@@ -15,6 +15,7 @@ Open `index.html` in a browser. It needs an internet connection the first time, 
 - Click a building to see inside it, or follow any student or lecturer up close.
 - Build teaching blocks, labs, a Smart Factory Lab, hostel, library, research centre, sports courts, running track, bike station and more.
 - Hire academics, sponsor PhDs, launch programmes, manage finances and policies.
+- Decisions tab: set the enrolment target, recruit lecturers, and set the research and marketing budgets. Before you approve, it shows what each change would do to cash, students, academics, facility load, teaching support, satisfaction, reputation and research, and why. A decision log then compares what was expected with what actually happened after the next intake.
 - ViTrox HQ (Campus 2.0) next door: students intern there under Work-Based Learning.
 - Koi pond, campus events, and the upgrade path to University College and University.
 
