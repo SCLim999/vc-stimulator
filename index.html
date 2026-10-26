@@ -149,6 +149,12 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .card .fine{font-size:11.5px;color:var(--muted)}
 .card input[type=text]{font:inherit;padding:8px 10px;border-radius:9px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink)}
 .langrow{display:flex;gap:6px;flex-wrap:wrap}
+.card.wide{width:min(780px,100%)}
+.scn{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.scn-c{gap:6px;padding:12px}
+.scn-c .t{font-size:14px}
+.scn-c .diff{margin-left:auto;color:var(--gold);letter-spacing:1px;font-size:12px}
+.scn-c .gl{font-size:11.5px;line-height:1.4}
 /* reports tab */
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
 .seg button{border:0;background:var(--panel);padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer}
@@ -787,11 +793,12 @@ function dailyTick() {
 function monthlyTick(month) {
   const c = counts(), k = capacity();
   let tuition = 0, share = 0;
-  for (const co of S.cohorts) { const p = P[co.p], f = p.fee * co.count; tuition += f; if (p.lvl === 'fra') share += f * 0.25; }
+  const md = MOD();
+  for (const co of S.cohorts) { const p = P[co.p], f = p.fee * md.fee * co.count; tuition += f; if (p.lvl === 'fra') share += f * 0.25; }
   const rent = Math.min(c.students, k.beds) * 350;
   const salaries = S.staff.reduce((a, s) => a + s.salary, 0);
   const sponsor = S.staff.filter(s => s.sponsor > 0).length * 2500;
-  const upkeep = S.buildings.reduce((a, b) => a + BT[b.t].upkeep, 0);
+  const upkeep = Math.round(S.buildings.reduce((a, b) => a + BT[b.t].upkeep, 0) * md.upkeep);
   const overhead = 15000 + 45 * c.students;
   const pol = (S.policies.mentor ? 60 * c.students : 0) + (S.policies.wbl ? 40 * c.students : 0) + (S.policies.shuttle && has('bus') ? 12000 : 0)
     + (S.policies.scholar ? Math.round(c.students * 0.05) * 1800 : 0) + (S.policies.iactg ? 10000 : 0);
@@ -845,11 +852,11 @@ function monthlyTick(month) {
   syncSims();
   save(true);
   if (S.debtMonths >= 3 && !S.over) { S.over = true; showGameOver(); return; }
-  if (Math.random() < 0.6) maybeEvent();
+  if (!checkScenario() && Math.random() < 0.6) maybeEvent();
 }
 function intake(month) {
   const c = counts(), k = capacity();
-  const repM = 0.4 + S.rep / 50, mkt = 0.7 + 0.6 * Math.sqrt(S.marketing / 20000), sch = S.policies.scholar ? 1.15 : 1, od = S.openDay ? 1.25 : 1, st = [1, 1.2, 1.4][S.stage];
+  const repM = 0.4 + S.rep / 50, mkt = 0.7 + 0.6 * Math.sqrt(S.marketing / 20000), sch = S.policies.scholar ? 1.15 : 1, od = (S.openDay ? 1.25 : 1) * MOD().demand, st = [1, 1.2, 1.4][S.stage];
   const want = [];
   for (const p of PROGS) if (S.progs[p.id].state === 'running') want.push({ p, n: Math.round(DEMAND[p.lvl] * repM * mkt * sch * od * st * rnd(0.85, 1.15)) });
   const demand = want.reduce((a, w) => a + w.n, 0);
@@ -871,7 +878,8 @@ function refreshPool() {
   S.pool = [];
   for (let i = 0; i < 5; i++) {
     const r = Math.random(); const profP = S.stage >= 1 ? 0.06 + S.rep / 900 : 0.015 + S.rep / 4000;
-    const role = r < profP ? 'prof' : r < profP + 0.22 + S.rep / 500 ? 'phd' : r < profP + 0.4 + S.rep / 500 ? 'ind' : 'master';
+    const phdP = (0.22 + S.rep / 500) * MOD().phd;
+    const role = r < profP * MOD().phd ? 'prof' : r < profP + phdP ? 'phd' : r < profP + phdP + 0.18 ? 'ind' : 'master';
     S.pool.push(makeStaff(role, pick(['eng','eng','comp','comp','mgmt'])));
   }
 }
@@ -925,6 +933,116 @@ function decideApplication() {
     choices: [{ t: ['Open the Programmes tab','Buka tab Program','打开课程页面'], fx: () => { setTab('progs'); return ''; } }] });
   else { S.won = true; showWin(); }
   refreshPanel(true);
+}
+
+// ================= scenarios =================
+// Each scenario changes the starting campus and market, sets goals with a deadline, and is scored in stars.
+const goalRow = (label, cur, need, f = v => fmtN(v), atMost = false) => ({ label, ok: atMost ? cur <= need : cur >= need, txt: `${f(cur)} ${atMost ? '≤' : '/'} ${f(need)}` });
+const goalBld = t => ({ label: [bname(t)], ok: has(t), txt: has(t) ? tr(['Built','Dibina','已建']) : tr(['Missing','Tiada','未建']) });
+const pctF = v => Math.round(v) + '%';
+const GL = { stu: ['Students enrolled','Pelajar berdaftar','在籍学生'], sat: ['Student satisfaction','Kepuasan pelajar','学生满意度'], ratio: ['Students per academic','Pelajar bagi setiap akademik','师生比'],
+  seats: ['Teaching seats in use','Tempat duduk kuliah digunakan','教学座位使用率'], phd: ['Academics with a PhD','Akademik berPhD','拥有博士学位的学术人员'], res: ['Research points (total)','Mata penyelidikan (jumlah)','研究积分（累计）'],
+  emp: ['Graduate employability','Kebolehpasaran graduan','毕业生就业率'], rep: ['Reputation','Reputasi','声誉'], loan: ['Bank loan outstanding','Baki pinjaman bank','未偿还贷款'], cash: ['Cash','Tunai','现金'] };
+const SCN = [
+  { id: 'uni', icon: '🏛️', diff: 2, cash: 1500000, months: 0,
+    name: ['Road to University','Menuju Universiti','通往大学'],
+    tag: ['The full game: grow the college until the Ministry grants University status.','Permainan penuh: bangunkan kolej sehingga Kementerian memberi status Universiti.','完整玩法：发展学院，直到教育部批准升格为大学。'],
+    challenge: ['No deadline. Meet the upgrade requirements in the Goals tab.','Tiada tarikh akhir. Penuhi syarat naik taraf di tab Matlamat.','没有期限。在“目标”页满足升格条件即可。'],
+    summary: [['University College, then University status','Status Kolej Universiti, kemudian Universiti','先升格为大学学院，再升格为大学']] },
+  { id: 'startup', icon: '🌱', diff: 2, cash: 600000, months: 24,
+    name: ['Startup College','Kolej Baharu','初创学院'],
+    tag: ['Start small with limited money: one classroom, a cafeteria, four lecturers and no labs.','Bermula kecil dengan dana terhad: satu bilik kuliah, kafeteria, empat pensyarah dan tiada makmal.','资金有限、从零开始：一栋教学楼、一间食堂、四位讲师，没有实验室。'],
+    challenge: ['Every ringgit counts. Engineering and computing students cannot enrol until you build their labs.','Setiap ringgit penting. Pelajar kejuruteraan dan pengkomputeran tidak boleh mendaftar sebelum makmal dibina.','每一分钱都要精打细算。没建实验室之前，工程和计算机学生无法入学。'],
+    summary: [['300 students','300 pelajar','300 名学生'], ['Satisfaction 60%','Kepuasan 60%','满意度 60%'], ['Library and both labs built','Perpustakaan dan kedua-dua makmal dibina','建好图书馆和两种实验室'], ['Stay out of debt','Elakkan hutang','不能负债']],
+    setup() {
+      S.cash = 600000; S.rep = 30; S.sat = 58;
+      S.buildings = S.buildings.filter(b => !['englab', 'complab'].includes(b.t));
+      for (const p of PROGS) S.progs[p.id].state = ['dBS', 'dCS', 'dEE'].includes(p.id) ? 'running' : 'locked';
+      S.cohorts = [{ p: 'dBS', count: 34, left: 20 }, { p: 'dCS', count: 16, left: 24 }, { p: 'dEE', count: 12, left: 26 }];
+      S.staff = []; ['mgmt', 'mgmt', 'comp', 'eng'].forEach(sc => S.staff.push(makeStaff('master', sc)));
+    },
+    goals() { const c = counts(); return [goalRow(GL.stu, c.students, 300), goalRow(GL.sat, Math.round(S.sat), 60, pctF), goalBld('library'), goalBld('complab'), goalBld('englab'), goalRow(GL.cash, Math.round(S.cash), 0, fmtRM)]; } },
+  { id: 'growing', icon: '📈', diff: 3, cash: 2500000, months: 18, mod: { demand: 1.8 },
+    name: ['Growing College','Kolej Berkembang','扩张学院'],
+    tag: ['Applications have exploded. You start with 360 students and classrooms that are already full.','Permohonan melonjak. Anda bermula dengan 360 pelajar dan bilik kuliah yang sudah penuh.','申请人数暴增。开局就有 360 名学生，教室已经挤满。'],
+    challenge: ['Applicants ×1.8 every intake. Build fast and hire fast, or satisfaction will collapse.','Pemohon ×1.8 setiap pengambilan. Bina dan ambil staf dengan pantas, atau kepuasan akan jatuh.','每次招生申请人数 ×1.8。扩建和聘人都要快，否则满意度会崩盘。'],
+    summary: [['800 students','800 pelajar','800 名学生'], ['Enough teaching seats','Tempat duduk kuliah mencukupi','教学座位够用'], ['25 or fewer students per academic','25 pelajar atau kurang bagi setiap akademik','师生比不超过 25'], ['Satisfaction 60%','Kepuasan 60%','满意度 60%']],
+    setup() { S.cash = 2500000; S.rep = 55; S.cohorts.forEach(c => c.count = Math.round(c.count * 2.6)); ['eng', 'comp', 'mgmt'].forEach(sc => S.staff.push(makeStaff('master', sc))); },
+    goals() { const c = counts(), k = capacity(); return [goalRow(GL.stu, c.students, 800), goalRow(GL.seats, Math.round(c.students / Math.max(1, k.teach) * 100), 100, pctF, true), goalRow(GL.ratio, +c.ratio.toFixed(1), 25, v => (+v).toFixed(1), true), goalRow(GL.sat, Math.round(S.sat), 60, pctF)]; } },
+  { id: 'excellence', icon: '🎓', diff: 3, cash: 3000000, months: 36, mod: { phd: 0.6 },
+    name: ['Academic Excellence','Kecemerlangan Akademik','学术卓越'],
+    tag: ['Put teaching and research quality first. Money is fine; PhD academics are scarce.','Utamakan kualiti pengajaran dan penyelidikan. Wang mencukupi; akademik PhD sukar dicari.','以教学和研究质量为先。资金充足，但博士学者很难聘到。'],
+    challenge: ['40% fewer PhD applicants. Sponsor your own lecturers and invest in research.','40% kurang pemohon PhD. Taja pensyarah sendiri dan labur dalam penyelidikan.','博士求职者少 40%。资助自己的讲师读博，并投资研究。'],
+    summary: [['40% of academics hold a PhD','40% akademik berPhD','40% 学术人员拥有博士学位'], ['400 research points','400 mata penyelidikan','研究积分 400'], ['Employability 90%','Kebolehpasaran 90%','就业率 90%'], ['Reputation 70','Reputasi 70','声誉 70']],
+    setup() { S.cash = 3000000; S.rep = 45; S.buildings.push({ id: uid++, t: 'library', x: 2, y: 10 }); },
+    goals() { const c = counts(); return [goalRow(GL.phd, c.phdPct, 40, pctF), goalRow(GL.res, Math.round(S.research), 400), goalRow(GL.emp, Math.round(S.employ), 90, pctF), goalRow(GL.rep, Math.round(S.rep), 70)]; } },
+  { id: 'finance', icon: '💸', diff: 4, cash: 150000, months: 30, mod: { fee: 0.85, upkeep: 1.25 },
+    name: ['Financial Challenge','Cabaran Kewangan','财务危机'],
+    tag: ['RM 150k in the bank and RM 2M owed. A rival is cutting prices and the old blocks need repairs.','RM 150k dalam bank dan hutang RM 2M. Pesaing menurunkan harga dan blok lama perlu dibaiki.','银行只有 RM 150k，还欠 RM 2M。对手在降价，旧楼又要维修。'],
+    challenge: ['Fees earn 15% less and upkeep costs 25% more. Keep students happy while you pay the bank back.','Yuran 15% kurang dan penyelenggaraan 25% lebih mahal. Pastikan pelajar gembira sambil membayar balik bank.','学费少收 15%，维护费多 25%。在还清银行贷款的同时，还要让学生满意。'],
+    summary: [['Repay the RM 2M loan','Bayar balik pinjaman RM 2M','还清 RM 2M 贷款'], ['RM 500k cash','Tunai RM 500k','现金 RM 500k'], ['Satisfaction 50%','Kepuasan 50%','满意度 50%']],
+    setup() { S.cash = 150000; S.loan = 2000000; S.rep = 38; S.sat = 52; },
+    goals() { return [goalRow(GL.loan, S.loan, 0, fmtRM, true), goalRow(GL.cash, Math.round(S.cash), 500000, fmtRM), goalRow(GL.sat, Math.round(S.sat), 50, pctF)]; } },
+];
+const curScn = () => SCN.find(x => x.id === (S.scn && S.scn.id)) || SCN[0];
+const MOD = () => Object.assign({ demand: 1, fee: 1, upkeep: 1, phd: 1 }, S.mod || {});
+function monthsIn() { if (!S.scn) return 0; const a = dateAt(S.scn.start), b = dateAt(S.hours); return (b.getUTCFullYear() - a.getUTCFullYear()) * 12 + b.getUTCMonth() - a.getUTCMonth(); }
+function applyScenario(id) {
+  const sc = SCN.find(x => x.id === id) || SCN[0];
+  S.mod = Object.assign({ demand: 1, fee: 1, upkeep: 1, phd: 1 }, sc.mod || {});
+  if (sc.setup) sc.setup();
+  S.scn = { id: sc.id, start: S.hours, done: false, failed: false };
+  refreshPool(); CROWD = crowd();
+  logD('result', ['Started the scenario {s}','Memulakan senario {s}','开始情境：{s}'], { s: sc.name });
+}
+function startScenario(id) { newGame(); applyScenario(id); sims = []; syncSims(); fitCam(); setTab('goals'); updateTop(); }
+let bestRuns = {}; try { bestRuns = JSON.parse(localStorage.getItem('vcsim-best') || '{}'); } catch (e) {}
+function checkScenario() {
+  const sc = curScn(); if (!S.scn || sc.id === 'uni' || S.scn.done || S.scn.failed) return false;
+  const gs = sc.goals(), m = monthsIn();
+  if (gs.every(g => g.ok)) {
+    S.scn.done = true; const stars = m <= sc.months * 0.6 ? 3 : m <= sc.months * 0.85 ? 2 : 1;
+    const prev = bestRuns[sc.id]; if (!prev || stars > prev.stars || (stars === prev.stars && m < prev.months)) { bestRuns[sc.id] = { stars, months: m }; try { localStorage.setItem('vcsim-best', JSON.stringify(bestRuns)); } catch (e) {} }
+    logD('result', ['Scenario complete: {s} in {m} months','Senario selesai: {s} dalam {m} bulan','情境完成：{s}，用时 {m} 个月'], { s: sc.name, m }, ['{x}','{x}','{x}'], { x: '⭐'.repeat(stars) });
+    showModal({ kicker: ['Scenario complete','Senario selesai','情境完成'], title: sc.name,
+      body: `<span style="font-size:28px;letter-spacing:4px">${'⭐'.repeat(stars)}${'☆'.repeat(3 - stars)}</span><br>` + esc(tr(['You met every goal in {m} of {d} months. Finish within 60% of the time for three stars.','Anda mencapai semua matlamat dalam {m} daripada {d} bulan. Selesai dalam 60% masa untuk tiga bintang.','你用了 {m} 个月（期限 {d} 个月）达成所有目标。在 60% 的时间内完成可得三颗星。'], { m, d: sc.months })),
+      choices: [{ t: ['Keep playing this campus','Teruskan kampus ini','继续经营这个校园'], fx: () => '' }, { t: ['Choose another scenario','Pilih senario lain','选择其他情境'], fx: () => { setTimeout(() => showScenarioPicker(false), 0); return ''; } }] });
+    return true;
+  }
+  if (sc.months && m >= sc.months) {
+    S.scn.failed = true; const miss = gs.filter(g => !g.ok);
+    logD('result', ['Scenario failed: {s}','Senario gagal: {s}','情境失败：{s}'], { s: sc.name }, ['Not met: {l}','Tidak dipenuhi: {l}','未达成：{l}'], { l: miss.map(g => tr(g.label)).join(', ') });
+    showModal({ kicker: ['Time is up','Masa tamat','时间到'], title: sc.name,
+      body: esc(tr(['The deadline passed with {n} goal(s) still open: {l}. Check the Reports tab to see what held you back.','Tarikh akhir berlalu dengan {n} matlamat belum dicapai: {l}. Lihat tab Laporan untuk mengetahui puncanya.','期限已到，还有 {n} 个目标未达成：{l}。到“报告”页看看是什么拖慢了你。'], { n: miss.length, l: miss.map(g => tr(g.label)).join(LANG === 'zh' ? '、' : ', ') })),
+      choices: [{ t: ['Try this scenario again','Cuba senario ini semula','重新挑战这个情境'], fx: () => { startScenario(sc.id); return ''; } }, { t: ['Choose another scenario','Pilih senario lain','选择其他情境'], fx: () => { setTimeout(() => showScenarioPicker(false), 0); return ''; } }, { t: ['Keep playing without a deadline','Teruskan tanpa tarikh akhir','不设期限继续玩'], fx: () => '' }] });
+    return true;
+  }
+  return false;
+}
+function showScenarioPicker(fromWelcome) {
+  const T = s => esc(tr(s));
+  modalEl.innerHTML = `<div class="card wide" role="dialog" aria-modal="true" aria-labelledby="mt"><p class="eyebrow">${T(['Scenario mode','Mod senario','情境模式'])}</p><h2 id="mt">${T(['How do you want to start?','Bagaimana anda mahu bermula?','你想从哪里开始？'])}</h2>
+    <div class="scn">${SCN.map(sc => { const b = bestRuns[sc.id]; return `<button class="bcard scn-c" data-sc="${sc.id}">
+      <span class="t">${sc.icon} ${T(sc.name)}<span class="diff" aria-label="${T(['Difficulty','Kesukaran','难度'])} ${sc.diff}/4">${'★'.repeat(sc.diff)}${'☆'.repeat(4 - sc.diff)}</span></span>
+      <span class="muted" style="font-size:12px;line-height:1.4">${T(sc.tag)}</span>
+      <span class="kv"><span class="cost">💰 ${fmtRM(sc.cash)}</span><span>⏳ ${sc.months ? esc(tr(['{m} months','{m} bulan','{m} 个月'], { m: sc.months })) : T(['No deadline','Tiada had masa','无期限'])}</span>${b ? `<span>🏆 ${'⭐'.repeat(b.stars)} · ${esc(tr(['{m} mo','{m} bln','{m} 个月'], { m: b.months }))}</span>` : ''}</span>
+      <span class="gl"><b>${T(['Goals','Matlamat','目标'])}:</b> ${sc.summary.map(g => T(g)).join(' · ')}</span></button>`; }).join('')}</div>
+    <div class="choices"><button class="btn" data-back>${T(['Back','Kembali','返回'])}</button></div></div>`;
+  modalEl.hidden = false;
+  modalEl.querySelectorAll('[data-sc]').forEach(b => b.onclick = () => { modalEl.hidden = true; startScenario(b.dataset.sc); const sc = curScn(); toast(tr(['Scenario: {s}. {c}','Senario: {s}. {c}','情境：{s}。{c}'], { s: tr(sc.name), c: tr(sc.challenge) }), 'gold'); });
+  modalEl.querySelector('[data-back]').onclick = () => { if (fromWelcome) showWelcome(hasSave()); else modalEl.hidden = true; };
+  modalEl.querySelector('[data-sc]').focus();
+}
+function scenarioPanel() {
+  const sc = curScn(); if (!S.scn || sc.id === 'uni') return '';
+  const T = s => esc(tr(s)), gs = sc.goals(), m = monthsIn(), left = Math.max(0, sc.months - m), met = gs.filter(g => g.ok).length;
+  const status = S.scn.done ? `<span class="tag ok">✅ ${T(['Complete','Selesai','已完成'])}</span>` : S.scn.failed ? `<span class="tag" style="color:var(--bad);border-color:var(--bad)">⌛ ${T(['Deadline passed, free play','Tarikh akhir berlalu, main bebas','期限已过，自由模式'])}</span>`
+    : `<span class="tag wip">⏳ ${esc(tr(['{n} months left','{n} bulan lagi','剩余 {n} 个月'], { n: left }))}</span>`;
+  return `<div class="sec yr"><p class="eyebrow">${T(['Scenario','Senario','情境模式'])}</p><h4 style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${sc.icon} ${T(sc.name)} ${status}</h4>
+    <p class="muted" style="margin:0 0 6px;font-size:12px">${T(sc.challenge)}</p>
+    <div class="bar" style="margin-bottom:6px" title="${esc(tr(['Time used','Masa digunakan','已用时间']))}"><i class="${left <= sc.months * 0.2 && !S.scn.done ? 'low' : ''}" style="width:${Math.min(100, m / sc.months * 100)}%"></i></div>
+    <p class="muted" style="margin:0 0 4px;font-size:12px">${esc(tr(['{a} of {b} goals met · month {m} of {d}','{a} daripada {b} matlamat dicapai · bulan {m} daripada {d}','已达成 {a}/{b} 个目标 · 第 {m}/{d} 个月'], { a: met, b: gs.length, m, d: sc.months }))}</p>
+    ${gs.map(g => `<div class="req ${g.ok ? 'ok' : ''}"><span class="ic"></span><span>${T(g.label)}</span><span class="v">${esc(g.txt)}</span></div>`).join('')}</div>`;
 }
 
 // ================= events =================
@@ -1031,7 +1149,7 @@ function showModal({ title, body, choices, kicker, extra }) {
   modalEl.querySelector('[data-i]').focus();
 }
 function showWelcome(saved) {
-  const choices = [{ t: ['Start a new campus','Mulakan kampus baru','开始新校园'], fx: () => { newGame(); sims = []; syncSims(); fitCam(); setTab('goals'); return tr(['Welcome, Principal. Your first intake is in May.','Selamat datang, Pengetua. Pengambilan pertama anda pada bulan Mei.','欢迎您，院长。第一次招生在五月。']); } }];
+  const choices = [{ t: ['Start a new campus: choose a scenario','Mulakan kampus baru: pilih senario','开始新校园：选择情境模式'], fx: () => { setTimeout(() => showScenarioPicker(true), 0); return ''; } }];
   if (saved) choices.unshift({ t: ['Continue saved campus','Teruskan kampus tersimpan','继续已保存的校园'], fx: () => { load(); fitCam(); return tr(['Save loaded.','Simpanan dimuatkan.','存档已载入。']); } });
   const langs = `<div class="langrow" role="group" aria-label="${esc(tr(UI.lang))}">${[['en','English'],['ms','Bahasa Melayu'],['zh','中文']].map(([k, n]) => `<button class="btn" data-lang="${k}" aria-pressed="${LANG === k}">${n}</button>`).join('')}</div>`;
   showModal({ kicker: ['Batu Kawan Industrial Park, Penang','Taman Perindustrian Batu Kawan, Pulau Pinang','槟城峇都加湾工业园'],
@@ -1052,7 +1170,7 @@ function showWin() {
 function showGameOver() {
   showModal({ kicker: ['Insolvent','Muflis','资不抵债'], title: ['The college ran out of money','Kolej kehabisan wang','学院资金耗尽'],
     body: tr(['Cash stayed negative for three months and the bank has stepped in. Next time, keep a buffer, watch the monthly net in Finance, and take a loan before the account goes red.','Tunai kekal negatif selama tiga bulan dan bank telah campur tangan. Lain kali, simpan penimbal, pantau baki bersih bulanan di Kewangan, dan ambil pinjaman sebelum akaun jadi merah.','现金连续三个月为负，银行已介入。下次请保留缓冲资金，留意财务页的每月净额，并在账户赤字前申请贷款。']),
-    choices: [{ t: ['Start over','Mula semula','重新开始'], fx: () => { newGame(); sims = []; syncSims(); fitCam(); return tr(['New campus started.','Kampus baru dimulakan.','新校园已开始。']); } }] });
+    choices: [{ t: ['Try this scenario again','Cuba senario ini semula','重新挑战这个情境'], fx: () => { startScenario(curScn().id); return tr(['New campus started.','Kampus baru dimulakan.','新校园已开始。']); } }, { t: ['Choose another scenario','Pilih senario lain','选择其他情境'], fx: () => { setTimeout(() => showScenarioPicker(false), 0); return ''; } }] });
 }
 
 // ================= toasts =================
@@ -1072,7 +1190,7 @@ function load() {
     const d = JSON.parse(localStorage.getItem(KEY));
     if (d && (d.v === 1 || d.v === 2)) {
       S = d; S.v = 2; if (S.customName === undefined) S.customName = null; delete S.name;
-      S.policies.iactg = !!S.policies.iactg; S.log = S.log || []; S.intakes = S.intakes || []; uid = S.uid || 1e5; sims = []; syncSims(); return true;
+      S.policies.iactg = !!S.policies.iactg; S.scn = S.scn || { id: 'uni', start: 0, done: false, failed: false }; S.log = S.log || []; S.intakes = S.intakes || []; uid = S.uid || 1e5; sims = []; syncSims(); return true;
     }
   } catch (e) {}
   return false;
@@ -2035,7 +2153,7 @@ function renderTab() {
   const c = counts();
   if (curTab === 'goals') {
     const t = S.stage + 1;
-    let h = `<div class="sec"><p class="eyebrow">${esc(tr(['Institution status','Status institusi','院校地位']))}</p><div class="ladder">${STAGES.map((s, i) => `<div class="rung ${i < S.stage ? 'done' : i === S.stage ? 'on' : ''}">${esc(tr(s))}</div>`).join('')}</div></div>`;
+    let h = scenarioPanel() + `<div class="sec"><p class="eyebrow">${esc(tr(['Institution status','Status institusi','院校地位']))}</p><div class="ladder">${STAGES.map((s, i) => `<div class="rung ${i < S.stage ? 'done' : i === S.stage ? 'on' : ''}">${esc(tr(s))}</div>`).join('')}</div></div>`;
     if (t <= 2) {
       const R = reqs(t), met = R.filter(r => r.ok).length, a = APP[t];
       h += `<div class="sec"><h4>${esc(tr(['Requirements for {s}','Syarat untuk {s}','升格为{s}的条件'], { s: tr(STAGES[t]) }))}</h4><p class="muted" style="margin:0 0 6px;font-size:12px">${esc(tr(['{m} of {n} met. Application fee {f}, review takes {d} days.','{m} daripada {n} dipenuhi. Yuran permohonan {f}, semakan mengambil {d} hari.','已达成 {m}/{n} 项。申请费 {f}，审核需 {d} 天。'], { m: met, n: R.length, f: fmtRM(a.fee), d: a.days }))}</p>
@@ -2055,7 +2173,7 @@ function renderTab() {
     const ap = document.getElementById('apply'); if (ap) ap.onclick = apply;
     document.getElementById('sv').onclick = () => save(false);
     document.getElementById('ng').onclick = () => showModal({ title: ['Start a new campus?','Mulakan kampus baru?','要开始新校园吗？'], body: tr(['Your current campus is replaced. The autosave is overwritten at the next month end.','Kampus semasa akan diganti. Simpanan automatik ditulis semula pada hujung bulan seterusnya.','当前校园将被取代，自动存档会在下个月底被覆盖。']),
-      choices: [{ t: ['Start over','Mula semula','重新开始'], fx: () => { newGame(); sims = []; syncSims(); fitCam(); setTab('goals'); return tr(['New campus started.','Kampus baru dimulakan.','新校园已开始。']); } }, { t: ['Cancel','Batal','取消'], fx: () => '' }] });
+      choices: [{ t: ['Choose a scenario','Pilih senario','选择情境'], fx: () => { setTimeout(() => showScenarioPicker(false), 0); return ''; } }, { t: ['Cancel','Batal','取消'], fx: () => '' }] });
   }
   if (curTab === 'build') {
     const k = capacity();
