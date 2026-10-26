@@ -15,7 +15,9 @@ Open `index.html` in a browser. It needs an internet connection the first time, 
 - Click a building to see inside it, or follow any student or lecturer up close.
 - Build teaching blocks, labs, a Smart Factory Lab, hostel, library, research centre, sports courts, running track, bike station and more.
 - Hire academics, sponsor PhDs, launch programmes, manage finances and policies.
-- ViTrox HQ (Campus 2.0) next door: students intern there under Work-Based Learning.
+- Decisions tab: set the enrolment target, recruit lecturers, and set the research and marketing budgets. Before you approve, it shows what each change would do to cash, students, academics, facility load, teaching support, satisfaction, reputation and research, and why. A decision log then compares what was expected with what actually happened after the next intake.
+- ViTrox HQ (Campus 2.0) next door, four storeys tall: click it and use the floor buttons to go up and down through the lobby and showroom, R&D engineering, the machine assembly and test line, and the boardroom, training academy and sky garden. Students intern there under Work-Based Learning and appear on the floor where they work.
+- Challenges with deadlines, such as adding a Computer Lab within budget, staying solvent while students are happy, or lifting reputation within five academic years. Finishing faster earns more stars; rewards are score, achievements, grants and four buildings you can only unlock this way: Innovation Hub, Wellness Centre, Teaching & Learning Centre and Convention Centre.
 - Koi pond, campus events, and the upgrade path to University College and University.
 
 ## Disclaimer
