@@ -9,6 +9,7 @@
   --bg:#e9efe8; --panel:#ffffff; --panel-2:#f3f6f1; --ink:#14202f; --muted:#5a6878; --line:#d5ded3;
   --accent:#17a35e; --accent-ink:#ffffff; --accent-soft:#dff3e7; --gold:#c98314; --bad:#cf3f3f; --warn:#d99a12;
   --stage:#bcd7bf; --shadow:0 1px 2px rgba(20,32,47,.06),0 6px 20px rgba(20,32,47,.08);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --grid:#e1e0d9; --axis:#c3c2b7;   /* chart series (validated order) and chrome */
   --f-display:"Bricolage Grotesque","Noto Sans SC","Trebuchet MS",system-ui,sans-serif;
   --f-body:"Figtree","Noto Sans SC","Segoe UI","Microsoft YaHei",system-ui,sans-serif;
   --f-mono:"JetBrains Mono","Noto Sans SC",ui-monospace,Consolas,monospace;
@@ -16,11 +17,13 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0c131b; --panel:#141e2a; --panel-2:#1a2635; --ink:#e6edf3; --muted:#93a2b2; --line:#263648;
   --accent:#36cf85; --accent-ink:#06210f; --accent-soft:#163626; --gold:#f0b24a; --bad:#ff6b6b; --warn:#f2c14e;
-  --stage:#17241d; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35); color-scheme:dark}}
+  --stage:#17241d; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --grid:#2c2c2a; --axis:#383835; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0c131b; --panel:#141e2a; --panel-2:#1a2635; --ink:#e6edf3; --muted:#93a2b2; --line:#263648;
   --accent:#36cf85; --accent-ink:#06210f; --accent-soft:#163626; --gold:#f0b24a; --bad:#ff6b6b; --warn:#f2c14e;
-  --stage:#17241d; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35); color-scheme:dark}
+  --stage:#17241d; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --grid:#2c2c2a; --axis:#383835; color-scheme:dark}
 html{height:100%;box-sizing:border-box}
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -146,6 +149,33 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .card .fine{font-size:11.5px;color:var(--muted)}
 .card input[type=text]{font:inherit;padding:8px 10px;border-radius:9px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink)}
 .langrow{display:flex;gap:6px;flex-wrap:wrap}
+/* reports tab */
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{border:0;background:var(--panel);padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.chart{position:relative}
+.chart canvas{width:100%;height:150px;display:block;cursor:crosshair}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11.5px;color:var(--muted);margin:0 0 4px}
+.legend i{display:inline-block;width:10px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.legend i.bar{height:9px;width:9px}
+.tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:11.5px;box-shadow:var(--shadow);white-space:nowrap;z-index:2}
+.tip b{display:block;margin-bottom:2px}
+.tip span{display:flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums}
+.tip i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.yr{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--panel-2)}
+.yr h5{font-family:var(--f-display);font-size:15px;margin:0 0 6px;font-weight:800}
+.deltas{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.deltas span{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;border:1px solid var(--line);background:var(--panel);font-variant-numeric:tabular-nums}
+.deltas .good{color:var(--accent)}.deltas .bad{color:var(--bad)}
+.why{margin:0 0 6px;padding:0;list-style:none;font-size:12px;display:flex;flex-direction:column;gap:3px}
+.why li{display:flex;gap:6px;line-height:1.4}
+.dlog{font-size:12px;border-top:1px dashed var(--line);padding:5px 0;display:grid;grid-template-columns:52px 18px 1fr;gap:6px}
+.dlog .when{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);padding-top:1px}
+.dlog .res{display:block;color:var(--muted);font-size:11.5px}
+.dtable{overflow-x:auto}
+.dtable table{border-collapse:collapse;font-size:11px;width:100%}
+.dtable th,.dtable td{padding:3px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.dtable th:first-child,.dtable td:first-child{text-align:left}
 .langrow .btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 @media (max-width:860px){
   main{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) 44%}
@@ -189,7 +219,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
     </section>
     <aside id="panel">
       <nav class="tabs" role="tablist" id="tabs">
-        <button data-t="goals" role="tab" data-i18n="goals">Goals</button><button data-t="build" role="tab" data-i18n="build">Build</button><button data-t="progs" role="tab" data-i18n="progs">Programmes</button><button data-t="people" role="tab" data-i18n="people">People</button><button data-t="policy" role="tab" data-i18n="policy">Policies</button><button data-t="fin" role="tab" data-i18n="fin">Finance</button>
+        <button data-t="goals" role="tab" data-i18n="goals">Goals</button><button data-t="build" role="tab" data-i18n="build">Build</button><button data-t="progs" role="tab" data-i18n="progs">Programmes</button><button data-t="people" role="tab" data-i18n="people">People</button><button data-t="policy" role="tab" data-i18n="policy">Policies</button><button data-t="fin" role="tab" data-i18n="fin">Finance</button><button data-t="stats" role="tab" data-i18n="stats">Reports</button>
       </nav>
       <div id="tabbody"></div>
     </aside>
@@ -214,7 +244,7 @@ const UI = {
   cash:['Cash','Tunai','现金'], students:['Students','Pelajar','学生'], academics:['Academics','Akademik','学术人员'],
   rep:['Reputation','Reputasi','声誉'], sat:['Satisfaction','Kepuasan','满意度'], research:['Research','Penyelidikan','研究'],
   goals:['Goals','Matlamat','目标'], build:['Build','Bina','建造'], progs:['Programmes','Program','课程'], people:['People','Warga','人员'],
-  policy:['Policies','Dasar','政策'], fin:['Finance','Kewangan','财务'], pause:['Pause','Jeda','暂停'], speed:['Game speed','Kelajuan permainan','游戏速度'],
+  policy:['Policies','Dasar','政策'], fin:['Finance','Kewangan','财务'], stats:['Reports','Laporan','报告'], pause:['Pause','Jeda','暂停'], speed:['Game speed','Kelajuan permainan','游戏速度'],
   zin:['Zoom in','Zum masuk','放大'], zout:['Zoom out','Zum keluar','缩小'], zfit:['Recentre','Pusatkan semula','重新居中'], zbub:['Show thoughts','Tunjuk fikiran','显示想法'],
   lang:['Language','Bahasa','语言'], campus:['Campus view','Paparan kampus','校园视图'], north:['N','U','北'],
   zwatch:['Watch a random student','Tonton pelajar rawak','随机跟随一名学生'],
@@ -404,7 +434,7 @@ function newGame() {
     policies: { mentor: true, wbl: true, scholar: false, shuttle: false, iactg: false }, marketing: 10000, rfund: 0,
     rep: 40, repBonus: 0, research: 0, researchRate: 0, sat: 62, employ: 80, employBonus: 0, morale: 70,
     graduates: 0, application: null, loan: 0, openDay: false, debtMonths: 0,
-    acc: { grants: 0, oneoff: 0, capex: 0 }, last: null, history: [], won: false, over: false, uid: 1,
+    acc: { grants: 0, oneoff: 0, capex: 0 }, last: null, history: [], log: [], intakes: [], won: false, over: false, uid: 1,
   };
   const add = (t, x, y) => S.buildings.push({ id: uid++, t, x, y });
   add('admin', 10, 2); add('classroom', 5, 6); add('englab', 8, 6); add('complab', 11, 6); add('cafe', 14, 6);
@@ -473,6 +503,7 @@ const nextHour = hh => { const base = Math.floor(S.hours / 24) * 24; let t = bas
 const MONS = { en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], ms:['Jan','Feb','Mac','Apr','Mei','Jun','Jul','Ogo','Sep','Okt','Nov','Dis'] };
 const DOWS = { en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], ms:['Ahd','Isn','Sel','Rab','Kha','Jum','Sab'], zh:['周日','周一','周二','周三','周四','周五','周六'] };
 const monName = m => LANG === 'zh' ? (m + 1) + '月' : MONS[LANG][m];
+const monArr = m => [MONS.en[m], MONS.ms[m], (m + 1) + '月'];   // a month name that re-translates when the language changes
 function fmtDate(h, withTime = true) {
   const d = dateAt(h), D = d.getUTCDate(), M = d.getUTCMonth(), Y = d.getUTCFullYear(), w = d.getUTCDay();
   const s = LANG === 'zh' ? `${Y}年${M + 1}月${D}日 ${DOWS.zh[w]}` : `${DOWS[LANG][w]} ${D} ${MONS[LANG][M]} ${Y}`;
@@ -746,7 +777,7 @@ function dailyTick() {
   S.sat += (clamp(target, 5, 100) - S.sat) * 0.2;
   for (const p of PROGS) {
     const st = S.progs[p.id];
-    if (st.state === 'accrediting' && --st.days <= 0) { st.state = 'running'; toast(tr(['MQA accredited {p}. First intake at the next semester.','MQA telah mengakreditasi {p}. Pengambilan pertama pada semester depan.','MQA 已认证{p}，下学期开始招生。'], { p: tr(p.name) }), 'gold'); }
+    if (st.state === 'accrediting' && --st.days <= 0) { st.state = 'running'; logD('result', ['MQA accredited {p}','MQA mengakreditasi {p}','MQA 认证了{p}'], { p: p.name }); toast(tr(['MQA accredited {p}. First intake at the next semester.','MQA telah mengakreditasi {p}. Pengambilan pertama pada semester depan.','MQA 已认证{p}，下学期开始招生。'], { p: tr(p.name) }), 'gold'); }
   }
   if (S.application && --S.application.days <= 0) decideApplication();
   const d = dateAt(S.hours);
@@ -779,6 +810,7 @@ function monthlyTick(month) {
   }
   S.cohorts = S.cohorts.filter(co => co.count > 0);
   S.graduates += grads;
+  if (grads) logD('result', ['Convocation: {g} graduates','Konvokesyen: {g} graduan','毕业典礼：{g} 名毕业生'], { g: grads }, ['{e}% employed within 6 months','{e}% bekerja dalam 6 bulan','{e}% 在 6 个月内就业'], { e: Math.round(S.employ) });
   if (grads) toast(tr(['Convocation: {g} graduates this month. {e}% employed within 6 months.','Konvokesyen: {g} graduan bulan ini. {e}% bekerja dalam 6 bulan.','毕业典礼：本月 {g} 名毕业生，{e}% 在 6 个月内就业。'], { g: grads, e: Math.round(S.employ) }), 'gold');
   const indRatio = c.staff ? c.ind / c.staff : 0;
   let rr = c.phd * 1.2 + c.prof * 4 + c.master * 0.15 + c.postgrad * 0.15 + (has('industry') ? 6 : 0) + S.rfund / 5000;
@@ -797,14 +829,19 @@ function monthlyTick(month) {
   for (const s of [...S.staff]) {
     if (s.sponsor > 0 && --s.sponsor === 0) { s.role = 'phd'; s.salary = Math.max(s.salary, Math.round(ROLES.phd.pay / 100) * 100); toast(tr(['{n} passed the PhD viva. Welcome, Dr. {g}!','{n} lulus viva PhD. Selamat datang, Dr. {g}!','{n} 通过了博士答辩。恭喜 {g} 博士！'], { n: s.name, g: given(s.name) }), 'gold'); }
     const pq = s.sponsor > 0 ? 0.002 : 0.004 + Math.max(0, 55 - S.morale) / 600;
-    if (Math.random() < pq) { S.staff.splice(S.staff.indexOf(s), 1); toast(tr(['{n} resigned (staff morale {m}).','{n} meletak jawatan (semangat staf {m}).','{n} 辞职了（教职员士气 {m}）。'], { n: ROLES[s.role].title + s.name, m: Math.round(S.morale) }), 'bad'); }
+    if (Math.random() < pq) { S.staff.splice(S.staff.indexOf(s), 1); logD('result', ['{n} resigned','{n} meletak jawatan','{n} 辞职'], { n: ROLES[s.role].title + s.name }, ['Staff morale was {m}','Semangat staf ketika itu {m}','当时教职员士气为 {m}'], { m: Math.round(S.morale) }); toast(tr(['{n} resigned (staff morale {m}).','{n} meletak jawatan (semangat staf {m}).','{n} 辞职了（教职员士气 {m}）。'], { n: ROLES[s.role].title + s.name, m: Math.round(S.morale) }), 'bad'); }
   }
   refreshPool();
   if (month === 0 || month === 4 || month === 8) intake(month);
   if (S.cash < 0) { S.debtMonths++; toast(S.debtMonths >= 3 ? tr(['The bank has called in its loans.','Bank telah menuntut semula pinjaman.','银行已收回贷款。']) : tr(['Cash is negative. {m} month(s) before the bank steps in. Take a loan or cut costs.','Tunai negatif. {m} bulan lagi sebelum bank campur tangan. Ambil pinjaman atau kurangkan kos.','现金为负。{m} 个月后银行将介入，请贷款或削减开支。'], { m: 3 - S.debtMonths }), 'bad'); }
   else S.debtMonths = 0;
-  S.history.push({ cash: S.cash, students: counts().students, rep: S.rep });
-  if (S.history.length > 36) S.history.shift();
+  // monthly snapshot for the Reports tab (t sits inside the month that just closed)
+  const c2 = counts(), L2 = S.last;
+  S.history.push({ t: S.hours - 12, cash: S.cash, students: c2.students, rep: S.rep, sat: S.sat, employ: S.employ, ratio: +c2.ratio.toFixed(2), phdPct: c2.phdPct,
+    staff: c2.staff, research: S.research, rr: S.researchRate, teach: +(CROWD ? CROWD.teach : 1).toFixed(2),
+    income: L2.tuition + L2.rent + L2.grants, expense: L2.tuition + L2.rent + L2.grants - L2.net,
+    ex: { sal: L2.salaries + L2.sponsor, up: L2.upkeep, cap: L2.capex, pol: L2.pol + L2.marketing + L2.rfund, adm: L2.overhead + L2.share + L2.interest, ev: L2.oneoff } });
+  if (S.history.length > 240) S.history.shift();
   syncSims();
   save(true);
   if (S.debtMonths >= 3 && !S.over) { S.over = true; showGameOver(); return; }
@@ -824,6 +861,9 @@ function intake(month) {
   for (const w of want) if (w.n > 0) { S.cohorts.push({ p: w.p.id, count: w.n, left: w.p.months }); tot += w.n; }
   S.openDay = false;
   const capped = tot < demand * 0.9;
+  S.intakes.push({ t: S.hours, m: month, demand, tot });
+  logD('result', ['{m} intake: {t} enrolled out of {d} applicants','Pengambilan {m}: {t} berdaftar daripada {d} pemohon','{m}招生：{d} 名申请者中录取 {t} 名'], { m: monArr(month), t: tot, d: demand },
+    capped ? ['Turned away {n}: not enough classrooms, labs or staff','{n} ditolak: bilik kuliah, makmal atau staf tidak mencukupi','{n} 人未能录取：教室、实验室或师资不足'] : null, capped ? { n: demand - tot } : null);
   toast(tr(['{m} intake: {t} new students enrolled from {d} applicants.','Pengambilan {m}: {t} pelajar baru daripada {d} pemohon.','{m}招生：{d} 名申请者中录取 {t} 名新生。'], { m: monName(month), t: tot, d: demand })
     + (capped ? ' ' + tr(['The rest were turned away: build more classrooms or labs.','Selebihnya ditolak: bina lebih banyak bilik kuliah atau makmal.','其余申请者被拒：请增建教室或实验室。']) : ''), capped ? 'warn' : 'gold');
 }
@@ -864,12 +904,15 @@ function apply() {
   const t = S.stage + 1, a = APP[t];
   if (!reqs(t).every(r => r.ok) || S.cash < a.fee || S.application) return;
   S.cash -= a.fee; S.acc.oneoff += a.fee; S.application = { target: t, days: a.days };
+  logD('apply', ['Applied for {s} status ({c})','Memohon status {s} ({c})','申请升格为{s}（{c}）'], { s: STAGES[t], c: fmtRM(a.fee) });
   toast(tr(['Application for {s} status submitted to the Ministry. Decision in {d} days. Keep every requirement met until then.','Permohonan status {s} dihantar kepada Kementerian. Keputusan dalam {d} hari. Pastikan semua syarat kekal dipenuhi.','{s}升格申请已提交教育部，{d} 天后公布结果。在此之前请保持所有条件达标。'], { s: tr(STAGES[t]), d: a.days }), 'gold');
   refreshPanel(true);
 }
 function decideApplication() {
   const t = S.application.target, fails = reqs(t).filter(r => !r.ok);
   S.application = null;
+  if (fails.length) logD('result', ['{s} application rejected','Permohonan {s} ditolak','{s}升格申请被拒'], { s: STAGES[t] }, ['Not met: {l}','Tidak dipenuhi: {l}','未达标：{l}'], { l: fails.map(f => tr(f.label)).join(', ') });
+  else logD('result', ['Upgraded to {s}!','Dinaik taraf kepada {s}!','成功升格为{s}！'], { s: STAGES[t] });
   if (fails.length) {
     showModal({ title: ['Application not approved','Permohonan tidak diluluskan','申请未获批准'],
       body: tr(['The panel found {n} requirement(s) not met: {l}. The fee is not refunded. Fix them and apply again.','Panel mendapati {n} syarat tidak dipenuhi: {l}. Yuran tidak dipulangkan. Perbaiki dan mohon semula.','评审团发现 {n} 项条件未达标：{l}。申请费不予退还，请改善后重新申请。'], { n: fails.length, l: fails.map(f => tr(f.label)).join(', ') }),
@@ -959,12 +1002,19 @@ const EVENTS = [
       { t:['Run the bootcamp (RM 25k)','Adakan kem (RM 25k)','举办训练营（RM 25k）'], fx:() => { spend(25000); S.openDay = true; S.repBonus += 1; return tr(['Bootcamp full. Next intake gets +25% applicants.','Kem penuh. Pengambilan seterusnya +25% pemohon.','训练营爆满。下次招生申请人数 +25%。']); } },
       { t:['Skip','Langkau','跳过'], fx:() => tr(['Skipped.','Dilangkau.','已跳过。']) }] },
 ];
+// decision log: what the player chose (and what came of it), shown by academic year in the Reports tab
+function logD(k, line, vars, res, rv) {
+  if (!S.log) S.log = [];
+  S.log.push({ t: S.hours, k, line, vars: vars || null, res: res || null, rv: rv || null });
+  if (S.log.length > 800) S.log.shift();
+}
 function spend(n) { S.cash -= n; S.acc.oneoff += n; }
 function gain(n) { S.cash += n; S.acc.grants += n; }
 function maybeEvent() {
   const c = counts(); const ok = EVENTS.filter(e => e.when(c));
   if (!ok.length) return; const e = pick(ok);
-  showModal({ title: e.title, body: tr(e.body), choices: e.choices, kicker: ['Campus event','Peristiwa kampus','校园事件'] });
+  const choices = e.choices.map(ch => ({ t: ch.t, fx: () => { const r = ch.fx(); logD('event', ['{e}: chose "{c}"','{e}: pilih "{c}"','{e}：选择“{c}”'], { e: e.title, c: ch.t }, r || null); return r; } }));
+  showModal({ title: e.title, body: tr(e.body), choices, kicker: ['Campus event','Peristiwa kampus','校园事件'] });
 }
 
 // ================= modal =================
@@ -1022,7 +1072,7 @@ function load() {
     const d = JSON.parse(localStorage.getItem(KEY));
     if (d && (d.v === 1 || d.v === 2)) {
       S = d; S.v = 2; if (S.customName === undefined) S.customName = null; delete S.name;
-      S.policies.iactg = !!S.policies.iactg; uid = S.uid || 1e5; sims = []; syncSims(); return true;
+      S.policies.iactg = !!S.policies.iactg; S.log = S.log || []; S.intakes = S.intakes || []; uid = S.uid || 1e5; sims = []; syncSims(); return true;
     }
   } catch (e) {}
   return false;
@@ -1832,12 +1882,14 @@ function canPlace(t, x, y) {
 function place(t, x, y) {
   const ok = canPlace(t, x, y); if (ok !== true) { toast(ok, 'warn'); return; }
   const d = BT[t]; S.cash -= d.cost; S.acc.capex += d.cost; S.buildings.push({ id: uid++, t, x, y }); CROWD = crowd();
+  if (!d.tree) logD('build', ['Built {x} for {c}','Membina {x} dengan kos {c}','建造{x}，花费 {c}'], { x: d.name, c: fmtRM(d.cost) });
   if (!d.tree) toast(tr(['{b} built for {c}.','{b} dibina dengan kos {c}.','{b}已建成，花费 {c}。'], { b: bname(t), c: fmtRM(d.cost) }));
   updateTop(); if (curTab === 'build') renderTab();
 }
 function demolish(id) {
   const b = bById(id); if (!b || b.t === 'admin') return; const d = BT[b.t];
   S.buildings.splice(S.buildings.indexOf(b), 1); const back = Math.round(d.cost * 0.5); S.cash += back; S.acc.capex -= back; CROWD = crowd();
+  logD('demolish', ['Demolished {x}, recovered {c}','Merobohkan {x}, dapat semula {c}','拆除{x}，回收 {c}'], { x: d.name, c: fmtRM(back) });
   sel = null; renderInsp(); toast(tr(['{b} demolished. {c} recovered.','{b} dirobohkan. {c} diperoleh semula.','{b}已拆除，回收 {c}。'], { b: bname(b.t), c: fmtRM(back) })); updateTop();
 }
 
@@ -1974,6 +2026,7 @@ let lastAuto = 0;
 function refreshPanel(force) {
   if (force) return renderTab();
   if (curTab === 'policy' || curTab === 'build') return;
+  if (curTab === 'stats') { if (statsSeen !== S.history.length + ':' + (S.log || []).length) { const st = body.scrollTop; renderTab(); body.scrollTop = st; } return; }
   if (document.activeElement && body.contains(document.activeElement) && document.activeElement.tagName === 'INPUT') return;
   const now = performance.now(); if (now - lastAuto < 700) return; lastAuto = now; const st = body.scrollTop; renderTab(); body.scrollTop = st;
 }
@@ -2054,10 +2107,10 @@ function renderTab() {
       ${[...S.staff].sort((a, b) => order.indexOf(a.role) - order.indexOf(b.role)).map(s => `<div class="row"><div class="l"><div class="n">${esc(ROLES[s.role].title + s.name)}</div><div class="d">${esc(tr(ROLES[s.role].t))} · ${esc(schoolOf(s.school))} · ${fmtRM(s.salary)}${esc(tr(['/mo','/bln','/月']))}${s.sponsor ? ' · ' + esc(tr(['PhD in {m} mo','PhD dalam {m} bln','{m} 个月后获博士'], { m: s.sponsor })) : ''}</div></div>
         ${sims.some(x => x.staffId === s.id) ? `<button class="btn" data-w="${s.id}" aria-label="${esc(tr(['Watch','Tonton','跟随']))}">👁</button>` : ''}${s.role === 'master' && !s.sponsor ? `<button class="btn" data-sp="${s.id}">${esc(tr(['Sponsor PhD','Taja PhD','资助读博']))}</button>` : ''}<button class="btn danger" data-f="${s.id}">${esc(tr(['Let go','Lepaskan','解聘']))}</button></div>`).join('')}</div>`;
     body.innerHTML = h;
-    body.querySelectorAll('[data-h]').forEach(b => b.onclick = () => { const s = S.pool.splice(+b.dataset.h, 1)[0]; S.staff.push(s); syncSims(); toast(tr(['{n} joins the {s}.','{n} menyertai {s}.','{n} 加入了{s}。'], { n: ROLES[s.role].title + s.name, s: tr(SCHOOLS[s.school]) })); renderTab(); updateTop(); });
+    body.querySelectorAll('[data-h]').forEach(b => b.onclick = () => { const s = S.pool.splice(+b.dataset.h, 1)[0]; S.staff.push(s); syncSims(); logD('hire', ['Hired {n} ({r}, {c}/month)','Mengambil {n} ({r}, {c}/bulan)','聘请 {n}（{r}，月薪 {c}）'], { n: ROLES[s.role].title + s.name, r: ROLES[s.role].t, c: fmtRM(s.salary) }); toast(tr(['{n} joins the {s}.','{n} menyertai {s}.','{n} 加入了{s}。'], { n: ROLES[s.role].title + s.name, s: tr(SCHOOLS[s.school]) })); renderTab(); updateTop(); });
     body.querySelectorAll('[data-w]').forEach(b => b.onclick = () => { const s = sims.find(x => x.staffId === +b.dataset.w); if (s) startFollow(s); });
-    body.querySelectorAll('[data-sp]').forEach(b => b.onclick = () => { const s = S.staff.find(x => x.id === +b.dataset.sp); s.sponsor = 24; toast(tr(['{n} starts a sponsored PhD.','{n} memulakan PhD tajaan.','{n} 开始攻读资助博士。'], { n: s.name })); renderTab(); });
-    body.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { const s = S.staff.find(x => x.id === +b.dataset.f); spend(s.salary); S.staff.splice(S.staff.indexOf(s), 1); S.morale -= 2; syncSims(); toast(tr(["{n} left with one month's pay.",'{n} pergi dengan gaji sebulan.','{n} 领取一个月薪水后离职。'], { n: s.name })); renderTab(); updateTop(); });
+    body.querySelectorAll('[data-sp]').forEach(b => b.onclick = () => { const s = S.staff.find(x => x.id === +b.dataset.sp); s.sponsor = 24; logD('sponsor', ['Sponsored a PhD for {n} (RM 2,500/month, 24 months)','Menaja PhD untuk {n} (RM 2,500/bulan, 24 bulan)','资助 {n} 攻读博士（每月 RM 2,500，24 个月）'], { n: s.name }); toast(tr(['{n} starts a sponsored PhD.','{n} memulakan PhD tajaan.','{n} 开始攻读资助博士。'], { n: s.name })); renderTab(); });
+    body.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { const s = S.staff.find(x => x.id === +b.dataset.f); spend(s.salary); S.staff.splice(S.staff.indexOf(s), 1); S.morale -= 2; logD('fire', ['Let {n} go','Melepaskan {n}','解聘 {n}'], { n: ROLES[s.role].title + s.name }, ['Morale −2','Semangat −2','士气 −2']); syncSims(); toast(tr(["{n} left with one month's pay.",'{n} pergi dengan gaji sebulan.','{n} 领取一个月薪水后离职。'], { n: s.name })); renderTab(); updateTop(); });
   }
   if (curTab === 'policy') {
     const pol = [
@@ -2073,11 +2126,17 @@ function renderTab() {
         <input type="range" id="mkt" min="0" max="80000" step="5000" value="${S.marketing}"><p class="muted" style="margin:2px 0 12px;font-size:12px">${esc(tr(['Roadshows, school visits and social ads. More applicants at each intake, with diminishing returns.','Jerayawara, lawatan sekolah dan iklan media sosial. Lebih ramai pemohon setiap pengambilan, dengan pulangan berkurangan.','巡回宣传、学校拜访和社交媒体广告。每次招生申请人数增加，但效益递减。']))}</p>
         <label for="rf" style="font-weight:600">${esc(tr(['Research fund','Dana penyelidikan','研究基金']))}: <span id="rfv" style="font-family:var(--f-mono)">${fmtRM(S.rfund)}</span>${esc(tr(['/mo','/bln','/月']))}</label>
         <input type="range" id="rf" min="0" max="150000" step="10000" value="${S.rfund}"><p class="muted" style="margin:2px 0 0;font-size:12px">${esc(tr(['Internal grants. +1 research point for every RM 5k, multiplied by a Research Centre.','Geran dalaman. +1 mata penyelidikan bagi setiap RM 5k, digandakan oleh Pusat Penyelidikan.','内部研究资助。每 RM 5k 增加 1 研究积分，研究中心可加乘。']))}</p></div>`;
-    body.querySelectorAll('[data-k]').forEach(i => i.onchange = () => { S.policies[i.dataset.k] = i.checked; });
+    body.querySelectorAll('[data-k]').forEach(i => i.onchange = () => {
+      S.policies[i.dataset.k] = i.checked; const p = pol.find(x => x[0] === i.dataset.k);
+      logD('policy', i.checked ? ['Turned on {x}','Menghidupkan {x}','开启{x}'] : ['Turned off {x}','Mematikan {x}','关闭{x}'], { x: p[1] });
+    });
     const mk = document.getElementById('mkt'), rf = document.getElementById('rf');
     mk.oninput = () => { S.marketing = +mk.value; document.getElementById('mktv').textContent = fmtRM(S.marketing); };
     rf.oninput = () => { S.rfund = +rf.value; document.getElementById('rfv').textContent = fmtRM(S.rfund); };
+    mk.onchange = () => logD('budget', ['Set the marketing budget to {c}/month','Menetapkan bajet pemasaran {c}/bulan','市场推广预算调为每月 {c}'], { c: fmtRM(S.marketing) });
+    rf.onchange = () => logD('budget', ['Set the research fund to {c}/month','Menetapkan dana penyelidikan {c}/bulan','研究基金调为每月 {c}'], { c: fmtRM(S.rfund) });
   }
+  if (curTab === 'stats') { statsSeen = S.history.length + ':' + (S.log || []).length; renderStats(); return; }
   if (curTab === 'fin') {
     const L = S.last;
     let h = `<div class="sec"><p class="eyebrow">${esc(tr(['Cash, last {n} months','Tunai, {n} bulan lepas','近 {n} 个月现金'], { n: S.history.length || 0 }))}</p><canvas id="spark" style="width:100%;height:90px;display:block"></canvas></div>`;
@@ -2093,8 +2152,8 @@ function renderTab() {
     h += `<div class="sec"><h4>${esc(tr(['Bank loan','Pinjaman bank','银行贷款']))}</h4><p class="muted" style="margin:-4px 0 8px;font-size:12px">${esc(tr(['Borrow RM 1M at 0.5% interest a month, up to RM 3M. Outstanding:','Pinjam RM 1M pada faedah 0.5% sebulan, sehingga RM 3M. Baki:','以每月 0.5% 利息借贷 RM 1M，上限 RM 3M。未偿还：']))} <b style="font-family:var(--f-mono)">${fmtRM(S.loan)}</b></p>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="borrow" ${S.loan >= 3e6 ? 'disabled' : ''}>${esc(tr(['Borrow RM 1M','Pinjam RM 1M','借贷 RM 1M']))}</button><button class="btn" id="repay" ${S.loan <= 0 || S.cash < 1e6 ? 'disabled' : ''}>${esc(tr(['Repay RM 1M','Bayar balik RM 1M','偿还 RM 1M']))}</button></div></div>`;
     body.innerHTML = h;
-    document.getElementById('borrow').onclick = () => { S.loan += 1e6; S.cash += 1e6; toast(tr(['RM 1M loan received.','Pinjaman RM 1M diterima.','已收到 RM 1M 贷款。'])); renderTab(); updateTop(); };
-    document.getElementById('repay').onclick = () => { S.loan -= 1e6; S.cash -= 1e6; toast(tr(['RM 1M repaid.','RM 1M telah dibayar balik.','已偿还 RM 1M。'])); renderTab(); updateTop(); };
+    document.getElementById('borrow').onclick = () => { S.loan += 1e6; S.cash += 1e6; logD('loan', ['Borrowed RM 1M (0.5% a month)','Meminjam RM 1M (0.5% sebulan)','借贷 RM 1M（月息 0.5%）']); toast(tr(['RM 1M loan received.','Pinjaman RM 1M diterima.','已收到 RM 1M 贷款。'])); renderTab(); updateTop(); };
+    document.getElementById('repay').onclick = () => { S.loan -= 1e6; S.cash -= 1e6; logD('loan', ['Repaid RM 1M','Membayar balik RM 1M','偿还 RM 1M']); toast(tr(['RM 1M repaid.','RM 1M telah dibayar balik.','已偿还 RM 1M。'])); renderTab(); updateTop(); };
     drawSpark();
   }
 }
@@ -2126,6 +2185,143 @@ function buildInfo(id, k, c) {
   const hot = !(d.unique && has(id)) && (req || (use && (use[1] === 0 || use[0] / use[1] > 0.85)));
   return { cap, capLabel, needs, sat, hot };
 }
+// ================= reports: trend charts, yearly review and decision log =================
+let statRange = 24, statsSeen = '';
+const RANGE = { 12: ['12 mo','12 bln','12 个月'], 24: ['24 mo','24 bln','24 个月'], 0: ['All','Semua','全部'] };
+const EXCAT = { sal: ['Salaries','Gaji','薪水'], up: ['Building upkeep','Penyelenggaraan bangunan','建筑维护'], cap: ['Construction','Pembinaan','建设'], pol: ['Policies and budgets','Dasar dan bajet','政策与预算'], adm: ['Administration and partner share','Pentadbiran dan bahagian rakan','行政与合作分成'], ev: ['Events and fees','Acara dan yuran','活动与费用'] };
+const LOG_ICON = { build:'🏗️', demolish:'🧨', hire:'🤝', fire:'👋', sponsor:'🎓', launch:'📜', policy:'⚙️', budget:'💵', event:'🎲', loan:'🏦', apply:'📨', result:'📊' };
+const monLabel = t => { const d = dateAt(t), y = String(d.getUTCFullYear()).slice(2); return LANG === 'zh' ? `${y}年${d.getUTCMonth() + 1}月` : `${MONS[LANG][d.getUTCMonth()]} ${y}`; };
+const dayLabel = t => { const d = dateAt(t); return LANG === 'zh' ? `${d.getUTCMonth() + 1}月${d.getUTCDate()}日` : `${d.getUTCDate()} ${MONS[LANG][d.getUTCMonth()]}`; };
+const yearOf = t => dateAt(t).getUTCFullYear();
+function niceTicks(lo, hi, n) {
+  const raw = (hi - lo) / n, mag = Math.pow(10, Math.floor(Math.log10(raw || 1))), f = raw / mag, st = (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * mag;
+  const out = []; for (let v = Math.floor(lo / st) * st; v <= Math.ceil(hi / st) * st + st / 2; v += st) out.push(+v.toFixed(6)); return out;
+}
+// Line or grouped-bar chart on a canvas, with gridlines, one y-axis, an optional reference line, and a crosshair tooltip.
+function drawChart(id, labels, series, o) {
+  const cv = document.getElementById(id); if (!cv) return;
+  const tip = cv.parentElement.querySelector('.tip'), css = getComputedStyle(document.documentElement), V = n => css.getPropertyValue(n).trim();
+  let tries = 0;
+  const draw = hi => {
+    const r = cv.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
+    if (!r.width) { if (tries++ < 30 && cv.isConnected) requestAnimationFrame(() => draw(hi)); return; }   // not laid out yet
+    cv.width = r.width * dpr; cv.height = r.height * dpr; const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const Wc = r.width, Hc = r.height, pl = 48, pr = 10, pt = 10, pb = 20, pw = Wc - pl - pr, ph = Hc - pt - pb;
+    const vals = series.flatMap(s => s.values).filter(v => v != null);
+    let lo = o.min0 === false ? Math.min(...vals) : Math.min(0, ...vals), top = Math.max(...vals, o.ref != null ? o.ref * 1.1 : -Infinity);
+    if (top === lo) top = lo + 1;
+    const ticks = niceTicks(lo, top, 4); lo = ticks[0]; top = ticks[ticks.length - 1];
+    const Y = v => pt + ph - (v - lo) / (top - lo) * ph, n = labels.length, step = pw / (o.bar ? n : Math.max(1, n - 1));
+    const X = i => pl + (o.bar ? step * (i + 0.5) : step * i);
+    g.font = `10.5px ${V('--f-mono')}`; g.textAlign = 'right'; g.textBaseline = 'middle';
+    for (const tk of ticks) { const y = Math.round(Y(tk)) + 0.5; g.strokeStyle = tk === 0 ? V('--axis') : V('--grid'); g.lineWidth = 1; g.beginPath(); g.moveTo(pl, y); g.lineTo(Wc - pr, y); g.stroke(); g.fillStyle = V('--muted'); g.fillText((o.axis || o.fmt)(tk), pl - 6, y); }
+    g.textAlign = 'center'; g.textBaseline = 'top'; const every = Math.max(1, Math.ceil(n / 5));
+    for (let i = 0; i < n; i += every) g.fillText(labels[i], clamp(X(i), pl + 14, Wc - pr - 14), Hc - pb + 5);
+    if (o.ref != null) { const y = Math.round(Y(o.ref)) + 0.5; g.setLineDash([4, 4]); g.strokeStyle = V('--bad'); g.beginPath(); g.moveTo(pl, y); g.lineTo(Wc - pr, y); g.stroke(); g.setLineDash([]); g.textAlign = 'right'; g.textBaseline = 'bottom'; g.fillStyle = V('--muted'); g.fillText(o.refLabel, Wc - pr, y - 2); }
+    if (hi != null) { g.fillStyle = V('--grid'); if (o.bar) g.fillRect(X(hi) - step / 2, pt, step, ph); else { g.fillRect(X(hi) - 0.5, pt, 1, ph); } }
+    if (o.bar) {
+      const k = series.length, bw = Math.max(3, Math.min(16, (step - 6) / k - 2)), base = Y(Math.max(0, lo));
+      series.forEach((s, j) => { g.fillStyle = V(s.color); s.values.forEach((v, i) => {
+        if (v == null) return; const x = X(i) - (k * bw + (k - 1) * 2) / 2 + j * (bw + 2), y = Y(v), h = Math.max(1, base - y), rr = Math.min(3, bw / 2, h);
+        g.beginPath(); g.moveTo(x, base); g.lineTo(x, y + rr); g.arcTo(x, y, x + rr, y, rr); g.lineTo(x + bw - rr, y); g.arcTo(x + bw, y, x + bw, y + rr, rr); g.lineTo(x + bw, base); g.closePath(); g.fill();
+      }); });
+    } else series.forEach(s => {
+      g.strokeStyle = V(s.color); g.lineWidth = 2; g.lineJoin = g.lineCap = 'round'; g.beginPath(); let on = false;
+      s.values.forEach((v, i) => { if (v == null) { on = false; return; } if (on) g.lineTo(X(i), Y(v)); else { g.moveTo(X(i), Y(v)); on = true; } }); g.stroke();
+      const dot = i => { if (s.values[i] == null) return; g.beginPath(); g.arc(X(i), Y(s.values[i]), 4, 0, 7); g.fillStyle = V(s.color); g.fill(); g.lineWidth = 2; g.strokeStyle = V('--panel'); g.stroke(); };
+      dot(hi != null ? hi : s.values.length - 1);
+    });
+    cv._geo = { X, n, step, pl };
+  };
+  draw(null);
+  const move = e => {
+    const r = cv.getBoundingClientRect(), geo = cv._geo; if (!geo) return;
+    const x = e.clientX - r.left, i = clamp(o.bar ? Math.floor((x - geo.pl) / geo.step) : Math.round((x - geo.pl) / geo.step), 0, geo.n - 1);
+    draw(i);
+    tip.innerHTML = `<b>${esc(labels[i])}</b>` + series.map(s => `<span><i style="background:var(${s.color})"></i>${esc(s.label)}: <strong>${s.values[i] == null ? '–' : esc(o.fmt(s.values[i]))}</strong></span>`).join('');
+    tip.hidden = false; const tw = tip.offsetWidth, tx = geo.X(i);
+    tip.style.left = (tx + 12 + tw > r.width ? Math.max(0, tx - 12 - tw) : tx + 12) + 'px'; tip.style.top = '6px';
+  };
+  cv.onpointermove = move; cv.onpointerdown = move; cv.onpointerleave = () => { draw(null); tip.hidden = true; };
+}
+// Why did the year go well or badly? Plain-language findings from the monthly snapshots and the log.
+function whyYear(y, rows, a, b) {
+  const out = [], T = (s, v) => tr(s, v), avg = (k) => rows.reduce((s, x) => s + (x[k] || 0), 0) / Math.max(1, rows.length);
+  const logs = (S.log || []).filter(l => yearOf(l.t) === y);
+  if (b.sat - a.sat <= -4) {
+    const why = [];
+    if (avg('ratio') > 25) why.push(T(['students per academic averaged {r} (above 25)','purata {r} pelajar bagi setiap akademik (melebihi 25)','师生比平均 1:{r}（超过 25）'], { r: avg('ratio').toFixed(1) }));
+    const minT = Math.min(...rows.map(x => x.teach ?? 1)); if (minT < 0.97) why.push(T(['classrooms were full (only {p}% of students had a seat)','bilik kuliah penuh (hanya {p}% pelajar dapat tempat)','教室不够（只有 {p}% 的学生有座位）'], { p: Math.round(minT * 100) }));
+    const quits = logs.filter(l => l.k === 'result' && l.line[0].includes('resigned')).length; if (quits) why.push(T(['{n} staff resigned','{n} staf meletak jawatan','{n} 位教职员辞职'], { n: quits }));
+    if (!why.length) why.push(T(["students' needs went unmet: add student-life facilities","keperluan pelajar tidak dipenuhi: tambah kemudahan pelajar","学生需求没被满足：请增建学生生活设施"]));
+    out.push([false, T(['Satisfaction fell {d} points because {w}.','Kepuasan turun {d} mata kerana {w}.','满意度下降 {d} 分，原因：{w}。'], { d: Math.round(a.sat - b.sat), w: why.join(LANG === 'zh' ? '；' : '; ') })]);
+  } else if (b.sat - a.sat >= 4) {
+    const built = logs.filter(l => l.k === 'build').length, pols = logs.filter(l => l.k === 'policy' && l.line[0].startsWith('Turned on')).length;
+    out.push([true, T(['Satisfaction rose {d} points ({b} new buildings, {p} policies switched on).','Kepuasan naik {d} mata ({b} bangunan baharu, {p} dasar dihidupkan).','满意度上升 {d} 分（新建 {b} 栋建筑，开启 {p} 项政策）。'], { d: Math.round(b.sat - a.sat), b: built, p: pols })]);
+  }
+  const inc = rows.reduce((s, x) => s + x.income, 0), exp = rows.reduce((s, x) => s + x.expense, 0), cats = {};
+  rows.forEach(x => { for (const k in x.ex || {}) cats[k] = (cats[k] || 0) + x.ex[k]; });
+  const big = Object.entries(cats).sort((p, q) => q[1] - p[1])[0];
+  if (inc - exp < 0) out.push([false, T(['Spent {c} more than came in. Biggest cost: {k} ({v}).','Belanja {c} lebih daripada pendapatan. Kos terbesar: {k} ({v}).','支出比收入多 {c}。最大支出：{k}（{v}）。'], { c: fmtRM(exp - inc), k: big ? tr(EXCAT[big[0]]) : '-', v: big ? fmtRM(big[1]) : '' })]);
+  else out.push([true, T(['Surplus of {c}. Tuition and rent covered all spending.','Lebihan {c}. Yuran dan sewa menampung semua perbelanjaan.','盈余 {c}，学费和租金足以支付所有开支。'], { c: fmtRM(inc - exp) })]);
+  const lost = (S.intakes || []).filter(i => yearOf(i.t) === y).reduce((s, i) => s + Math.max(0, i.demand - i.tot), 0);
+  if (lost > 0) out.push([false, T(['{n} applicants were turned away for lack of seats, labs or staff. More capacity means more fee income.','{n} pemohon ditolak kerana kekurangan tempat, makmal atau staf. Lebih kapasiti bermakna lebih banyak yuran.','有 {n} 名申请者因座位、实验室或师资不足未能录取。容量越大，学费收入越多。'], { n: lost })]);
+  if (b.rep - a.rep >= 3) out.push([true, T(['Reputation rose {d}: research averaged {r} points a month and {p}% of academics hold a PhD.','Reputasi naik {d}: purata penyelidikan {r} mata sebulan dan {p}% akademik berPhD.','声誉上升 {d}：研究产出平均每月 {r} 分，{p}% 的学术人员拥有博士学位。'], { d: Math.round(b.rep - a.rep), r: avg('rr').toFixed(1), p: b.phdPct })]);
+  else if (b.rep - a.rep <= -3) out.push([false, T(['Reputation fell {d}. It follows satisfaction, employability, PhD share and research.','Reputasi turun {d}. Ia mengikut kepuasan, kebolehpasaran, bahagian PhD dan penyelidikan.','声誉下降 {d}。声誉取决于满意度、就业率、博士比例和研究。'], { d: Math.round(a.rep - b.rep) })]);
+  return out;
+}
+function renderStats() {
+  const T = s => esc(tr(s)), H = S.history.filter(x => x.income !== undefined), rows = statRange ? H.slice(-statRange) : H;
+  let h = `<div class="sec" style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><h4 style="margin:0">${T(['Trends','Trend','趋势'])}</h4>
+    <div class="seg" role="group" aria-label="${T(['Time range','Julat masa','时间范围'])}">${[12, 24, 0].map(v => `<button data-r="${v}" aria-pressed="${statRange === v}">${T(RANGE[v])}</button>`).join('')}</div></div>`;
+  const box = (id, title, legend) => `<div class="sec"><p class="eyebrow">${T(title)}</p>${legend ? `<div class="legend">${legend.map(([c, l, bar]) => `<span><i class="${bar ? 'bar' : ''}" style="background:var(${c})"></i>${T(l)}</span>`).join('')}</div>` : ''}<div class="chart"><canvas id="${id}"></canvas><div class="tip" hidden></div></div></div>`;
+  const L = { stu: ['Students enrolled','Pelajar berdaftar','在籍学生'], app: ['Applicants','Pemohon','申请人数'], enr: ['Enrolled','Berdaftar','录取人数'], inc: ['Income','Pendapatan','收入'], exp: ['Spending','Perbelanjaan','支出'],
+    cash: ['Cash reserve','Rizab tunai','现金储备'], sat: ['Satisfaction','Kepuasan','满意度'], rep: ['Reputation','Reputasi','声誉'], emp: ['Employability','Kebolehpasaran','就业率'], ratio: ['Students per academic','Pelajar bagi setiap akademik','师生比'] };
+  const ins = (S.intakes || []).filter(i => !rows.length || i.t >= rows[0].t - 24 * 31);
+  if (rows.length < 2) h += `<p class="muted" style="margin:0">${T(['Charts appear after your second month. Speed up time to start building a history.','Carta muncul selepas bulan kedua. Cepatkan masa untuk mula membina sejarah.','第二个月之后就会出现图表。加快游戏速度来累积数据。'])}</p>`;
+  else {
+    h += box('chStu', L.stu) + (ins.length ? box('chIn', ['Intakes: applicants and enrolled','Pengambilan: pemohon dan berdaftar','历次招生：申请与录取'], [['--s2', L.app, 1], ['--s1', L.enr, 1]]) : '')
+      + box('chMoney', ['Income and spending each month','Pendapatan dan perbelanjaan setiap bulan','每月收入与支出'], [['--s1', L.inc], ['--s2', L.exp]]) + box('chCash', L.cash)
+      + box('chQual', ['Satisfaction, reputation and employability (0–100)','Kepuasan, reputasi dan kebolehpasaran (0–100)','满意度、声誉与就业率（0–100）'], [['--s1', L.sat], ['--s2', L.rep], ['--s3', L.emp]])
+      + box('chRatio', ['Teaching quality: students per academic (lower is better)','Kualiti pengajaran: pelajar bagi setiap akademik (lebih rendah lebih baik)','教学质量：师生比（越低越好）']);
+  }
+  // yearly review, newest first
+  const years = [...new Set([...H.map(x => yearOf(x.t)), ...(S.log || []).map(l => yearOf(l.t))])].sort((p, q) => q - p);
+  h += `<div class="sec"><h4>${T(['Year by year: what you decided and what happened','Tahun demi tahun: keputusan anda dan hasilnya','逐年回顾：你的决策与结果'])}</h4><div style="display:flex;flex-direction:column;gap:10px">`;
+  if (!years.length) h += `<p class="muted" style="margin:0">${T(['Nothing yet. Your first decisions will appear here.','Belum ada. Keputusan pertama anda akan muncul di sini.','还没有记录。你的第一个决策会出现在这里。'])}</p>`;
+  const cur = yearOf(S.hours);
+  for (const y of years) {
+    const yr = H.filter(x => yearOf(x.t) === y), prev = H.filter(x => yearOf(x.t) < y).slice(-1)[0], a = prev || yr[0], b = yr[yr.length - 1];
+    h += `<div class="yr"><h5>${T(['Academic year','Tahun akademik','学年'])} ${y}${y === cur ? ` <span class="tag wip">${T(['in progress','sedang berjalan','进行中'])}</span>` : ''}</h5>`;
+    if (a && b) {
+      const chip = (l, va, vb, f, goodUp = true) => { const d = vb - va, cls = Math.abs(d) < 1e-9 ? '' : (d > 0) === goodUp ? 'good' : 'bad'; return `<span class="${cls}">${T(l)} ${esc(f(va))} → ${esc(f(vb))}</span>`; };
+      h += `<div class="deltas">${chip(L.stu, a.students, b.students, fmtN)}${chip(L.cash, a.cash, b.cash, fmtRM)}${chip(L.sat, a.sat, b.sat, v => Math.round(v) + '%')}${chip(L.rep, a.rep, b.rep, v => Math.round(v))}${chip(L.ratio, a.ratio, b.ratio, v => (+v).toFixed(1), false)}</div>`;
+      const why = whyYear(y, yr, a, b);
+      if (why.length) h += `<ul class="why">${why.map(([ok, tx]) => `<li><span aria-hidden="true">${ok ? '✅' : '⚠️'}</span><span><b class="${ok ? '' : ''}" style="color:${ok ? 'var(--accent)' : 'var(--bad)'}">${T(ok ? ['Worked','Berjaya','做得好'] : ['Problem','Masalah','问题'])}:</b> ${esc(tx)}</span></li>`).join('')}</ul>`;
+    }
+    const ent = (S.log || []).filter(l => yearOf(l.t) === y).slice().reverse(), shown = ent.slice(0, 40);
+    h += shown.map(l => `<div class="dlog"><span class="when">${esc(dayLabel(l.t))}</span><span aria-hidden="true">${LOG_ICON[l.k] || '•'}</span><span>${esc(trV(l.line, l.vars))}${l.res ? `<span class="res">→ ${esc(typeof l.res === 'string' ? l.res : trV(l.res, l.rv))}</span>` : ''}</span></div>`).join('');
+    if (ent.length > shown.length) h += `<p class="muted" style="margin:4px 0 0;font-size:11.5px">${T(['…and {n} earlier entries','…dan {n} catatan terdahulu','……以及更早的 {n} 条记录']).replace('{n}', ent.length - shown.length)}</p>`;
+    h += `</div>`;
+  }
+  h += `</div></div>`;
+  if (rows.length) h += `<details class="sec dtable"><summary style="cursor:pointer;font-weight:700;font-size:12.5px">${T(['Show the monthly data table','Tunjukkan jadual data bulanan','查看月度数据表'])}</summary><table><thead><tr><th>${T(['Month','Bulan','月份'])}</th><th>${T(L.stu)}</th><th>${T(L.inc)}</th><th>${T(L.exp)}</th><th>${T(L.cash)}</th><th>${T(L.sat)}</th><th>${T(L.rep)}</th><th>${T(L.emp)}</th><th>${T(L.ratio)}</th></tr></thead><tbody>
+    ${rows.slice().reverse().map(x => `<tr><td>${esc(monLabel(x.t))}</td><td>${fmtN(x.students)}</td><td>${fmtRM(x.income)}</td><td>${fmtRM(x.expense)}</td><td>${fmtRM(x.cash)}</td><td>${Math.round(x.sat)}%</td><td>${Math.round(x.rep)}</td><td>${Math.round(x.employ)}%</td><td>${(+x.ratio).toFixed(1)}</td></tr>`).join('')}</tbody></table></details>`;
+  body.innerHTML = h;
+  body.querySelectorAll('[data-r]').forEach(b => b.onclick = () => { statRange = +b.dataset.r; renderStats(); });
+  if (rows.length < 2) return;
+  const lab = rows.map(x => monLabel(x.t)), pct = v => Math.round(v) + '';
+  const kM = v => { const a = Math.abs(v), s = v < 0 ? '−' : ''; return a >= 1e6 ? s + (a / 1e6).toFixed(a % 1e6 ? 1 : 0) + 'M' : a >= 1e3 ? s + Math.round(a / 1e3) + 'k' : s + Math.round(a); };
+  drawChart('chStu', lab, [{ label: tr(L.stu), color: '--s1', values: rows.map(x => x.students) }], { fmt: fmtN });
+  if (ins.length) drawChart('chIn', ins.map(i => monLabel(i.t)), [{ label: tr(L.app), color: '--s2', values: ins.map(i => i.demand) }, { label: tr(L.enr), color: '--s1', values: ins.map(i => i.tot) }], { fmt: fmtN, bar: true });
+  drawChart('chMoney', lab, [{ label: tr(L.inc), color: '--s1', values: rows.map(x => x.income) }, { label: tr(L.exp), color: '--s2', values: rows.map(x => x.expense) }], { fmt: fmtRM, axis: kM });
+  drawChart('chCash', lab, [{ label: tr(L.cash), color: '--s1', values: rows.map(x => x.cash) }], { fmt: fmtRM, axis: kM });
+  drawChart('chQual', lab, [{ label: tr(L.sat), color: '--s1', values: rows.map(x => x.sat) }, { label: tr(L.rep), color: '--s2', values: rows.map(x => x.rep) }, { label: tr(L.emp), color: '--s3', values: rows.map(x => x.employ) }], { fmt: pct });
+  drawChart('chRatio', lab, [{ label: tr(L.ratio), color: '--s1', values: rows.map(x => +x.ratio) }], { fmt: v => (+v).toFixed(0), ref: 25, refLabel: tr(['25 = limit','25 = had','25 = 上限']) });
+}
+// redraw the report charts when the panel changes width (phone rotation, window resize)
+let statsW = 0;
+new ResizeObserver(() => { const w = Math.round(body.clientWidth); if (curTab === 'stats' && w !== statsW && statsW) renderStats(); statsW = w; }).observe(body);
 function nextIntake() { const m = dateAt(S.hours).getUTCMonth(); const n = [0, 4, 8, 12].find(x => x > m) % 12; return LANG === 'zh' ? `${n + 1}月1日` : `1 ${MONS[LANG][n]}`; }
 function progMissing(p) {
   const c = counts(), miss = [];
@@ -2140,6 +2336,7 @@ function progMissing(p) {
 function launch(id) {
   const p = P[id]; if (progMissing(p).length) return;
   spend(p.cost); S.progs[id] = { state: 'accrediting', days: p.days };
+  logD('launch', ['Submitted {p} to MQA ({c})','Menghantar {p} kepada MQA ({c})','向 MQA 提交{p}（{c}）'], { p: p.name, c: fmtRM(p.cost) });
   toast(tr(['Submitted {p} to MQA. Accreditation takes {d} days.','{p} dihantar kepada MQA. Akreditasi mengambil {d} hari.','已向 MQA 提交{p}，认证需 {d} 天。'], { p: tr(p.name), d: p.days })); renderTab(); updateTop();
 }
 function drawSpark() {
