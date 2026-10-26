@@ -104,6 +104,12 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:10px;min-height:
 .bcard[disabled]{opacity:.5;cursor:not-allowed}
 .bcard .t{font-weight:700;font-size:12.5px;display:flex;gap:6px;align-items:center}
 .bcard .p{font-family:var(--f-mono);font-size:11.5px;color:var(--gold);font-weight:700}
+.bcard .kv{display:flex;flex-wrap:wrap;gap:4px}
+.bcard .kv span{font-size:10.5px;font-weight:700;padding:2px 6px;border-radius:6px;background:var(--panel);border:1px solid var(--line);white-space:nowrap;font-variant-numeric:tabular-nums}
+.bcard .kv .cost{color:var(--gold)}
+.bcard .kv .up{color:var(--accent)}
+.bcard .sat{font-size:11px;font-weight:600;line-height:1.35}
+.bcard .hot{margin-left:auto;font-size:10px;font-weight:800;letter-spacing:.04em;padding:2px 6px;border-radius:99px;background:var(--bad);color:#fff}
 .row{display:flex;align-items:center;gap:8px;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);min-width:0}
 .row:last-child{border-bottom:0}
 .row .l{min-width:0;flex:1}
@@ -2006,8 +2012,13 @@ function renderTab() {
     for (const cat of ['Teaching', 'Research', 'Life', 'Sport', 'Decor']) {
       h += `<div class="sec"><p class="eyebrow">${esc(tr(CATS[cat]))}</p><div class="grid2">`;
       for (const [id, d] of Object.entries(BT)) if (d.cat === cat) {
-        const dis = S.cash < d.cost || (d.unique && has(id));
-        h += `<button class="bcard" data-b="${id}" aria-pressed="${tool === id}" ${dis ? 'disabled' : ''}><span class="t">${d.icon} ${esc(bname(id))}</span><span class="p">${fmtRM(d.cost)}${d.upkeep ? ` · ${fmtRM(d.upkeep)}${esc(tr(['/mo','/bln','/月']))}` : ''}</span><span class="muted" style="font-size:11px;line-height:1.35">${esc(tr(d.desc))}</span></button>`;
+        const dis = S.cash < d.cost || (d.unique && has(id)), info = buildInfo(id, k, c);
+        h += `<button class="bcard" data-b="${id}" aria-pressed="${tool === id}" ${dis ? 'disabled' : ''}>
+          <span class="t">${d.icon} ${esc(bname(id))}${info.hot ? `<span class="hot">${esc(tr(['Needed','Diperlukan','急需']))}</span>` : ''}</span>
+          <span class="kv"><span class="cost" title="${esc(tr(['Build cost','Kos bina','建设成本']))}">💰 ${fmtRM(d.cost)}</span>${d.upkeep ? `<span title="${esc(tr(['Upkeep','Penyelenggaraan','维护费']))}">🔧 ${fmtRM(d.upkeep)}${esc(tr(['/mo','/bln','/月']))}</span>` : ''}${info.cap ? `<span title="${esc(tr(['Capacity','Kapasiti','容量']))}">👥 ${esc(tr(info.capLabel, { n: fmtN(info.cap) }))}</span>` : ''}</span>
+          ${info.needs.length ? `<span class="kv">${info.needs.map(n => `<span class="up">${NEED_ICON[n]} ${esc(tr(NEED_LABEL[n]))} ↑</span>`).join('')}</span>` : ''}
+          <span class="sat">😊 ${esc(tr(info.sat))}</span>
+          <span class="muted" style="font-size:11px;line-height:1.35">${esc(tr(d.desc))}</span></button>`;
       }
       h += `</div></div>`;
     }
@@ -2086,6 +2097,34 @@ function renderTab() {
     document.getElementById('repay').onclick = () => { S.loan -= 1e6; S.cash -= 1e6; toast(tr(['RM 1M repaid.','RM 1M telah dibayar balik.','已偿还 RM 1M。'])); renderTab(); updateTop(); };
     drawSpark();
   }
+}
+// What a building adds, for the Build cards: capacity, needs it restores, its effect on satisfaction, and whether it is needed now
+const SAT_FX = {
+  seats: ['Prevents the overcrowding penalty (up to −30)','Mengelakkan penalti kesesakan (sehingga −30)','避免教室拥挤扣分（最多 −30）'],
+  lab: ['Prevents the lab shortage penalty (up to −15)','Mengelakkan penalti kekurangan makmal (sehingga −15)','避免实验室不足扣分（最多 −15）'],
+  cafe: ['Prevents the food shortage penalty (up to −12)','Mengelakkan penalti kekurangan makanan (sehingga −12)','避免用餐不足扣分（最多 −12）'],
+  sport: ['+1 for each kind of sports facility (up to +4)','+1 bagi setiap jenis kemudahan sukan (sehingga +4)','每多一种运动设施 +1（最多 +4）'],
+  bikes: ['+2 satisfaction','+2 kepuasan','满意度 +2'], fountain: ['+2 satisfaction (counts once)','+2 kepuasan (dikira sekali)','满意度 +2（只计一次）'],
+  tree: ['+1 for every 5 trees (up to +4)','+1 bagi setiap 5 pokok (sehingga +4)','每 5 棵树 +1（最多 +4）'],
+  bus: ['+2 with the Shuttle Service policy','+2 dengan dasar Perkhidmatan Bas','配合“校车服务”政策 +2'],
+  research: ['No direct effect. Research output ×1.6','Tiada kesan langsung. Hasil penyelidikan ×1.6','不直接影响满意度，研究产出 ×1.6'],
+  needs: ['Raises satisfaction through the needs it restores','Menaikkan kepuasan melalui keperluan yang dipulihkan','通过恢复需求来提升满意度'],
+};
+const CAP_STU = ['{n} students','{n} pelajar','{n} 名学生'], CAP_BED = ['{n} beds','{n} katil','{n} 张床位'];
+function buildInfo(id, k, c) {
+  const d = BT[id];
+  let cap = null, capLabel = CAP_STU, use = null, sat = SAT_FX.needs;
+  if (d.seats) { cap = d.seats * 2.5; use = [c.students, k.teach]; sat = SAT_FX.seats; }
+  else if (d.lab) { cap = d.labSeats * 4; use = d.lab === 'eng' ? [c.eng, k.eng] : [c.comp, k.comp]; sat = SAT_FX.lab; }
+  else if (id === 'cafe') { cap = d.cap * 3; use = [c.students, k.food]; sat = SAT_FX.cafe; }
+  else if (d.beds) { cap = d.beds; capLabel = CAP_BED; use = [c.students, k.beds]; }
+  else if (d.cap) { cap = d.cap * 4; use = [c.students, k.fun]; if (SPORT_T.includes(id)) sat = SAT_FX.sport; }
+  if (SAT_FX[id]) sat = SAT_FX[id];
+  const needs = Object.entries(FX[id] || {}).filter(([, v]) => v > 0).map(([n]) => n);
+  // needed: that kind of space is missing or over 85% full (a missing library or sports field also counts when an upgrade requires it)
+  const req = S.stage < 2 ? reqs(S.stage + 1).some(r => !r.ok && Array.isArray(r.label) && r.label[0] === bname(id)) : false;
+  const hot = !(d.unique && has(id)) && (req || (use && (use[1] === 0 || use[0] / use[1] > 0.85)));
+  return { cap, capLabel, needs, sat, hot };
 }
 function nextIntake() { const m = dateAt(S.hours).getUTCMonth(); const n = [0, 4, 8, 12].find(x => x > m) % 12; return LANG === 'zh' ? `${n + 1}月1日` : `1 ${MONS[LANG][n]}`; }
 function progMissing(p) {
