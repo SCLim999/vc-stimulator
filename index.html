@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+SC:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&family=Press+Start+2P&family=Patrick+Hand&family=Caveat:wght@700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+SC:wght@500;700&display=swap">
 <style>
 /* Layout: one-screen game. Top status rail, isometric campus canvas, right-hand management panel (bottom sheet on phones). */
 :root{
@@ -14,6 +14,10 @@
   --f-body:"Comic Neue","Figtree","Noto Sans SC","Segoe UI","Microsoft YaHei",system-ui,sans-serif;
   --f-mono:"JetBrains Mono","Noto Sans SC",ui-monospace,Consolas,monospace;
 }
+/* per-style page colours; the dark-mode blocks below still win in dark mode */
+:root[data-skin="3d"]{--bg:#e9efe8; --panel:#ffffff; --panel-2:#f3f6f1; --ink:#14202f; --muted:#5a6878; --line:#d5ded3; --stage:#bcd7bf; --frame:#d5ded3}
+:root[data-skin="pixel"]{--bg:#d8e4c8; --panel:#f4f8ec; --panel-2:#e6efd8; --ink:#1b2a1a; --muted:#4a5d48; --line:#9fb48f; --stage:#9fb48f; --accent:#2f8f3a; --accent-soft:#d3ecc8; --frame:#1b2a1a}
+:root[data-skin="sketch"]{--bg:#f6f4ee; --panel:#fffef9; --panel-2:#f3f0e6; --ink:#2b2b30; --muted:#66656b; --line:#cfcac0; --stage:#ecebe5; --frame:#2b2b30}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0c131b; --panel:#141e2a; --panel-2:#1a2635; --ink:#e6edf3; --muted:#93a2b2; --line:#263648;
   --accent:#36cf85; --accent-ink:#06210f; --accent-soft:#163626; --gold:#f0b24a; --bad:#ff6b6b; --warn:#f2c14e;
@@ -24,6 +28,13 @@
   --accent:#36cf85; --accent-ink:#06210f; --accent-soft:#163626; --gold:#f0b24a; --bad:#ff6b6b; --warn:#f2c14e;
   --stage:#17241d; --shadow:4px 4px 0 #000; --frame:#c9bfa4;
   --s1:#3987e5; --s2:#d95926; --s3:#199e70; --grid:#2c2c2a; --axis:#383835; color-scheme:dark}
+/* per-style shapes and type, in light and dark alike */
+:root[data-skin="3d"]{--shadow:0 1px 2px rgba(20,32,47,.06),0 6px 20px rgba(20,32,47,.08);
+  --f-display:"Bricolage Grotesque","Noto Sans SC","Trebuchet MS",system-ui,sans-serif; --f-body:"Figtree","Noto Sans SC","Segoe UI","Microsoft YaHei",system-ui,sans-serif}
+:root[data-skin="pixel"]{--shadow:4px 4px 0 var(--ink);
+  --f-display:"Press Start 2P","Noto Sans SC",monospace; --f-body:"Figtree","Noto Sans SC","Segoe UI","Microsoft YaHei",system-ui,sans-serif}
+:root[data-skin="sketch"]{--shadow:2px 3px 0 rgba(43,43,48,.25);
+  --f-display:"Caveat","Noto Sans SC",cursive; --f-body:"Patrick Hand","Noto Sans SC","Segoe UI","Microsoft YaHei",system-ui,sans-serif}
 html{height:100%;box-sizing:border-box}
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -77,6 +88,10 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:10px;min-height:
 .zoom{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:4px}
 .zoom button,.iconbtn{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-weight:700;font-size:16px}
 .zoom button[aria-pressed="false"]{opacity:.5}
+.floors{position:absolute;right:50px;top:10px;display:flex;flex-direction:column;gap:4px;align-items:stretch;background:var(--panel);border:2.5px solid var(--frame);border-radius:12px;padding:5px;box-shadow:3px 3px 0 var(--frame)}
+.floors span{font-size:10px;font-weight:700;text-align:center;color:var(--muted)}
+.floors button{min-width:34px;height:28px;border-radius:8px;border:2px solid var(--line);background:var(--panel-2);cursor:pointer;font:700 12px var(--f-mono)}
+.floors button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .hint{position:absolute;left:50%;top:10px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;max-width:calc(100% - 100px);overflow:hidden;text-overflow:ellipsis}
 #toasts{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:6px;align-items:flex-end;max-width:min(340px,calc(100% - 20px));pointer-events:none}
 .toast{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:7px 10px;font-size:12.5px;box-shadow:var(--shadow);animation:tin .25s ease-out}
@@ -182,6 +197,11 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .dtable table{border-collapse:collapse;font-size:11px;width:100%}
 .dtable th,.dtable td{padding:3px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 .dtable th:first-child,.dtable td:first-child{text-align:left}
+.gmgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.bcard.on{border-color:var(--gold);box-shadow:inset 0 0 0 2px var(--gold);background:var(--panel)}
+.card.gm{border-color:var(--gold)!important}
+.gmbtn{width:34px;height:30px;font-size:16px;background:linear-gradient(#fff6d6,#f6d36b);border-color:#d9a521}
+.chip.gmchip{background:#f8e7a8;color:#7a5600}
 .opt{border:2px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--panel);margin-top:6px}
 .opt .why li{font-size:12px}
 .langrow .btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
@@ -191,22 +211,38 @@ input[type=range]{width:100%;accent-color:var(--accent)}
   .brand h1{font-size:17px}
 }
 /* comic page: ink-ruled panels, hard offset shadows, lettered balloons, sound-effect bursts */
-#stage,#panel{border:3px solid var(--frame)}
-.card{border:3px solid var(--frame);box-shadow:6px 6px 0 var(--frame)}
-#insp,.toast,#followbar{border:2.5px solid var(--frame)}
-.toast{border-left-width:7px}
-.brand h1,.card h2,.sec h4,#insp h3,.yr h5{letter-spacing:.03em;font-weight:400}
-.brand h1{font-size:24px}.card h2{font-size:30px}.sec h4{font-size:18px}#insp h3{font-size:20px}
-.btn,.bcard,.tabs button{font-weight:700}
-.btn{border:2px solid var(--frame)}
-.btn.pri{box-shadow:2px 2px 0 var(--frame)}
-.bub{font:700 12.5px/1.25 "Comic Neue","Noto Sans SC",sans-serif;text-transform:uppercase;letter-spacing:.02em;background:#fffaf0;color:#1c1a20;border:2.5px solid #1c1a20;border-radius:16px;box-shadow:none}
-.bub.think{font-style:normal;color:#1c1a20;border-radius:22px;border-style:solid}
-.bub.say::before{content:"";position:absolute;left:50%;bottom:-11px;margin-left:-8px;border:8px solid transparent;border-top:11px solid #1c1a20;border-bottom:0}
-.bub.say::after{bottom:-6px;margin-left:-5px;border-width:5px;border-top-width:7px;border-top-color:#fffaf0}
-.bub.think::after{bottom:-12px;width:8px;height:8px;border:2px solid #1c1a20;background:#fffaf0}
-.lbl{font-family:"Comic Neue","Noto Sans SC",sans-serif;border:2px solid #1c1a20;background:rgba(28,26,32,.88)}
-#compass{border:2.5px solid #1c1a20;background:#fffaf0}
+[data-skin="comic"] #stage,[data-skin="comic"] #panel{border:3px solid var(--frame)}
+[data-skin="comic"] .card{border:3px solid var(--frame);box-shadow:6px 6px 0 var(--frame)}
+[data-skin="comic"] #insp,[data-skin="comic"] .toast,[data-skin="comic"] #followbar{border:2.5px solid var(--frame)}
+[data-skin="comic"] .toast{border-left-width:7px}
+[data-skin="comic"] .brand h1,[data-skin="comic"] .card h2,[data-skin="comic"] .sec h4,[data-skin="comic"] #insp h3,[data-skin="comic"] .yr h5{letter-spacing:.03em;font-weight:400}
+[data-skin="comic"] .brand h1{font-size:24px}[data-skin="comic"] .card h2{font-size:30px}[data-skin="comic"] .sec h4{font-size:18px}[data-skin="comic"] #insp h3{font-size:20px}
+[data-skin="comic"] .btn,[data-skin="comic"] .bcard,[data-skin="comic"] .tabs button{font-weight:700}
+[data-skin="comic"] .btn{border:2px solid var(--frame)}
+[data-skin="comic"] .btn.pri{box-shadow:2px 2px 0 var(--frame)}
+[data-skin="comic"] .bub{font:700 12.5px/1.25 "Comic Neue","Noto Sans SC",sans-serif;text-transform:uppercase;letter-spacing:.02em;background:#fffaf0;color:#1c1a20;border:2.5px solid #1c1a20;border-radius:16px;box-shadow:none}
+[data-skin="comic"] .bub.think{font-style:normal;color:#1c1a20;border-radius:22px;border-style:solid}
+[data-skin="comic"] .bub.say::before{content:"";position:absolute;left:50%;bottom:-11px;margin-left:-8px;border:8px solid transparent;border-top:11px solid #1c1a20;border-bottom:0}
+[data-skin="comic"] .bub.say::after{bottom:-6px;margin-left:-5px;border-width:5px;border-top-width:7px;border-top-color:#fffaf0}
+[data-skin="comic"] .bub.think::after{bottom:-12px;width:8px;height:8px;border:2px solid #1c1a20;background:#fffaf0}
+[data-skin="comic"] .lbl{font-family:"Comic Neue","Noto Sans SC",sans-serif;border:2px solid #1c1a20;background:rgba(28,26,32,.88)}
+[data-skin="comic"] #compass{border:2.5px solid #1c1a20;background:#fffaf0}
+/* pixel: square corners, hard 1-bit shadows, an arcade font for headings, crisp upscaled canvas */
+[data-skin="pixel"] *{border-radius:0!important}
+[data-skin="pixel"] #stage,[data-skin="pixel"] #panel,[data-skin="pixel"] .card,[data-skin="pixel"] #insp,[data-skin="pixel"] .toast,[data-skin="pixel"] #followbar{border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+[data-skin="pixel"] .btn{border:2px solid var(--ink)}
+[data-skin="pixel"] .brand h1,[data-skin="pixel"] .card h2,[data-skin="pixel"] .sec h4,[data-skin="pixel"] #insp h3,[data-skin="pixel"] .yr h5{font-weight:400;line-height:1.5;letter-spacing:0}
+[data-skin="pixel"] .brand h1{font-size:14px}[data-skin="pixel"] .card h2{font-size:17px}[data-skin="pixel"] .sec h4,[data-skin="pixel"] #insp h3{font-size:11.5px}[data-skin="pixel"] .yr h5{font-size:10.5px}
+[data-skin="pixel"] #gl canvas{image-rendering:pixelated}
+/* the arcade font has no Chinese, so Chinese headings keep a normal size and face */
+:root[data-skin="pixel"][lang|="zh"]{--f-display:"Noto Sans SC",monospace}
+[data-skin="pixel"][lang|="zh"] .brand h1{font-size:20px}[data-skin="pixel"][lang|="zh"] .card h2{font-size:24px}[data-skin="pixel"][lang|="zh"] .sec h4,[data-skin="pixel"][lang|="zh"] #insp h3{font-size:16px}[data-skin="pixel"][lang|="zh"] .yr h5{font-size:14px}
+[data-skin="pixel"] .bub{border:2px solid #1b2a1a;box-shadow:3px 3px 0 #1b2a1a}
+/* sketch: hand-drawn wobbly frames, pencil-grey ink, handwriting */
+[data-skin="sketch"] #stage,[data-skin="sketch"] #panel,[data-skin="sketch"] .card,[data-skin="sketch"] #insp,[data-skin="sketch"] .toast,[data-skin="sketch"] #followbar,[data-skin="sketch"] .bub,[data-skin="sketch"] .btn,[data-skin="sketch"] .bcard,[data-skin="sketch"] .yr{border:2px solid var(--ink);border-radius:255px 14px 225px 14px/14px 225px 14px 255px;box-shadow:2px 3px 0 rgba(43,43,48,.25)}
+[data-skin="sketch"] .brand h1,[data-skin="sketch"] .card h2,[data-skin="sketch"] .sec h4,[data-skin="sketch"] #insp h3,[data-skin="sketch"] .yr h5{font-weight:700;letter-spacing:0}
+[data-skin="sketch"] .brand h1{font-size:28px}[data-skin="sketch"] .card h2{font-size:32px}[data-skin="sketch"] .sec h4{font-size:21px}
+[data-skin="sketch"] .bub{font-family:"Patrick Hand","Noto Sans SC",sans-serif;font-size:14px}
 .sfx{position:absolute;pointer-events:none;z-index:4;white-space:nowrap;padding:24px 34px;font:400 34px/1 "Bangers","Noto Sans SC",sans-serif;letter-spacing:.05em;color:#f6c536;
   -webkit-text-stroke:2px #1c1a20;text-shadow:3px 3px 0 #1c1a20;animation:sfxpop 1.8s steps(1,end) forwards,sfxfade 1.8s ease-out forwards}
 .sfx::before,.sfx::after{content:"";position:absolute;z-index:-1;clip-path:polygon(50% 0%,61% 22%,85% 10%,78% 35%,100% 50%,78% 65%,85% 90%,61% 78%,50% 100%,39% 78%,15% 90%,22% 65%,0% 50%,22% 35%,15% 10%,39% 22%)}
@@ -220,14 +256,21 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 
 <div id="app">
   <header class="top">
-    <div class="brand"><span class="gem" aria-hidden="true"></span><h1 id="cname">ViTrox College</h1><span class="chip" id="stagechip">College</span></div>
+    <div class="brand"><span class="gem" aria-hidden="true"></span><h1 id="cname">ViTrox College</h1><span class="chip" id="stagechip">College</span><span class="chip gmchip" id="gmchip" hidden>👑 GM</span></div>
     <div class="clock">
       <span class="when" id="when">–</span>
       <div class="speed" role="group" id="speed" data-i18n-aria="speed">
         <button data-s="0" data-i18n-aria="pause">II</button><button data-s="1">1×</button><button data-s="3">3×</button><button data-s="10">10×</button><button data-s="30">30×</button>
       </div>
+      <button class="iconbtn gmbtn" id="gmbtn" data-i18n-aria="gm">👑</button>
       <select class="lang" id="lang" data-i18n-aria="lang">
         <option value="en">English</option><option value="ms">Bahasa Melayu</option><option value="zh">中文</option>
+      </select>
+      <select class="lang" id="skin" data-i18n-aria="skin">
+        <option value="comic" data-i18n="sk_comic">Comic</option><option value="3d" data-i18n="sk_3d">3D</option><option value="pixel" data-i18n="sk_pixel">Pixel</option><option value="sketch" data-i18n="sk_sketch">Sketch</option>
+      </select>
+      <select class="lang" id="quality" data-i18n-aria="quality">
+        <option value="high" data-i18n="q_high">High</option><option value="medium" data-i18n="q_medium">Medium</option><option value="low" data-i18n="q_low">Low</option>
       </select>
     </div>
     <div class="stats">
@@ -247,6 +290,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
       <div id="followbar" hidden></div>
       <div id="compass" aria-hidden="true"><div id="needle"><i></i><b data-i18n="north">N</b></div></div>
       <div class="zoom"><button id="zin" data-i18n-aria="zin">+</button><button id="zout" data-i18n-aria="zout">−</button><button id="zfit" data-i18n-aria="zfit" style="font-size:13px">⌂</button><button id="zbub" data-i18n-aria="zbub" aria-pressed="true" style="font-size:14px">💬</button><button id="zwatch" data-i18n-aria="zwatch" style="font-size:14px">👁</button></div>
+      <div id="floors" class="floors" role="group" hidden></div>
       <div id="insp" hidden></div>
       <div id="toasts" aria-live="polite"></div>
     </section>
@@ -280,6 +324,8 @@ const UI = {
   ind:['Industry','Industri','产业合作'], qual:['Success & QA','Kejayaan & QA','学业与质量'], adv:['AI Advisor','Penasihat AI','AI 顾问'], policy:['Policies','Dasar','政策'], fin:['Finance','Kewangan','财务'], stats:['Reports','Laporan','报告'], pause:['Pause','Jeda','暂停'], speed:['Game speed','Kelajuan permainan','游戏速度'],
   zin:['Zoom in','Zum masuk','放大'], zout:['Zoom out','Zum keluar','缩小'], zfit:['Recentre','Pusatkan semula','重新居中'], zbub:['Show thoughts','Tunjuk fikiran','显示想法'],
   lang:['Language','Bahasa','语言'], campus:['Campus view','Paparan kampus','校园视图'], north:['N','U','北'],
+  gm:['Game Master console','Konsol Game Master','游戏主宰控制台'], skin:['Art style','Gaya seni','画风'], sk_comic:['🎨 Comic','🎨 Komik','🎨 漫画风'], sk_3d:['🧊 3D','🧊 3D','🧊 3D 写实'], sk_pixel:['👾 Pixel','👾 Piksel','👾 像素风'], sk_sketch:['✏️ Sketch','✏️ Lakaran','✏️ 素描风'],
+  quality:['Graphics quality','Kualiti grafik','画质'], q_high:['High','Tinggi','高画质'], q_medium:['Medium','Sederhana','中画质'], q_low:['Low (saves battery)','Rendah (jimat bateri)','低画质（省电）'],
   zwatch:['Watch a random student','Tonton pelajar rawak','随机跟随一名学生'],
 };
 function applyStatic() {
@@ -470,7 +516,7 @@ function newGame() {
     policies: { mentor: true, wbl: true, scholar: false, shuttle: false, iactg: false }, marketing: 10000, rfund: 0,
     rep: 40, repBonus: 0, research: 0, researchRate: 0, sat: 62, employ: 80, employBonus: 0, morale: 70,
     graduates: 0, application: null, loan: 0, openDay: false, debtMonths: 0,
-    acc: { grants: 0, oneoff: 0, capex: 0 }, last: null, history: [], log: [], intakes: [], won: false, over: false, uid: 1,
+    acc: { grants: 0, oneoff: 0, capex: 0 }, last: null, gm: { infinite: false, used: false }, history: [], log: [], intakes: [], won: false, over: false, uid: 1,
   };
   const add = (t, x, y) => S.buildings.push({ id: uid++, t, x, y });
   add('admin', 10, 2); add('classroom', 5, 6); add('englab', 8, 6); add('complab', 11, 6); add('cafe', 14, 6);
@@ -588,6 +634,7 @@ function syncSims() {
   const shown = new Set(sims.filter(s => s.kind === 'staff').map(s => s.staffId));
   for (const st of S.staff) { if (sims.filter(s => s.kind === 'staff').length >= wantT) break; if (!shown.has(st.id)) sims.push(makeSim('staff', st)); }
   for (const s of sims) if (s.kind === 'staff') { const st = S.staff.find(x => x.id === s.staffId); if (st) s.role = st.role; }
+  if (!sims.some(s => s.kind === 'gm')) sims.push(makeGM());
 }
 function door(b) { const d = BT[b.t]; return { x: b.x + d.w / 2, y: b.y + d.h + 0.3 }; }
 function pickB(types) { const c = S.buildings.filter(b => types.includes(b.t)); return c.length ? pick(c) : null; }
@@ -602,6 +649,7 @@ const CLASS_B = { eng: ['classroom','hall','englab','englab','industry'], comp: 
 function chooseActivity(s) {
   const h = hourOfDay(), wd = weekday(), weekday_ = wd >= 1 && wd <= 5, n = s.needs;
   s.complaint = null;
+  if (s.kind === 'gm') return gmActivity(s);
   if (s.kind === 'staff') {
     if (!weekday_ || h >= 18 || h < 8) return goOff(s, nextHour(8) + rnd(0, 1), A.home);
     if (h >= 12 && h < 14 && n.hunger < 65) { const b = pickB(['cafe']); if (b) return goTo(s, b, 1, A.lunch); }
@@ -657,6 +705,7 @@ function updateSims(gh) {
       if (night) n.energy += (S.policies.shuttle && has('bus') ? 13 : 11) * gh; else n.energy += 2 * gh;
       if (s.kind === 'staff') n.learning += 1 * gh;
     }
+    if (s.kind === 'gm') for (const k in n) n[k] = 100;   // the Game Master never gets hungry or tired
     for (const k in n) n[k] = clamp(n[k], 0, 100);
     s.lowFlag = s.lowFlag || {};
     for (const k in n) { if (n[k] < 18 && !s.lowFlag[k]) { s.lowFlag[k] = true; if (s.state !== 'inside' && s.state !== 'off') say(s, pick(NEED_LINES[k])); } else if (n[k] > 40) s.lowFlag[k] = false; }
@@ -772,6 +821,7 @@ function say(s, line, kind = 'think', force, vars) {
   if (force || isSel || active < 5) s.bubble = { line, vars, kind, until: now + 4200 };
 }
 function thinkAboutActivity(s) {
+  if (s.kind === 'gm') { if (Math.random() < .7) say(s, pick(GM_LINES), 'say'); return; }
   if (s.state === 'off' || Math.random() > (s.kind === 'staff' ? 0.3 : 0.38)) return;
   const n = s.needs, low = Object.keys(n).sort((a, b) => n[a] - n[b])[0];
   if (s.complaint && Math.random() < 0.35) return say(s, s.complaint);
@@ -803,6 +853,7 @@ function advance(gh) {
   }
 }
 function dailyTick() {
+  if (gmOn()) { S.cash = Math.max(S.cash, 1e9); S.debtMonths = 0; }
   CROWD = crowd();
   const c = counts();
   const stu = sims.filter(s => s.kind === 'student');
@@ -944,8 +995,8 @@ function apply() {
   toast(tr(['Application for {s} status submitted to the Ministry. Decision in {d} days. Keep every requirement met until then.','Permohonan status {s} dihantar kepada Kementerian. Keputusan dalam {d} hari. Pastikan semua syarat kekal dipenuhi.','{s}升格申请已提交教育部，{d} 天后公布结果。在此之前请保持所有条件达标。'], { s: tr(STAGES[t]), d: a.days }), 'gold');
   refreshPanel(true);
 }
-function decideApplication() {
-  const t = S.application.target, fails = reqs(t).filter(r => !r.ok);
+function decideApplication(force) {
+  const t = S.application.target, fails = force ? [] : reqs(t).filter(r => !r.ok);
   S.application = null;
   if (fails.length) logD('result', ['{s} application rejected','Permohonan {s} ditolak','{s}升格申请被拒'], { s: STAGES[t] }, ['Not met: {l}','Tidak dipenuhi: {l}','未达标：{l}'], { l: fails.map(f => tr(f.label)).join(', ') });
   else logD('result', ['Upgraded to {s}!','Dinaik taraf kepada {s}!','成功升格为{s}！'], { s: STAGES[t] });
@@ -1030,7 +1081,7 @@ function checkScenario() {
   const gs = sc.goals(), m = monthsIn();
   if (gs.every(g => g.ok)) {
     S.scn.done = true; sfxAdmin('win'); const stars = m <= sc.months * 0.6 ? 3 : m <= sc.months * 0.85 ? 2 : 1;
-    const prev = bestRuns[sc.id]; if (!prev || stars > prev.stars || (stars === prev.stars && m < prev.months)) { bestRuns[sc.id] = { stars, months: m }; try { localStorage.setItem('vcsim-best', JSON.stringify(bestRuns)); } catch (e) {} }
+    const prev = bestRuns[sc.id]; if (!(S.gm && S.gm.used) && (!prev || stars > prev.stars || (stars === prev.stars && m < prev.months))) { bestRuns[sc.id] = { stars, months: m }; try { localStorage.setItem('vcsim-best', JSON.stringify(bestRuns)); } catch (e) {} }
     logD('result', ['Scenario complete: {s} in {m} months','Senario selesai: {s} dalam {m} bulan','情境完成：{s}，用时 {m} 个月'], { s: sc.name, m }, ['{x}','{x}','{x}'], { x: '⭐'.repeat(stars) });
     showModal({ kicker: ['Scenario complete','Senario selesai','情境完成'], title: sc.name,
       body: `<span style="font-size:28px;letter-spacing:4px">${'⭐'.repeat(stars)}${'☆'.repeat(3 - stars)}</span><br>` + esc(tr(['You met every goal in {m} of {d} months. Finish within 60% of the time for three stars.','Anda mencapai semua matlamat dalam {m} daripada {d} bulan. Selesai dalam 60% masa untuk tiga bintang.','你用了 {m} 个月（期限 {d} 个月）达成所有目标。在 60% 的时间内完成可得三颗星。'], { m, d: sc.months })),
@@ -1351,6 +1402,109 @@ function qaDay(c) {
 // applicants follow programme quality; suspended programmes take nobody
 function qaDemand(p, c) { const q = S.qa[p.id]; if (q && q.status === 'susp') return 0; return (.85 + qaScore(qaCrit(p, c)) / 100 * .3) * (q && q.status === 'cond' ? .9 : 1); }
 
+// ================= the Game Master: the highest authority in the game, with infinite resources =================
+// He walks the campus like everyone else. His console (the crown button, or click him) can do anything.
+// Using any power marks the run as GM-assisted, so scenario best scores only count fair runs.
+const GM_NAME = ['Game Master','Game Master','游戏主宰'];
+const GM_LINES = [
+  ['I am the Game Master. Budgets are merely a suggestion.','Saya Game Master. Bajet hanyalah cadangan.','我是游戏主宰。预算只是参考而已。'],
+  ['Infinite resources, infinite possibilities.','Sumber tanpa had, kemungkinan tanpa had.','无限资源，无限可能。'],
+  ['Need a library? Say the word.','Perlukan perpustakaan? Cakap sahaja.','需要图书馆？说一声就有。'],
+  ['Reputation 100 is easy. Earning it is more fun.','Reputasi 100 mudah. Mencapainya sendiri lebih seronok.','声誉 100 很简单，自己挣来才好玩。'],
+  ['I see every cohort, past and future.','Saya nampak setiap kohort, dahulu dan akan datang.','我看得见每一届学生，过去与未来。'],
+  ['Speed 30×? I call that warming up.','Kelajuan 30×? Itu baru memanaskan badan.','30 倍速？我只当热身。'],
+  ['Click me if you need a miracle.','Klik saya jika perlukan keajaiban.','需要奇迹就点我。'],
+  ['Even the koi answer to me.','Ikan koi pun patuh pada saya.','连锦鲤都听我的。'],
+  ['The Ministry and I have an understanding.','Kementerian dan saya saling memahami.','教育部和我有默契。'],
+  ['Every building here was my idea. Probably.','Setiap bangunan di sini idea saya. Mungkin.','这里每栋楼都是我的主意。大概吧。'],
+];
+const GM_ACT = { inspect: ['Inspecting the campus','Memeriksa kampus','巡视校园'], hq: ['Visiting ViTrox HQ','Melawat HQ ViTrox','视察 ViTrox 总部'], stroll: ['Surveying the realm','Meninjau wilayah','巡视疆土'] };
+function makeGM() {
+  const [x, y] = freeSpot();
+  return { id: uid++, kind: 'gm', name: tr(GM_NAME), f: false, x, y, tx: x, ty: y, state: 'idle', until: S.hours, bld: null, act: GM_ACT.stroll, actV: null, complaint: null, school: 'eng',
+    needs: { hunger: 100, energy: 100, fun: 100, social: 100, learning: 100 }, skin: '#f1c9a5', hair: '#f4f1ea', phase: 1.7 };
+}
+function gmActivity(s) {
+  const r = Math.random(), bs = S.buildings.filter(b => !BT[b.t].tree && !BT[b.t].fountain);
+  if (r < .55 && bs.length) return goTo(s, pick(bs), rnd(.6, 1.4), GM_ACT.inspect);
+  if (r < .65) return goTo(s, HQ_B, rnd(.6, 1.2), GM_ACT.hq);
+  wander(s, GM_ACT.stroll);
+}
+const gmSim = () => sims.find(s => s.kind === 'gm');
+const gmOn = () => S.gm && S.gm.infinite;
+function gmUse(line, vars) {
+  S.gm = S.gm || { infinite: false, used: false }; S.gm.used = true;
+  logD('gm', line, vars || null); const g = gmSim(); if (g) say(g, pick(GM_LINES), 'say', true);
+  const a = bOf('admin')[0]; if (a && renderer) sfx('gm', a.x + 1.5, a.y + 1, true);
+}
+// a free spot for a building, ignoring cost
+function gmSpot(t) { const keep = S.cash; S.cash = 1e15; let at = null; for (let y = 0; y < GRID && !at; y++) for (let x = 0; x < GRID && !at; x++) if (canPlace(t, x, y) === true) at = [x, y]; S.cash = keep; return at; }
+// run whole days at once, answering any pop-up with its first choice
+function gmSkip(days) { for (let i = 0; i < days; i++) { S.hours = Math.floor(S.hours / 24) * 24 + 24 + 10; S.day = Math.floor((S.hours - 8) / 24); dailyTick(); if (modalOpen()) modalEl.querySelector('[data-i]')?.click(); if (S.over) break; } }
+const GM_POWERS = [
+  ['res', '♾️', ['Resources','Sumber','资源'], [
+    ['inf', () => gmOn() ? ['Turn off infinite resources','Matikan sumber tanpa had','关闭无限资源'] : ['Infinite resources','Sumber tanpa had','无限资源'], ['Cash never runs out and nothing can go bankrupt.','Tunai tidak pernah habis dan tiada muflis.','现金永远用不完，永不破产。']],
+    ['cash', ['+RM 10M','+RM 10J','+RM 1000 万'], ['A one-off gift from the GM.','Hadiah sekali daripada GM.','GM 一次性赏赐。']],
+    ['loan', ['Clear all loans','Hapus semua pinjaman','清除所有贷款'], ['The bank forgets you ever borrowed.','Bank lupa anda pernah meminjam.','银行忘了你借过钱。']]]],
+  ['campus', '🏗️', ['Campus','Kampus','校园'], [
+    ['build', ['Build every missing building','Bina semua bangunan yang tiada','建好所有缺少的建筑'], ['Library, hostel, research centre, hall, sports and more, free.','Perpustakaan, asrama, pusat penyelidikan, dewan, sukan dan lain-lain, percuma.','图书馆、宿舍、研究中心、演讲厅、运动场等，全部免费。']],
+    ['stu', ['+200 students','+200 pelajar','+200 名学生'], ['Enrolled across running programmes at once.','Didaftarkan serta-merta ke program yang berjalan.','立即分配到开办中的课程。']],
+    ['staff', ['Hire a dream team','Ambil pasukan impian','聘请梦之队'], ['Three professors and three PhD lecturers, one of each per school.','Tiga profesor dan tiga pensyarah PhD, satu bagi setiap pusat.','三位教授和三位博士讲师，每个学院各一位。']],
+    ['happy', ['Make everyone happy','Gembirakan semua orang','让所有人开心'], ['All needs full, satisfaction +10.','Semua keperluan penuh, kepuasan +10.','所有需求满格，满意度 +10。']]]],
+  ['academic', '🎓', ['Academics and status','Akademik dan status','学术与地位'], [
+    ['progs', ['Run every programme','Jalankan semua program','开办全部课程'], ['Every diploma, degree, master and PhD, accredited now.','Semua diploma, ijazah, sarjana dan PhD, diakreditasi sekarang.','所有文凭、学士、硕士、博士课程即刻获认证开办。']],
+    ['qa', ['Perfect quality everywhere','Kualiti sempurna di semua tempat','全部质量满分'], ['Full accreditation, fresh reviews, CQI and advisory panels.','Akreditasi penuh, semakan, CQI dan panel penasihat terkini.','完全认证，课程审查、持续改进、产业咨询全部完成。']],
+    ['ind', ['Sign every partner','Tandatangani semua rakan','签约全部企业'], ['All companies on board with relationship 100.','Semua syarikat menyertai dengan hubungan 100.','所有企业加入，关系值 100。']],
+    ['max', ['Max out every score','Maksimumkan semua skor','所有指标拉满'], ['Reputation 100, satisfaction 100, employability 99, morale 100, +1,000 research.','Reputasi 100, kepuasan 100, kebolehpasaran 99, semangat 100, +1,000 penyelidikan.','声誉 100、满意度 100、就业率 99、士气 100、研究 +1000。']],
+    ['up', () => S.stage < 2 ? ['Upgrade to {s} now','Naik taraf ke {s} sekarang','立即升格为{s}'] : ['Already a university','Sudah universiti','已是大学'], ['The Ministry approves on the spot.','Kementerian meluluskan serta-merta.','教育部当场批准。']]]],
+  ['time', '⏳', ['Time','Masa','时间'], [
+    ['day', ['Jump to 10 am','Lompat ke 10 pagi','跳到上午 10 点'], ['Broad daylight.','Siang hari.','光天化日。']],
+    ['night', ['Jump to 9 pm','Lompat ke 9 malam','跳到晚上 9 点'], ['Lights on across campus.','Lampu menyala di seluruh kampus.','全校园灯火通明。']],
+    ['month', ['Skip 1 month','Langkau 1 bulan','快进 1 个月'], ['Pop-ups are answered with their first choice.','Tetingkap timbul dijawab dengan pilihan pertama.','弹窗自动选第一个选项。']],
+    ['year', ['Skip 1 year','Langkau 1 tahun','快进 1 年'], ['Twelve months in a blink.','Dua belas bulan sekelip mata.','一眨眼十二个月。']]]],
+  ['fun', '✨', ['Miracles','Keajaiban','神迹'], [
+    ['event', ['Summon a campus event','Panggil peristiwa kampus','召唤校园事件'], ['Something happens right now.','Sesuatu berlaku sekarang.','马上发生点什么。']],
+    ['follow', ['Watch the Game Master','Tonton Game Master','跟随游戏主宰'], ['Follow him around the campus.','Ikut dia di sekitar kampus.','跟着他巡视校园。']]]],
+];
+function gmDo(k) {
+  const c = counts(), close = () => { modalEl.hidden = true; };
+  if (k === 'inf') { S.gm = S.gm || { infinite: false, used: false }; S.gm.infinite = !S.gm.infinite; if (S.gm.infinite) S.cash = Math.max(S.cash, 1e9); gmUse(S.gm.infinite ? ['Game Master: infinite resources on','Game Master: sumber tanpa had dihidupkan','游戏主宰：开启无限资源'] : ['Game Master: infinite resources off','Game Master: sumber tanpa had dimatikan','游戏主宰：关闭无限资源']); }
+  else if (k === 'cash') { gain(1e7); gmUse(['Game Master granted RM 10M','Game Master memberi RM 10J','游戏主宰赏赐 RM 1000 万']); }
+  else if (k === 'loan') { S.loan = 0; S.debtMonths = 0; gmUse(['Game Master cleared all loans','Game Master menghapus semua pinjaman','游戏主宰清除了所有贷款']); }
+  else if (k === 'build') {
+    let n = 0;
+    for (const t of ['library', 'hostel', 'research', 'hall', 'sports', 'lounge', 'cafe', 'classroom', 'englab', 'complab', 'industry', 'wbl', 'bikes', 'bus', 'basketball', 'badminton', 'pingpong', 'track']) {
+      if (has(t) && !['classroom'].includes(t)) continue; const at = gmSpot(t); if (at) { S.buildings.push({ id: uid++, t, x: at[0], y: at[1] }); n++; }
+    }
+    CROWD = crowd(); gmUse(['Game Master raised {n} buildings overnight','Game Master membina {n} bangunan dalam semalam','游戏主宰一夜建起 {n} 栋建筑'], { n });
+  }
+  else if (k === 'stu') { const run = running(); if (run.length) { run.forEach(p => S.cohorts.push({ p: p.id, count: Math.round(200 / run.length), left: p.months })); syncSims(); } gmUse(['Game Master enrolled 200 students','Game Master mendaftarkan 200 pelajar','游戏主宰招收 200 名学生']); }
+  else if (k === 'staff') { for (const sc of ['eng', 'comp', 'mgmt']) S.staff.push(makeStaff('prof', sc), makeStaff('phd', sc)); syncSims(); gmUse(['Game Master hired a dream team of 6','Game Master mengambil pasukan impian 6 orang','游戏主宰聘请了 6 人梦之队']); }
+  else if (k === 'happy') { sims.forEach(s => { for (const n in s.needs) s.needs[n] = 100; }); S.sat = Math.min(100, S.sat + 10); gmUse(['Game Master made everyone happy','Game Master menggembirakan semua orang','游戏主宰让所有人都开心']); }
+  else if (k === 'progs') { for (const p of PROGS) { S.progs[p.id] = { state: 'running', days: 0 }; if (!S.qa[p.id]) S.qa[p.id] = { review: S.hours, cqi: null, next: S.hours + 24 * MO, status: 'full', score: null, condUntil: null }; } gmUse(['Game Master opened every programme','Game Master membuka semua program','游戏主宰开办了全部课程']); }
+  else if (k === 'qa') { for (const p of running()) S.qa[p.id] = { review: S.hours, cqi: S.hours, next: S.hours + 36 * MO, status: 'full', score: 100, condUntil: null }; S.tasks = []; for (const sc of ['eng', 'comp', 'mgmt']) S.iap[sc] = S.hours; gmUse(['Game Master perfected every programme','Game Master menyempurnakan semua program','游戏主宰让所有课程质量满分']); }
+  else if (k === 'ind') { for (const p of PARTNERS) S.ind.partners[p.id] = { rel: 100, since: S.hours }; gmUse(['Game Master signed every partner','Game Master menandatangani semua rakan','游戏主宰签下全部合作企业']); }
+  else if (k === 'max') { S.rep = 100; S.sat = 100; S.employ = 99; S.morale = 100; S.research += 1000; gmUse(['Game Master maxed out every score','Game Master memaksimumkan semua skor','游戏主宰把所有指标拉满']); }
+  else if (k === 'up') { if (S.stage >= 2) return; close(); S.application = { target: S.stage + 1, days: 0 }; gmUse(['Game Master upgraded the college','Game Master menaik taraf kolej','游戏主宰让学院升格']); decideApplication(true); updateTop(); refreshPanel(true); return; }
+  else if (k === 'day' || k === 'night') { S.hours = Math.floor(S.hours / 24) * 24 + (k === 'day' ? 10 : 21); S.day = Math.floor((S.hours - 8) / 24); gmUse(k === 'day' ? ['Game Master brought the morning','Game Master membawa pagi','游戏主宰召来清晨'] : ['Game Master brought the night','Game Master membawa malam','游戏主宰召来黑夜']); }
+  else if (k === 'month' || k === 'year') { close(); gmUse(k === 'month' ? ['Game Master skipped a month','Game Master melangkau sebulan','游戏主宰快进了一个月'] : ['Game Master skipped a year','Game Master melangkau setahun','游戏主宰快进了一年']); gmSkip(k === 'month' ? 31 : 365); updateTop(); refreshPanel(true); if (!modalOpen()) openGM(); return; }
+  else if (k === 'event') { close(); gmUse(['Game Master summoned an event','Game Master memanggil peristiwa','游戏主宰召唤了一个事件']); maybeEvent(); return; }
+  else if (k === 'follow') { close(); const g = gmSim(); if (g) startFollow(g); return; }
+  updateTop(); refreshPanel(true); openGM();
+}
+function openGM() {
+  const T = (s, v) => esc(trV(typeof s === 'function' ? s() : s, v)), st = { s: STAGES[Math.min(2, S.stage + 1)] };
+  modalEl.innerHTML = `<div class="card wide gm" role="dialog" aria-modal="true" aria-labelledby="gmt">
+    <div style="display:flex;gap:12px;align-items:center"><span style="font-size:40px;line-height:1" aria-hidden="true">👑</span><div><p class="eyebrow" style="margin:0">${T(['Highest authority · infinite resources · omnipotent','Kuasa tertinggi · sumber tanpa had · maha berkuasa','最高领导 · 无限资源 · 无所不能'])}</p><h2 id="gmt">${T(['Game Master console','Konsol Game Master','游戏主宰控制台'])}</h2></div></div>
+    <p class="fine" style="margin:0">${T(['Anything is possible here. Runs where the Game Master steps in are marked GM-assisted, and scenario best scores only count fair runs.','Apa-apa sahaja mungkin di sini. Permainan yang dibantu Game Master ditanda, dan skor terbaik senario hanya dikira untuk permainan adil.','这里无所不能。用过游戏主宰权力的一局会标记为“GM 协助”，情境模式最佳纪录只计公平局。'])}${S.gm && S.gm.used ? ` <b>· ${T(['This run is GM-assisted.','Permainan ini dibantu GM.','本局已标记为 GM 协助。'])}</b>` : ''}</p>
+    ${GM_POWERS.map(([, icon, title, list]) => `<div><p class="eyebrow" style="margin:6px 0 6px">${icon} ${T(title)}</p><div class="gmgrid">${list.map(([k, n, d]) => `<button class="bcard${k === 'inf' && gmOn() ? ' on' : ''}" data-gm="${k}" ${k === 'up' && S.stage >= 2 ? 'disabled' : ''}><span class="t">${T(n, k === 'up' ? st : null)}</span><span class="muted" style="font-size:11px;line-height:1.35">${T(d)}</span></button>`).join('')}</div></div>`).join('')}
+    <div class="choices"><button class="btn pri" id="gmclose">${T(['Close','Tutup','关闭'])}</button></div></div>`;
+  modalEl.hidden = false;
+  modalEl.querySelectorAll('[data-gm]').forEach(b => b.onclick = () => gmDo(b.dataset.gm));
+  document.getElementById('gmclose').onclick = () => { modalEl.hidden = true; };
+  document.getElementById('gmclose').focus();
+}
+
 // ================= modal =================
 const modalEl = document.getElementById('modal');
 const modalOpen = () => !modalEl.hidden;
@@ -1406,7 +1560,7 @@ function load() {
     const d = JSON.parse(localStorage.getItem(KEY));
     if (d && (d.v === 1 || d.v === 2)) {
       S = d; S.v = 2; if (S.customName === undefined) S.customName = null; delete S.name;
-      S.policies.iactg = !!S.policies.iactg; S.scn = S.scn || { id: 'uni', start: 0, done: false, failed: false }; S.log = S.log || []; S.intakes = S.intakes || []; initSystems(); uid = S.uid || 1e5; sims = []; syncSims(); return true;
+      S.policies.iactg = !!S.policies.iactg; S.scn = S.scn || { id: 'uni', start: 0, done: false, failed: false }; S.log = S.log || []; S.intakes = S.intakes || []; S.gm = S.gm || { infinite: false, used: false }; initSystems(); uid = S.uid || 1e5; sims = []; syncSims(); return true;
     }
   } catch (e) {}
   return false;
@@ -1425,25 +1579,48 @@ if (renderer) {
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   glEl.appendChild(domEl);
 } else glEl.innerHTML = '<p style="padding:24px;max-width:40ch">3D view needs WebGL, which this browser has turned off. The game still runs: use the panel on the right.</p>';
-// ---------- comic style: cel shading, ink lines, Ben-Day dots ----------
-// every lit material becomes a toon material with three hard light bands, so nothing has a soft gradient
+// ---------- art styles: comic, 3D, pixel, sketch ----------
+// The player picks the look. Comic uses toon materials (three hard light bands); the others use smooth Lambert/Phong.
+// Every lit material is made as a toon original with a smooth twin, and meshes are swapped to whichever the style needs.
+const SKINS = ['comic', '3d', 'pixel', 'sketch'], QUALITY = ['high', 'medium', 'low'];
+let SKIN = 'comic', QUAL = 'high';
+try { const s = localStorage.getItem('vcsim-skin'), q = localStorage.getItem('vcsim-quality'); if (SKINS.includes(s)) SKIN = s; if (QUALITY.includes(q)) QUAL = q; } catch (e) {}
 const TOON_RAMP = new THREE.DataTexture(new Uint8Array([95, 175, 255]), 3, 1, THREE.LuminanceFormat);
 TOON_RAMP.minFilter = TOON_RAMP.magFilter = THREE.NearestFilter; TOON_RAMP.generateMipmaps = false; TOON_RAMP.needsUpdate = true;
-const _toonProbe = new THREE.MeshToonMaterial();
-function toonMat(p) { const q = { gradientMap: TOON_RAMP }; for (const k in p || {}) if (k in _toonProbe) q[k] = p[k]; return new THREE.MeshToonMaterial(q); }
-THREE.MeshLambertMaterial = toonMat; THREE.MeshPhongMaterial = toonMat;
-// the scene renders into a target; a full-screen pass inks the edges, prints halftone dots in the shade and tints to newsprint
+const _Lambert = THREE.MeshLambertMaterial, _Phong = THREE.MeshPhongMaterial;
+const PROBE = { toon: new THREE.MeshToonMaterial(), lambert: new _Lambert(), phong: new _Phong() };
+const MPARAMS = new WeakMap(), TWIN = new WeakMap(), BACK = new WeakMap();
+const pickParams = (p, kind) => { const q = {}; for (const k in p || {}) if (k in PROBE[kind]) q[k] = p[k]; return q; };
+const useToon = () => SKIN === 'comic';
+function styled(m) {
+  if (!m) return m;
+  const canon = BACK.get(m) || m, info = MPARAMS.get(canon); if (!info) return m;
+  if (useToon()) return canon;
+  let tw = TWIN.get(canon);
+  if (!tw) { tw = new (info.kind === 'phong' ? _Phong : _Lambert)(pickParams(info.p, info.kind)); TWIN.set(canon, tw); BACK.set(tw, canon); }
+  return tw;
+}
+function makeStyled(p, kind) {
+  const m = new THREE.MeshToonMaterial(Object.assign({ gradientMap: TOON_RAMP }, pickParams(p, 'toon')));
+  MPARAMS.set(m, { p: Object.assign({}, p), kind }); return styled(m);
+}
+THREE.MeshLambertMaterial = function (p) { return makeStyled(p, 'lambert'); };
+THREE.MeshPhongMaterial = function (p) { return makeStyled(p, 'phong'); };
+const swapMat = m => Array.isArray(m) ? (m.some(x => styled(x) !== x) ? m.map(styled) : m) : styled(m);
+function restyleScene() { scene.traverse(o => { if (o.isMesh) { const n = swapMat(o.material); if (n !== o.material) o.material = n; } }); }
+// the scene renders into a target; a full-screen pass draws the style: ink and Ben-Day dots, chunky pixels, or pencil hatching
 let INK = null;
 if (renderer && (renderer.capabilities.isWebGL2 || renderer.extensions.has('WEBGL_depth_texture'))) {
-  const rt = new THREE.WebGLRenderTarget(1, 1, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter });
-  rt.depthTexture = new THREE.DepthTexture(); rt.depthTexture.type = THREE.UnsignedIntType;
+  const mk = filt => { const t = new THREE.WebGLRenderTarget(1, 1, { minFilter: filt, magFilter: filt }); t.depthTexture = new THREE.DepthTexture(); t.depthTexture.type = THREE.UnsignedIntType; return t; };
+  const rt = mk(THREE.LinearFilter), rtLow = mk(THREE.NearestFilter);
   const m = new THREE.ShaderMaterial({ depthTest: false, depthWrite: false,
-    uniforms: { tCol: { value: rt.texture }, tDep: { value: rt.depthTexture }, res: { value: new THREE.Vector2(1, 1) }, near: { value: 0.1 }, far: { value: 500 }, night: { value: 0 }, px: { value: 1 } },
+    uniforms: { tCol: { value: rt.texture }, tDep: { value: rt.depthTexture }, res: { value: new THREE.Vector2(1, 1) }, near: { value: 0.1 }, far: { value: 500 }, night: { value: 0 }, px: { value: 1 }, mode: { value: 0 } },
     vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0., 1.); }',
     fragmentShader: `
-      uniform sampler2D tCol, tDep; uniform vec2 res; uniform float near, far, night, px; varying vec2 vUv;
+      uniform sampler2D tCol, tDep; uniform vec2 res; uniform float near, far, night, px, mode; varying vec2 vUv;
       float lin(vec2 uv){ float z = texture2D(tDep, uv).r * 2. - 1.; return 2. * near * far / (far + near - z * (far - near)); }
       vec3 col(vec2 uv){ return texture2D(tCol, uv).rgb; }
+      float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
       void main(){
         vec2 o = px / res, ox = vec2(o.x, 0.), oy = vec2(0., o.y);
         vec3 c = col(vUv);
@@ -1451,25 +1628,67 @@ if (renderer && (renderer.capabilities.isWebGL2 || renderer.extensions.has('WEBG
         float sil = max(max(abs(dl - d), abs(dr - d)), max(abs(du - d), abs(dd - d))) / d;   // silhouettes
         float crease = max(abs(dl + dr - 2. * d), abs(du + dd - 2. * d)) / d;                 // folds and corners
         float ce = length(col(vUv - ox) - col(vUv + ox)) + length(col(vUv + oy) - col(vUv - oy)); // colour boundaries
-        float edge = max(smoothstep(.07, .16, sil), max(smoothstep(.025, .07, crease), smoothstep(.42, .7, ce)));
-        edge *= 1. - smoothstep(55., 130., d);
-        // Ben-Day dots, 45 degree screen, bigger where the print is darker
         float L = dot(c, vec3(.299, .587, .114));
-        vec2 g = mat2(.7071, -.7071, .7071, .7071) * gl_FragCoord.xy / (4.5 * px);
-        float r = clamp((.55 - L) * 1.1, 0., .5), dm = (1. - smoothstep(r - .07, r + .03, length(fract(g) - .5))) * step(.02, r);
-        c = mix(c, c * .66, dm * (1. - night * .7));
-        c = c * vec3(1., .975, .9) + vec3(.035, .03, .0);                                      // newsprint
-        gl_FragColor = vec4(mix(c, vec3(.11, .102, .125), edge * .94), 1.);
+        if (mode < .5) {
+          // comic: brush ink, Ben-Day dots on a 45 degree screen, newsprint
+          float edge = max(smoothstep(.07, .16, sil), max(smoothstep(.025, .07, crease), smoothstep(.42, .7, ce))) * (1. - smoothstep(55., 130., d));
+          vec2 g = mat2(.7071, -.7071, .7071, .7071) * gl_FragCoord.xy / (4.5 * px);
+          float r = clamp((.55 - L) * 1.1, 0., .5), dm = (1. - smoothstep(r - .07, r + .03, length(fract(g) - .5))) * step(.02, r);
+          c = mix(c, c * .66, dm * (1. - night * .7));
+          c = c * vec3(1., .975, .9) + vec3(.035, .03, .0);
+          gl_FragColor = vec4(mix(c, vec3(.11, .102, .125), edge * .94), 1.);
+        } else if (mode < 2.5) {
+          // pixel: the scene arrives at quarter resolution with nearest filtering; posterise and outline each sprite
+          c = floor(c * 6. + .5) / 6.;
+          float edge = smoothstep(.06, .14, sil) * (1. - smoothstep(60., 140., d));
+          gl_FragColor = vec4(mix(c, c * .35, edge * .8), 1.);
+        } else {
+          // sketch: washed colour on paper, graphite outlines, cross-hatching that thickens in the shade
+          float edge = max(smoothstep(.05, .14, sil), max(smoothstep(.02, .06, crease), smoothstep(.3, .6, ce))) * (1. - smoothstep(60., 140., d));
+          vec3 wash = mix(vec3(L), c, .45); wash = mix(wash, vec3(1.), .32);
+          float s = 5. * px, h1 = abs(fract((gl_FragCoord.x + gl_FragCoord.y) / s) - .5), h2 = abs(fract((gl_FragCoord.x - gl_FragCoord.y) / s) - .5);
+          float hatch = (1. - smoothstep(.08, .16, h1)) * step(L, .62 - night * .2) * .55 + (1. - smoothstep(.08, .16, h2)) * step(L, .4 - night * .2) * .55;
+          vec3 paper = vec3(.985, .975, .95) - hash(floor(gl_FragCoord.xy / 2.)) * .035;
+          vec3 graphite = vec3(.24, .24, .27);
+          c = wash * paper; c = mix(c, graphite, clamp(hatch, 0., .6)); c = mix(c, graphite, edge * .85);
+          gl_FragColor = vec4(c, 1.);
+        }
       }` });
   const qs = new THREE.Scene(); qs.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), m));
-  INK = { rt, m, qs, qc: new THREE.Camera() };
+  INK = { rt, rtLow, m, qs, qc: new THREE.Camera() };
 }
+const SKIN_MODE = { comic: 0, pixel: 2, sketch: 3 };
+let restyleTick = 0;
 function renderComic() {
-  if (!INK) { renderer.render(scene, camera); return; }
-  renderer.setRenderTarget(INK.rt); renderer.render(scene, camera); renderer.setRenderTarget(null);
-  const u = INK.m.uniforms; u.near.value = camera.near; u.far.value = camera.far; u.night.value = NIGHT;
+  // catch meshes built from materials made under another style (cached materials, faces, new buildings)
+  if (++restyleTick % 6 === 0) restyleScene();
+  if (!INK || SKIN === '3d') { renderer.render(scene, camera); return; }
+  const low = SKIN === 'pixel', t = low ? INK.rtLow : INK.rt, u = INK.m.uniforms;
+  renderer.setRenderTarget(t); renderer.render(scene, camera); renderer.setRenderTarget(null);
+  u.tCol.value = t.texture; u.tDep.value = t.depthTexture; u.mode.value = SKIN_MODE[SKIN];
+  u.res.value.set(t.width, t.height); u.px.value = low ? 1 : 1.25 * renderer.getPixelRatio();
+  u.near.value = camera.near; u.far.value = camera.far; u.night.value = NIGHT;
   renderer.render(INK.qs, INK.qc);
 }
+// graphics quality: resolution and shadows
+function applyQuality(q) {
+  QUAL = q; try { localStorage.setItem('vcsim-quality', q); } catch (e) {}
+  if (!renderer) return;
+  const dpr = window.devicePixelRatio || 1;
+  renderer.setPixelRatio(q === 'high' ? Math.min(2, dpr) : q === 'medium' ? Math.min(1.25, dpr) : 0.75);
+  const sh = q !== 'low', size = q === 'high' ? 2048 : 1024;
+  if (renderer.shadowMap.enabled !== sh) { renderer.shadowMap.enabled = sh; scene.traverse(o => { if (o.isMesh) [].concat(o.material).forEach(m => m && (m.needsUpdate = true)); }); }
+  if (sun.shadow.mapSize.x !== size) { sun.shadow.mapSize.set(size, size); if (sun.shadow.map) { sun.shadow.map.dispose(); sun.shadow.map = null; } }
+  resize3D();
+}
+function applySkin(s) {
+  SKIN = s; try { localStorage.setItem('vcsim-skin', s); } catch (e) {}
+  document.documentElement.dataset.skin = s;
+  if (renderer) { restyleScene(); resize3D(); }
+  const sel = document.getElementById('skin'); if (sel) sel.value = s;
+  if (typeof S !== 'undefined' && S && curTab === 'stats') renderTab();
+}
+document.documentElement.dataset.skin = SKIN;
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 500);
 const controls = new THREE.OrbitControls(camera, domEl);
@@ -1793,6 +2012,18 @@ const roomLight = new THREE.PointLight(0xfff0d0, 0, 7, 1.5); scene.add(roomLight
 let openI = null, interiorFor = null, camGoal = null, hqBlock = null, hqMain = null;
 // interior meshes select their building when clicked; the HQ opens its company card instead
 const tagPick = (o, b) => { if (b.t === 'hq') o.userData.kind = 'hq'; else o.userData.bid = b.id; };
+// multi-storey buildings open one floor at a time, Sims-style: the floors below stand solid, the chosen floor is cut away on top
+const ONE_FLOOR = new Set(['hall', 'badminton', 'industry', 'pingpong', 'bus', 'bikes', 'hq']);
+function floorsOf(b) { const d = BT[b.t]; if (!d || d.flat || d.tree || d.fountain || d.outdoor || ONE_FLOOR.has(b.t)) return 1; return Math.max(1, Math.round(d.ht / 16 / .9)); }
+const floorH = b => BT[b.t].ht / 16 / floorsOf(b);
+// each person keeps to one floor of a building, so flipping floors shows different people
+const floorOfSim = (s, n) => n > 1 ? (s.id * 7 + (s.kind === 'staff' ? 3 : 0)) % n : 0;
+const FLOOR_NAME = {
+  admin: [['Reception','Kaunter','接待处'], ['Registry & Finance','Pendaftar & Kewangan','注册处与财务处'], ['Academic Affairs','Hal Ehwal Akademik','教务处'], ["Principal's office",'Pejabat Pengetua','院长办公室']],
+  cafe: [['Food court','Medan selera','美食广场'], ['Upper dining hall','Dewan makan atas','二楼餐厅']],
+  library: [['Lending & study','Pinjaman & belajar','借阅与自习'], ['Reference','Rujukan','参考书库'], ['Quiet study floor','Tingkat belajar senyap','静音自习区']],
+  research: [['Labs','Makmal','实验室'], ['Labs','Makmal','实验室'], ['Postgraduate offices','Bilik pascasiswazah','研究生办公室'], ['Research data centre','Pusat data penyelidikan','科研数据中心']],
+};
 const floorMats = {};
 function floorMat(kind) {
   if (!floorMats[kind]) floorMats[kind] = new THREE.MeshLambertMaterial({ map: canvasTex(64, 64, g => {
@@ -1805,9 +2036,10 @@ function floorMat(kind) {
 }
 const BOOKS = canvasTex(64, 64, g => { const cs = ['#c8553d','#2b6cb0','#e0a020','#3f8a3a','#6b4c8a','#1f8a8a','#d94f3a']; g.fillStyle = '#6b4a2e'; g.fillRect(0, 0, 64, 64); for (let r = 0; r < 4; r++) for (let x = 2; x < 62; x += 4) { g.fillStyle = cs[(x + r * 3) % cs.length]; g.fillRect(x, r * 16 + 3, 3, 12); } }, [2, 1]);
 const booksMat = new THREE.MeshLambertMaterial({ map: BOOKS });
-function makeInterior(b) {
+function makeInterior(b, level = 0) {
   const d = BT[b.t], Wd = d.w, Dd = d.h, g = new THREE.Group(), slots = [], staff = [], labels = [], anims = [];
-  g.position.set(b.x, 0, b.y);
+  g.position.set(b.x, level * floorH(b), b.y);
+  if (floorsOf(b) > 1) { const fn = FLOOR_NAME[b.t]?.[level]; labels.push([`${level + 1}F` + (fn ? ' · ' + tr(fn) : ''), .45, 1.12, .12]); }
   const box = (w, h, dp, color, x, y, z, glow) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, dp), glow ? new THREE.MeshBasicMaterial({ color }) : (color.isMaterial ? color : mat(color))); m.position.set(x, y + h / 2, z); m.castShadow = !glow; m.receiveShadow = true; g.add(m); return m; };
   const cyl = (r, h, color, x, y, z) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 14), mat(color)); m.position.set(x, y + h / 2, z); m.castShadow = m.receiveShadow = true; g.add(m); return m; };
   const plant = (x, z) => { cyl(.07, .12, '#8a5a3a', x, 0, z); const c = new THREE.Mesh(TREE_G.crown2, mat('#3f8a3a', { flatShading: true })); c.scale.setScalar(.5); c.position.set(x, .26, z); g.add(c); };
@@ -1873,9 +2105,11 @@ function makeInterior(b) {
     for (let c = 0; c < 3; c++) { stand(.95 + c * .55, .85, 0); stand(.95 + c * .55, 1.58, PI); }
     stand(1.5, .5, PI, staff);
   } else if (b.t === 'cafe') {
-    box(Wd - .3, .26, .2, '#d94f3a', mid, 0, z0 + .16); box(Wd - .3, .02, .24, '#f2f2f2', mid, .26, z0 + .16);
-    for (let i = 0; i < 5; i++) box(.16, .04, .12, ['#f2c230', '#e07a2e', '#3f8a3a', '#c8553d', '#f4f4f4'][i], .38 + i * .3, .28, z0 + .16);
-    stand(mid, z0 + .4, PI, staff);
+    if (!level) {
+      box(Wd - .3, .26, .2, '#d94f3a', mid, 0, z0 + .16); box(Wd - .3, .02, .24, '#f2f2f2', mid, .26, z0 + .16);
+      for (let i = 0; i < 5; i++) box(.16, .04, .12, ['#f2c230', '#e07a2e', '#3f8a3a', '#c8553d', '#f4f4f4'][i], .38 + i * .3, .28, z0 + .16);
+      stand(mid, z0 + .4, PI, staff);
+    } else { box(Wd - .3, .3, .14, '#c8a27a', mid, 0, z0 + .12); plant(x0 + .2, z0 + .3); plant(x1 - .2, z0 + .3); }
     for (const [tx, tz] of [[.6, .9], [1.4, .9], [.6, 1.55], [1.4, 1.55]]) {
       cyl(.14, .02, '#f4f4f4', tx, .18, tz); cyl(.025, .18, '#9aa3ad', tx, 0, tz);
       for (const [dx, dz, f] of [[.22, 0, -PI / 2], [-.22, 0, PI / 2], [0, -.22, 0], [0, .22, PI]]) { cyl(.06, .11, '#ef8a3a', tx + dx, 0, tz + dz); slots.push({ x: tx + dx, z: tz + dz, f, y: 0, pose: 'sit' }); }
@@ -1893,8 +2127,15 @@ function makeInterior(b) {
     for (const dx of [-.36, 0, .36]) slots.push({ x: mid + dx, z: .62, f: PI, y: .02, pose: 'sit' });
     for (const [x, z] of [[.28, .32], [x1 - .25, .3]]) { const bb = new THREE.Mesh(new THREE.SphereGeometry(.12, 12, 8), mat('#6b4c8a')); bb.scale.y = .6; bb.position.set(x, .07, z); g.add(bb); slots.push({ x, z: z + .05, f: PI, y: -.04, pose: 'sit' }); }
   } else if (b.t === 'admin') {
-    box(1.1, .27, .18, '#36587c', mid, 0, z1 - .42); box(1.1, .02, .22, '#f2f2f2', mid, .27, z1 - .42); stand(mid, z1 - .66, 0, staff);
-    box(1.0, .3, .01, '#17a35e', mid, .5, z0 + .05, true); labels.push(['I.A.C.T.G.', mid, 1.0, z0 + .06]);
+    if (!level) {
+      box(1.1, .27, .18, '#36587c', mid, 0, z1 - .42); box(1.1, .02, .22, '#f2f2f2', mid, .27, z1 - .42); stand(mid, z1 - .66, 0, staff);
+      box(1.0, .3, .01, '#17a35e', mid, .5, z0 + .05, true); labels.push(['I.A.C.T.G.', mid, 1.0, z0 + .06]);
+    } else {
+      // office floors: a second row of desks and a filing wall instead of the reception counter
+      for (const x of [.55, 1.5]) { box(.42, .2, .24, '#c49567', x, 0, 1.5); box(.16, .11, .02, '#1a1f26', x, .2, 1.43); box(.14, .09, .004, '#6fb3ff', x, .21, 1.442, true); chair(x, 1.73, PI, '#36587c'); }
+      for (let i = 0; i < 4; i++) box(.3, .55, .16, '#9aa3ad', .5 + i * .34, 0, z0 + .12);
+      stand(Wd - .4, .5, -PI / 2, staff);
+    }
     for (const x of [.55, 1.5, 2.45]) { box(.42, .2, .24, '#c49567', x, 0, .45); box(.16, .11, .02, '#1a1f26', x, .2, .38); box(.14, .09, .004, '#6fb3ff', x, .21, .392, true); chair(x, .68, PI, '#36587c'); }
     cyl(.24, .02, '#c49567', Wd - .7, .18, 1.15); cyl(.04, .18, '#9aa3ad', Wd - .7, 0, 1.15);
     for (const [dx, dz, f] of [[.32, 0, -PI / 2], [-.32, 0, PI / 2], [0, -.32, 0]]) chair(Wd - .7 + dx, 1.15 + dz, f, '#36587c');
@@ -1975,31 +2216,52 @@ function rebuildExtras(I, want) {
     g.userData.bob.material.color.set(pick([0x2fd27a, 0x2fd27a, 0xf2c230])); I.g.add(g); I.extras.push({ g, slot });
   }
 }
-function openInterior(b) {
+function openInterior(b, level = 0) {
+  const keepCam = openI && openI.b === b;
   closeInterior(); interiorFor = b;
-  const d = BT[b.t]; if (d.tree || d.fountain || d.flat || b.t === 'bus' || b.t === 'pond') return;
-  const I = makeInterior(b); I.b = b; I.assign = new Map(); I.extras = []; I.extraN = -1; I.chat = 0;
+  const d = BT[b.t]; if (d.tree || d.fountain || d.flat || b.t === 'bus' || b.t === 'pond') { updateFloorsUI(); return; }
+  const n = floorsOf(b); level = clamp(level, 0, n - 1);
+  const I = makeInterior(b, level); I.b = b; I.assign = new Map(); I.extras = []; I.extraN = -1; I.chat = 0; I.n = n; I.level = level; I.fy = level * floorH(b);
   interiorRoot.add(I.g); openI = I;
+  if (level > 0) {
+    // the floors below the one you are looking at, as a solid white block with ribbon windows
+    const w = d.w - .14, h = d.h - .14, base = whiten(d.base, .88), sx = facade(base, h, I.fy, d.glass), sz = facade(base, w, I.fy, d.glass);
+    I.below = new THREE.Mesh(new THREE.BoxGeometry(w, I.fy, h), [sx, sx, mat('#e6e9e4'), mat(base), sz, sz]);
+    I.below.position.set(b.x + d.w / 2, I.fy / 2, b.y + d.h / 2); I.below.castShadow = I.below.receiveShadow = true; tagPick(I.below, b); interiorRoot.add(I.below);
+  }
   for (const g of bMeshes.values()) if (g.userData.b === b) { g.visible = false; I.shell = g; }
   if (b === HQ_B) { I.shell = [hqBlock, hqMain].filter(Boolean); I.shell.forEach(m => m.visible = false); }
-  roomLight.position.set(b.x + d.w / 2, 1.5, b.y + d.h / 2);
-  camTouched = true; camGoal = new THREE.Vector3(b.x + d.w / 2, 0.25, b.y + d.h / 2); distGoal = Math.max(4, (d.w + d.h) * 1.4);
+  roomLight.position.set(b.x + d.w / 2, 1.5 + I.fy, b.y + d.h / 2);
+  camTouched = true; camGoal = new THREE.Vector3(b.x + d.w / 2, 0.25 + I.fy, b.y + d.h / 2); if (!keepCam) distGoal = Math.max(4, (d.w + d.h) * 1.4);
+  updateFloorsUI();
 }
-function closeInterior() { interiorFor = null; if (!openI) return; interiorRoot.remove(openI.g); [].concat(openI.shell || []).forEach(m => m.visible = true); openI = null; roomLight.intensity = 0; }
+function closeInterior() { interiorFor = null; if (!openI) { updateFloorsUI(); return; } interiorRoot.remove(openI.g); if (openI.below) interiorRoot.remove(openI.below); [].concat(openI.shell || []).forEach(m => m.visible = true); openI = null; roomLight.intensity = 0; updateFloorsUI(); }
+// the floor picker beside the zoom buttons: top floor first, like a lift panel
+const floorsEl = document.getElementById('floors');
+function updateFloorsUI() {
+  if (!floorsEl) return;
+  if (!openI || openI.n < 2) { floorsEl.hidden = true; floorsEl.innerHTML = ''; return; }
+  floorsEl.hidden = false;
+  floorsEl.innerHTML = `<span>${esc(tr(['Floor','Tingkat','楼层']))}</span>` + Array.from({ length: openI.n }, (_, i) => openI.n - 1 - i).map(i => `<button data-fl="${i}" aria-pressed="${i === openI.level}" aria-label="${esc(tr(['Floor {n}','Tingkat {n}','{n} 楼'], { n: i + 1 }))}">${i + 1}F</button>`).join('');
+  floorsEl.querySelectorAll('[data-fl]').forEach(bt => bt.onclick = () => { if (openI) openInterior(openI.b, +bt.dataset.fl); });
+}
 function stepInterior(t) {
   let want = null;
   if (follow && follow.state === 'inside') want = bById(follow.bld) || null;
   else if (sel && sel.type === 'b') want = bById(sel.id) || null;
   else if (sel && sel.type === 'hq') want = HQ_B;
   else if (sel && sel.type === 's' && interiorFor) { const s = sims.find(x => x.id === sel.id); if (s && s.state === 'inside' && s.bld === interiorFor.id) want = interiorFor; }
-  if (want !== interiorFor) { if (want) openInterior(want); else closeInterior(); }
+  const followIn = follow && follow.state === 'inside' && want && follow.bld === want.id;
+  if (want !== interiorFor) { if (want) openInterior(want, followIn ? floorOfSim(follow, floorsOf(want)) : 0); else closeInterior(); }
+  // a followed person is always on screen: go to their floor
+  else if (openI && followIn && floorOfSim(follow, openI.n) !== openI.level) openInterior(want, floorOfSim(follow, openI.n));
   if (!openI) return;
   const I = openI;
-  for (const [s, a] of I.assign) if (!(s.state === 'inside' && s.bld === I.b.id && sims.includes(s))) I.assign.delete(s);
-  const realStu = sims.filter(s => s.state === 'inside' && s.bld === I.b.id && s.kind === 'student').length;
+  for (const [s, a] of I.assign) if (!(s.state === 'inside' && s.bld === I.b.id && floorOfSim(s, I.n) === I.level && sims.includes(s))) I.assign.delete(s);
+  const inB = sims.filter(s => s.state === 'inside' && s.bld === I.b.id && s.kind === 'student'), realStu = inB.length, realHere = inB.filter(s => floorOfSim(s, I.n) === I.level).length;
   const scale = Math.max(1, counts_cache.students / Math.max(1, sims.filter(s => s.kind === 'student').length));
   const hh = hourOfDay(), wd = weekday();
-  const extraWant = I.b === HQ_B ? (wd >= 1 && wd <= 5 && hh >= 8 && hh < 19 ? 14 : 2) : Math.round(realStu * scale) - realStu;
+  const extraWant = I.b === HQ_B ? (wd >= 1 && wd <= 5 && hh >= 8 && hh < 19 ? 14 : 2) : Math.round(realStu * scale / I.n) - realHere;
   if (extraWant !== I.extraN) { I.extraN = extraWant; rebuildExtras(I, extraWant); }
   I.anims.forEach(f => f(t));
   roomLight.intensity = 0.35 + NIGHT * 0.9;
@@ -2068,7 +2330,7 @@ function faceFor(s, t, pose) {
 function makeSimMesh(s) {
   const g = new THREE.Group(), u = g.userData, pose = new THREE.Group(); g.add(pose); u.pose = pose; u.poseName = 'stand';
   const limb = (geo, m, x, y, len) => { const p = new THREE.Group(); p.position.set(x, y, 0); const me = new THREE.Mesh(geo, m); me.position.y = -len / 2; p.add(me); pose.add(p); return p; };
-  const shirt = mat(s.kind === 'staff' ? '#2e3f55' : SCHOOL_COL[s.school]), skin = mat(s.skin), pants = mat(s.kind === 'staff' ? '#3b3f47' : '#2a2f3a');
+  const gm = s.kind === 'gm', shirt = mat(gm ? '#d9a521' : s.kind === 'staff' ? '#2e3f55' : SCHOOL_COL[s.school]), skin = mat(s.skin), pants = mat(gm ? '#3a2a12' : s.kind === 'staff' ? '#3b3f47' : '#2a2f3a');
   u.legs = [limb(SG.leg, pants, -0.055, 0.3, 0.3), limb(SG.leg, pants, 0.055, 0.3, 0.3)];
   u.arms = [limb(SG.arm, shirt, -0.15, 0.58, 0.26), limb(SG.arm, shirt, 0.15, 0.58, 0.26)];
   u.body = new THREE.Mesh(SG.body, shirt); u.body.position.y = 0.45; pose.add(u.body);
@@ -2076,7 +2338,17 @@ function makeSimMesh(s) {
   u.faceM = new THREE.Mesh(FACE_G, FACE.ok); u.faceName = 'ok'; u.head.add(u.faceM);
   const hair = new THREE.Mesh(SG.hair, mat(s.hair)); hair.position.y = 0.725; pose.add(hair);
   if (s.f) { const lh = new THREE.Mesh(SG.long, mat(s.hair)); lh.position.set(0, 0.64, -0.07); pose.add(lh); }
-  if (s.kind === 'staff') { const tie = new THREE.Mesh(SG.tie, mat('#f2f2f2')); tie.position.set(0, 0.5, 0.08); pose.add(tie); }
+  if (gm) {
+    // crown, red cape and a golden aura ring: the Game Master is easy to spot
+    const crown = new THREE.Group(); crown.position.y = 0.81; u.head.add(crown); crown.position.set(0, 0.09, 0);
+    const band = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.08, 0.05, 12, 1, true), mat('#f2c230')); crown.add(band);
+    for (let i = 0; i < 5; i++) { const sp = new THREE.Mesh(new THREE.ConeGeometry(0.018, 0.06, 6), mat('#f2c230')); const a = i / 5 * Math.PI * 2; sp.position.set(Math.sin(a) * 0.07, 0.05, Math.cos(a) * 0.07); crown.add(sp); }
+    const gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.018), mat('#dd3b2d')); gem.position.set(0, 0.01, 0.078); crown.add(gem);
+    const cape = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.42, 0.02), mat('#b3261e')); cape.position.set(0, 0.42, -0.09); cape.rotation.x = 0.12; pose.add(cape);
+    const aura = new THREE.Mesh(new THREE.RingGeometry(0.24, 0.3, 32), new THREE.MeshBasicMaterial({ color: 0xf2c230, transparent: true, opacity: 0.7, side: THREE.DoubleSide }));
+    aura.rotation.x = -Math.PI / 2; aura.position.y = 0.02; g.add(aura); u.aura = aura;
+    g.scale.setScalar(1.15);
+  } else if (s.kind === 'staff') { const tie = new THREE.Mesh(SG.tie, mat('#f2f2f2')); tie.position.set(0, 0.5, 0.08); pose.add(tie); }
   else { const bag = new THREE.Mesh(SG.bag, mat(pick(['#3a4a6a', '#6b4c8a', '#c8553d', '#1f8a8a']))); bag.position.set(0, 0.47, -0.11); pose.add(bag); }
   u.bob = new THREE.Mesh(SG.bob, new THREE.MeshBasicMaterial({ color: 0x2fd27a })); u.bob.scale.y = 1.7; u.bob.position.y = 1.02; g.add(u.bob);
   g.traverse(o => { if (o.isMesh) { o.castShadow = true; o.userData.sim = s; } });
@@ -2106,16 +2378,18 @@ function syncSimMeshes(t) {
   for (const s of sims) {
     let g = simMeshes.get(s); if (!g) { g = makeSimMesh(s); simMeshes.set(s, g); simRoot.add(g); g.position.set(s.x, 0, s.y); }
     if (s.pending && t >= s.pending.at) { say(s, s.pending.line, 'say', true, s.pending.vars); s.pending = null; }
-    const inOpen = openI && s.state === 'inside' && s.bld === openI.b.id;
+    const inB = openI && s.state === 'inside' && s.bld === openI.b.id, inOpen = inB && floorOfSim(s, openI.n) === openI.level;
+    if (inB && !inOpen) { g.visible = false; continue; }   // on another floor of the opened building
     const ob = !inOpen && s.state === 'inside' ? bById(s.bld) : null, outdoor = !!(ob && BT[ob.t].outdoor);
     const vis = inOpen || outdoor || (s.state !== 'inside' && s.state !== 'off'); g.visible = vis; if (!vis) continue;
-    const m0 = mood(s); g.userData.bob.material.color.set(m0 > 60 ? 0x2fd27a : m0 > 35 ? 0xf2c230 : 0xef4a4a); g.userData.bob.rotation.y = t / 500 + s.phase;
+    const m0 = mood(s); g.userData.bob.material.color.set(s.kind === 'gm' ? 0xffc21a : m0 > 60 ? 0x2fd27a : m0 > 35 ? 0xf2c230 : 0xef4a4a); g.userData.bob.rotation.y = t / 500 + s.phase;
+    if (g.userData.aura) { g.userData.aura.rotation.z = t / 700; g.userData.aura.material.opacity = 0.45 + Math.sin(t / 300) * 0.25; }
     const fu = g.userData, fn = faceFor(s, t, inOpen && openI.assign.get(s)?.slot.pose);
-    if (fu.faceName !== fn) { fu.faceName = fn; fu.faceM.material = FACE[fn]; }
+    if (fu.faceName !== fn) { fu.faceName = fn; fu.faceM.material = styled(FACE[fn]); }
     if (inOpen) {
       // inside the opened building: take a seat, a bench or a bed
       let a = openI.assign.get(s); if (!a) { a = claimSlot(openI, s.kind === 'staff'); openI.assign.set(s, a); }
-      const sl = a.slot, u = g.userData; g.position.set(openI.b.x + sl.x, sl.y || 0, openI.b.y + sl.z); g.rotation.y = sl.f; applyPose(u, sl.pose);
+      const sl = a.slot, u = g.userData; g.position.set(openI.b.x + sl.x, (sl.y || 0) + openI.fy, openI.b.y + sl.z); g.rotation.y = sl.f; applyPose(u, sl.pose);
       if (sl.pose === 'sit') u.arms.forEach((arm, i) => arm.rotation.x = -0.9 + Math.sin(t / 160 + s.phase + i * 2) * 0.12);
       if (sl.pose === 'stand') { u.arms[1].rotation.x = -0.6 + Math.sin(t / 300 + s.phase) * 0.35; u.legs.forEach(l => l.rotation.x = 0); }
       continue;
@@ -2161,7 +2435,7 @@ function updateLighting() {
   _c.copy(SKY_DAY).lerp(SKY_NIGHT, NIGHT / 0.85).lerp(SKY_DUSK, dusk * 0.35);
   scene.background = _c.clone(); scene.fog.color.copy(_c);
   sun.color.set(dusk > 0.2 ? 0xffc690 : 0xfff1d6);
-  const em = clamp((NIGHT - 0.15) * 1.8, 0, 1); for (const m of nightMats) m.emissiveIntensity = em;
+  const em = clamp((NIGHT - 0.15) * 1.8, 0, 1); for (const m of nightMats) { m.emissiveIntensity = em; const tw = TWIN.get(m) || BACK.get(m); if (tw) tw.emissiveIntensity = em; }
 }
 
 // ---------- overlay: labels & speech bubbles ----------
@@ -2175,9 +2449,9 @@ function ovEnd() { for (const [k, e] of ovPool) if (!ovUsed.has(k)) e.hidden = t
 const _v = new THREE.Vector3();
 function proj(x, y, z) { _v.set(x, y, z).project(camera); if (_v.z > 1) return null; const sx = (_v.x + 1) / 2 * W, sy = (1 - _v.y) / 2 * H; if (sx < -80 || sx > W + 80 || sy < -80 || sy > H + 80) return null; return [sx, sy]; }
 // a comic sound effect that pops in on a burst over a spot on the map, holds, then fades
-const SFX = { build: ['BAM!','BAM!','砰！'], intake: ['HOORAY!','HORE!','耶！'], upgrade: ['KA-BOOM!','KA-BOOM!','轰！升格啦！'], win: ['YES!','YES!','成功！'] };
-function sfx(k, x, z) {
-  if (!renderer) return; const p = proj(x, 1.2, z) || [W / 2, H / 2];
+const SFX = { gm: ['GM POWER!','KUASA GM!','GM 神力！'], build: ['BAM!','BAM!','砰！'], intake: ['HOORAY!','HORE!','耶！'], upgrade: ['KA-BOOM!','KA-BOOM!','轰！升格啦！'], win: ['YES!','YES!','成功！'] };
+function sfx(k, x, z, any) {
+  if (!renderer || (SKIN !== 'comic' && !any)) return; const p = proj(x, 1.2, z) || [W / 2, H / 2];
   const e = document.createElement('div'); e.className = 'sfx'; e.textContent = tr(SFX[k]);
   e.style.left = p[0] + 'px'; e.style.top = p[1] + 'px'; e.style.setProperty('--rot', (Math.random() < 0.5 ? -8 : 7) + 'deg');
   document.getElementById('stage').appendChild(e); setTimeout(() => e.remove(), 1800);
@@ -2211,7 +2485,7 @@ function renderOverlay(t) {
     if (inside) html += `${show ? ' · ' : ''}${esc(tr(d.outdoor ? ['≈{n} playing','≈{n} sedang bermain','约 {n} 人在运动'] : ['≈{n} inside','≈{n} di dalam','约 {n} 人在内'], { n: Math.round(inside * scale) }))}`;
     posEl(ovEl('b' + b.id + b.t, 'lbl bl' + (show || inside ? '' : ' only'), html), s);
   }
-  if (openI) for (const [n, x, y, z] of openI.labels) { const s = proj(openI.b.x + x, y, openI.b.y + z); if (s) posEl(ovEl('i' + n, 'lbl tag', esc(n)), s); }
+  if (openI) for (const [n, x, y, z] of openI.labels) { const s = proj(openI.b.x + x, y + openI.fy, openI.b.y + z); if (s) posEl(ovEl('i' + n, 'lbl tag', esc(n)), s); }
   if (showBubbles) {
     const seen = s => s.state !== 'off' && (s.state !== 'inside' || (openI && s.bld === openI.b.id));
     const placed = [], list = sims.filter(s => s.bubble && s.bubble.until > t && seen(s));
@@ -2239,7 +2513,7 @@ function updateCompass() {
 // ---------- camera, follow mode ----------
 let follow = null, distGoal = null, camTouched = false;
 function resize3D() { const r = glEl.getBoundingClientRect(); W = Math.max(1, r.width); H = Math.max(1, r.height); if (renderer) renderer.setSize(W, H, false);
-  if (INK) { const pr = renderer.getPixelRatio(); INK.rt.setSize(Math.round(W * pr), Math.round(H * pr)); INK.m.uniforms.res.value.set(Math.round(W * pr), Math.round(H * pr)); INK.m.uniforms.px.value = 1.25 * pr; }
+  if (INK) { const pr = renderer.getPixelRatio(); INK.rt.setSize(Math.round(W * pr), Math.round(H * pr)); INK.rtLow.setSize(Math.max(1, Math.round(W / 4)), Math.max(1, Math.round(H / 4))); }
   camera.aspect = W / H; camera.updateProjectionMatrix(); }
 function fitCam() {
   resize3D(); stopFollow(); distGoal = null;
@@ -2417,7 +2691,8 @@ function renderInsp() {
     const s = sims.find(x => x.id === sel.id); if (!s) { sel = null; inspEl.hidden = true; return; }
     const m = mood(s), mc = m > 60 ? tr(['Happy','Gembira','开心']) : m > 35 ? tr(['Fine','Biasa','还好']) : tr(['Unhappy','Tidak gembira','不开心']);
     let who;
-    if (s.kind === 'student') who = `${tr(P[s.prog].name)} · ${tr(['Year {y}','Tahun {y}','{y} 年级'], { y: s.year })} · ${s.resident ? tr(['Hostel resident','Penghuni asrama','住宿生']) : tr(['Commuter','Berulang-alik','通勤生'])}`;
+    if (s.kind === 'gm') who = tr(['👑 Highest authority · infinite resources · omnipotent','👑 Kuasa tertinggi · sumber tanpa had · maha berkuasa','👑 最高领导 · 无限资源 · 无所不能']);
+    else if (s.kind === 'student') who = `${tr(P[s.prog].name)} · ${tr(['Year {y}','Tahun {y}','{y} 年级'], { y: s.year })} · ${s.resident ? tr(['Hostel resident','Penghuni asrama','住宿生']) : tr(['Commuter','Berulang-alik','通勤生'])}`;
     else { const st = S.staff.find(x => x.id === s.staffId); who = st ? `${tr(ROLES[st.role].t)} · ${tr(SCHOOLS[st.school])} · ${tr(ROLES[st.role].q)}` : tr(['Former staff','Bekas staf','前教职员']); }
     const pref = s.kind === 'staff' && ROLES[s.role] ? ROLES[s.role].title : '';
     const bb = s.state === 'inside' && bById(s.bld);
@@ -2426,7 +2701,7 @@ function renderInsp() {
       <div class="sub">${esc(who)}</div><div style="font-weight:600;margin-bottom:6px">${esc(trV(s.act, s.actV))}${esc(where)} <span class="muted">· ${esc(mc)}</span></div>
       ${Object.keys(NEED_LABEL).map(k => `<div class="need"><span>${esc(tr(NEED_LABEL[k]))}</span><div class="bar"><i class="${barCls(s.needs[k])}" style="width:${s.needs[k].toFixed(0)}%"></i></div></div>`).join('')}
       ${s.complaint ? `<div style="margin-top:6px;color:var(--bad);font-weight:600;font-size:12px">${esc(tr(s.complaint))}</div>` : ''}
-      <button class="btn ${follow === s ? '' : 'pri'}" id="watch" style="margin-top:8px">👁 ${esc(follow === s ? tr(['Stop watching','Berhenti menonton','停止跟随']) : tr(['Watch up close','Tonton dari dekat','近距离跟随']))}</button>
+      <button class="btn ${follow === s ? '' : 'pri'}" id="watch" style="margin-top:8px">👁 ${esc(follow === s ? tr(['Stop watching','Berhenti menonton','停止跟随']) : tr(['Watch up close','Tonton dari dekat','近距离跟随']))}</button>${s.kind === 'gm' ? ` <button class="btn pri" id="gmopen" style="margin-top:8px">👑 ${esc(tr(['Open the GM console','Buka konsol GM','打开 GM 控制台']))}</button>` : ''}
       <p class="eyebrow" style="margin:10px 0 4px">${esc(tr(['Recent thoughts','Fikiran terkini','最近的想法']))}</p>
       ${(s.thoughts || []).length ? s.thoughts.slice(0, 4).map(th => `<div class="th"><span class="muted">${String(Math.floor(th.at % 24)).padStart(2, '0')}:${String(Math.floor((th.at % 1) * 6) * 10).padStart(2, '0')}</span> ${th.kind === 'say' ? '“' + esc(trV(th.line, th.vars)) + '”' : '<i>' + esc(trV(th.line, th.vars)) + '</i>'}</div>`).join('') : `<div class="th muted">${esc(tr(['Nothing on their mind yet.','Belum ada apa-apa dalam fikiran.','暂时没有想法。']))}</div>`}`;
   } else {
@@ -2447,6 +2722,7 @@ function renderInsp() {
   inspEl.innerHTML = closeBtn() + h;
   const dm = document.getElementById('demo'); if (dm) dm.onclick = () => demolish(sel.id);
   const wb = document.getElementById('watch'); if (wb) wb.onclick = () => { const s = sims.find(x => x.id === sel.id); if (!s) return; if (follow === s) stopFollow(); else startFollow(s); renderInsp(); };
+  const gb = document.getElementById('gmopen'); if (gb) gb.onclick = openGM;
   document.getElementById('ix').onclick = () => { sel = null; renderInsp(); };
   inspEl.hidden = false;
 }
@@ -2845,7 +3121,7 @@ function buildInfo(id, k, c) {
 let statRange = 24, statsSeen = '';
 const RANGE = { 12: ['12 mo','12 bln','12 个月'], 24: ['24 mo','24 bln','24 个月'], 0: ['All','Semua','全部'] };
 const EXCAT = { sal: ['Salaries','Gaji','薪水'], up: ['Building upkeep','Penyelenggaraan bangunan','建筑维护'], cap: ['Construction','Pembinaan','建设'], pol: ['Policies and budgets','Dasar dan bajet','政策与预算'], adm: ['Administration and partner share','Pentadbiran dan bahagian rakan','行政与合作分成'], ev: ['Events and fees','Acara dan yuran','活动与费用'] };
-const LOG_ICON = { build:'🏗️', demolish:'🧨', hire:'🤝', fire:'👋', sponsor:'🎓', launch:'📜', policy:'⚙️', budget:'💵', event:'🎲', loan:'🏦', apply:'📨', result:'📊', partner:'🏭', qa:'🧭', support:'🧑‍🏫', advisor:'💡' };
+const LOG_ICON = { build:'🏗️', demolish:'🧨', hire:'🤝', fire:'👋', sponsor:'🎓', launch:'📜', policy:'⚙️', budget:'💵', event:'🎲', loan:'🏦', apply:'📨', result:'📊', partner:'🏭', qa:'🧭', support:'🧑‍🏫', advisor:'💡', gm:'👑' };
 const monLabel = t => { const d = dateAt(t), y = String(d.getUTCFullYear()).slice(2); return LANG === 'zh' ? `${y}年${d.getUTCMonth() + 1}月` : `${MONS[LANG][d.getUTCMonth()]} ${y}`; };
 const dayLabel = t => { const d = dateAt(t); return LANG === 'zh' ? `${d.getUTCMonth() + 1}月${d.getUTCDate()}日` : `${d.getUTCDate()} ${MONS[LANG][d.getUTCMonth()]}`; };
 const yearOf = t => dateAt(t).getUTCFullYear();
@@ -3023,7 +3299,9 @@ function updateTop() {
   document.getElementById('cname').textContent = collegeName();
   document.getElementById('stagechip').textContent = tr(STAGES[S.stage]);
   document.getElementById('when').textContent = fmtDate(S.hours);
-  const cash = document.getElementById('sCash'); cash.textContent = fmtRM(S.cash); cash.className = S.cash < 0 ? 'neg' : '';
+  if (gmOn()) { S.cash = Math.max(S.cash, 1e9); S.debtMonths = 0; }
+  const cash = document.getElementById('sCash'); cash.textContent = gmOn() ? '∞' : fmtRM(S.cash); cash.className = S.cash < 0 ? 'neg' : '';
+  document.getElementById('gmchip').hidden = !(S.gm && S.gm.used);
   document.getElementById('sStu').textContent = fmtN(c.students);
   document.getElementById('sStaff').textContent = `${c.staff} · ${c.phdPct}% PhD`;
   document.getElementById('sRep').textContent = `${Math.round(S.rep)}/100`;
@@ -3047,7 +3325,11 @@ new ResizeObserver(() => { if (!camTouched) fitCam(); else resize3D(); }).observ
 
 // ================= boot =================
 applyStatic();
-newGame(); CROWD = crowd(); syncSims(); buildWorld(); fitCam(); setSpeed(1); setTab('goals'); updateTop();
+newGame(); CROWD = crowd(); syncSims(); buildWorld(); applyQuality(QUAL); applySkin(SKIN); fitCam(); setSpeed(1); setTab('goals'); updateTop();
+document.getElementById('skin').onchange = e => applySkin(e.target.value);
+document.getElementById('gmbtn').onclick = openGM;
+document.getElementById('quality').onchange = e => applyQuality(e.target.value);
+document.getElementById('quality').value = QUAL;
 showWelcome(hasSave());
 requestAnimationFrame(frame);
 </script>
