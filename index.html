@@ -182,6 +182,8 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .dtable table{border-collapse:collapse;font-size:11px;width:100%}
 .dtable th,.dtable td{padding:3px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 .dtable th:first-child,.dtable td:first-child{text-align:left}
+.opt{border:2px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--panel);margin-top:6px}
+.opt .why li{font-size:12px}
 .langrow .btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 @media (max-width:860px){
   main{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) 44%}
@@ -250,7 +252,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
     </section>
     <aside id="panel">
       <nav class="tabs" role="tablist" id="tabs">
-        <button data-t="goals" role="tab" data-i18n="goals">Goals</button><button data-t="build" role="tab" data-i18n="build">Build</button><button data-t="progs" role="tab" data-i18n="progs">Programmes</button><button data-t="people" role="tab" data-i18n="people">People</button><button data-t="policy" role="tab" data-i18n="policy">Policies</button><button data-t="fin" role="tab" data-i18n="fin">Finance</button><button data-t="stats" role="tab" data-i18n="stats">Reports</button>
+        <button data-t="goals" role="tab" data-i18n="goals">Goals</button><button data-t="build" role="tab" data-i18n="build">Build</button><button data-t="progs" role="tab" data-i18n="progs">Programmes</button><button data-t="people" role="tab" data-i18n="people">People</button><button data-t="ind" role="tab" data-i18n="ind">Industry</button><button data-t="qual" role="tab" data-i18n="qual">Success &amp; QA</button><button data-t="adv" role="tab" data-i18n="adv">AI Advisor</button><button data-t="policy" role="tab" data-i18n="policy">Policies</button><button data-t="fin" role="tab" data-i18n="fin">Finance</button><button data-t="stats" role="tab" data-i18n="stats">Reports</button>
       </nav>
       <div id="tabbody"></div>
     </aside>
@@ -275,7 +277,7 @@ const UI = {
   cash:['Cash','Tunai','现金'], students:['Students','Pelajar','学生'], academics:['Academics','Akademik','学术人员'],
   rep:['Reputation','Reputasi','声誉'], sat:['Satisfaction','Kepuasan','满意度'], research:['Research','Penyelidikan','研究'],
   goals:['Goals','Matlamat','目标'], build:['Build','Bina','建造'], progs:['Programmes','Program','课程'], people:['People','Warga','人员'],
-  policy:['Policies','Dasar','政策'], fin:['Finance','Kewangan','财务'], stats:['Reports','Laporan','报告'], pause:['Pause','Jeda','暂停'], speed:['Game speed','Kelajuan permainan','游戏速度'],
+  ind:['Industry','Industri','产业合作'], qual:['Success & QA','Kejayaan & QA','学业与质量'], adv:['AI Advisor','Penasihat AI','AI 顾问'], policy:['Policies','Dasar','政策'], fin:['Finance','Kewangan','财务'], stats:['Reports','Laporan','报告'], pause:['Pause','Jeda','暂停'], speed:['Game speed','Kelajuan permainan','游戏速度'],
   zin:['Zoom in','Zum masuk','放大'], zout:['Zoom out','Zum keluar','缩小'], zfit:['Recentre','Pusatkan semula','重新居中'], zbub:['Show thoughts','Tunjuk fikiran','显示想法'],
   lang:['Language','Bahasa','语言'], campus:['Campus view','Paparan kampus','校园视图'], north:['N','U','北'],
   zwatch:['Watch a random student','Tonton pelajar rawak','随机跟随一名学生'],
@@ -320,6 +322,8 @@ const BT = {
     desc:['60 workstations. Each lab supports 240 computing students.','60 stesen kerja. Setiap makmal menampung 240 pelajar pengkomputeran.','60 台工作站。每间实验室可支持 240 名计算机学生。']},
   industry:{name:['Smart Factory Lab','Makmal Kilang Pintar','智能工厂实验室'],w:3,h:3,ht:46,cost:900000,upkeep:9000,base:'#d0d7de',roof:'#2b3f5c',icon:'🏭',lab:'eng',labSeats:80,cat:'Teaching',
     desc:['A teaching SMT line: 3D solder-paste inspection (SPI), 3D AOI and 3D X-ray (AXI), monitored by V-ONE manufacturing intelligence. +8 employability, +6 research a month.','Barisan SMT pengajaran: pemeriksaan pes pateri 3D (SPI), AOI 3D dan X-ray 3D (AXI), dipantau oleh kecerdasan pembuatan V-ONE. +8 kebolehpasaran, +6 penyelidikan sebulan.','教学用 SMT 生产线：3D 锡膏检测（SPI）、3D AOI 与 3D X 射线检测（AXI），由 V-ONE 制造智能系统监控。就业率 +8，每月研究 +6。']},
+  wbl:{name:['WBL Studio','Studio WBL','WBL 工作室'],w:2,h:2,ht:34,cost:280000,upkeep:3500,base:'#e3efe0',roof:'#17a35e',icon:'🛠️',cat:'Teaching',
+    desc:['Industry project space: 80 work-based learning places a month for schools that have a partner company. Coordinate it in the Industry tab.','Ruang projek industri: 80 tempat pembelajaran berasaskan kerja sebulan untuk pusat pengajian yang mempunyai syarikat rakan. Selaraskan di tab Industri.','企业项目空间：为有合作企业的学院每月提供 80 个工作本位学习名额。在“产业”页统筹安排。']},
   library:{name:['Library','Perpustakaan','图书馆'],w:3,h:2,ht:42,cost:500000,upkeep:6000,base:'#efe6d2',roof:'#5a7d3a',icon:'📖',cat:'Teaching',
     desc:['Quiet study that restores Learning. Required for University College.','Ruang belajar senyap yang memulihkan Pembelajaran. Diperlukan untuk Kolej Universiti.','安静的学习空间，可恢复“学习”。升格为大学学院的必要条件。']},
   research:{name:['Research Centre','Pusat Penyelidikan','研究中心'],w:3,h:2,ht:62,cost:1200000,upkeep:15000,base:'#cfe0ee',roof:'#21456b',icon:'🔬',glass:true,cat:'Research',
@@ -391,7 +395,7 @@ const FX = {
   cafe:{hunger:45,social:12}, hostel:{energy:15,fun:2}, lounge:{fun:22,social:22,energy:3},
   sports:{fun:28,social:12,energy:-3}, classroom:{learning:24,social:4}, hall:{learning:24,social:4},
   englab:{learning:28,fun:5}, complab:{learning:28,fun:4}, industry:{learning:30,fun:8},
-  library:{learning:30}, research:{learning:22}, admin:{social:3}, bus:{}, bikes:{}, hq:{learning:28,social:8,fun:6}, pond:{fun:20,social:10,energy:3},
+  library:{learning:30}, research:{learning:22}, wbl:{learning:26,social:8,fun:4}, admin:{social:3}, bus:{}, bikes:{}, hq:{learning:28,social:8,fun:6}, pond:{fun:20,social:10,energy:3},
   basketball:{fun:30,social:14,energy:-5}, badminton:{fun:28,social:10,energy:-5}, pingpong:{fun:24,social:16,energy:-2}, track:{fun:20,social:4,energy:-4},
 };
 const SPORT_T = ['sports','basketball','badminton','pingpong','track'];
@@ -418,6 +422,7 @@ const A = {
   bball:['Playing basketball','Bermain bola keranjang','打篮球'], badm:['Playing badminton','Bermain badminton','打羽毛球'],
   pp:['Playing table tennis','Bermain ping pong','打乒乓球'], jog:['Jogging on the track','Berjoging di trek','在跑道上跑步'],
   intern:['Interning at ViTrox HQ','Latihan industri di HQ ViTrox','在 ViTrox 总部实习'], visit:['Industry visit to ViTrox HQ','Lawatan industri ke HQ ViTrox','参观 ViTrox 总部'],
+  wblp:['Industry project at the WBL Studio','Projek industri di Studio WBL','在 WBL 工作室做企业项目'],
   koi:['Feeding the koi at the fish pond','Memberi ikan koi makan di kolam','在鱼塘喂锦鲤'],
   hqmeet:['Meeting the engineering team at HQ','Mesyuarat dengan pasukan jurutera di HQ','在总部与工程团队开会'],
 };
@@ -480,6 +485,7 @@ function newGame() {
   ['eng','eng','eng','comp','comp','mgmt','eng','comp','mgmt'].forEach(s => hire('master', s));
   hire('phd', 'eng'); hire('ind', 'eng');
   refreshPool();
+  initSystems();
   S.uid = uid;
 }
 function makeStaff(role, school) {
@@ -612,7 +618,7 @@ function chooseActivity(s) {
   const low = order[0];
   // work-based learning: senior students intern at the HQ next door; others go on visits
   if (weekday_ && h >= 9 && h < 16 && n.hunger > 30 && n.energy > 25) {
-    if (S.policies.wbl && s.year >= 2 && Math.random() < 0.16) return goTo(s, HQ_B, rnd(2, 3.5), A.intern);
+    if (S.policies.wbl && s.year >= 2 && Math.random() < 0.05 + 0.2 * (S.ind ? S.ind.rate : 0.5)) { const ws = pickB(['wbl']); return ws && Math.random() < 0.5 ? goTo(s, ws, rnd(2, 3.5), A.wblp) : goTo(s, HQ_B, rnd(2, 3.5), A.intern); }
     if (Math.random() < 0.04) return goTo(s, HQ_B, rnd(1, 1.8), A.visit);
   }
   if (weekday_ && h >= 9 && h < 17 && n.hunger > 25 && n.energy > 20 && Math.random() < 0.65) {
@@ -804,11 +810,12 @@ function dailyTick() {
   const trees = bOf('tree').length;
   let target = avg + 6 + (S.policies.mentor ? 4 : 0) + (S.policies.shuttle && has('bus') ? 2 : 0) + (S.policies.scholar ? 1 : 0) + (S.policies.iactg ? 2 : 0)
     + Math.min(4, Math.floor(trees / 5)) + (has('fountain') ? 2 : 0) + Math.min(4, SPORT_T.filter(has).length) + (has('bikes') ? 2 : 0)
-    - Math.max(0, c.ratio - 22) * 1.2 - (1 - CROWD.teach) * 30 - (1 - Math.min(CROWD.eng, CROWD.comp)) * 15 - (1 - CROWD.food) * 12;
+    - Math.max(0, c.ratio - 22) * 1.2 - (1 - CROWD.teach) * 30 - (1 - Math.min(CROWD.eng, CROWD.comp)) * 15 - (1 - CROWD.food) * 12 + (ssNow(c).pass - .8) * 15;
   S.sat += (clamp(target, 5, 100) - S.sat) * 0.2;
+  qaDay(c);
   for (const p of PROGS) {
     const st = S.progs[p.id];
-    if (st.state === 'accrediting' && --st.days <= 0) { st.state = 'running'; logD('result', ['MQA accredited {p}','MQA mengakreditasi {p}','MQA 认证了{p}'], { p: p.name }); toast(tr(['MQA accredited {p}. First intake at the next semester.','MQA telah mengakreditasi {p}. Pengambilan pertama pada semester depan.','MQA 已认证{p}，下学期开始招生。'], { p: tr(p.name) }), 'gold'); }
+    if (st.state === 'accrediting' && --st.days <= 0) { st.state = 'running'; S.qa[p.id] = { review: S.hours, cqi: null, next: S.hours + 24 * MO, status: 'full', score: null, condUntil: null }; logD('result', ['MQA accredited {p}','MQA mengakreditasi {p}','MQA 认证了{p}'], { p: p.name }); toast(tr(['MQA accredited {p}. First intake at the next semester.','MQA telah mengakreditasi {p}. Pengambilan pertama pada semester depan.','MQA 已认证{p}，下学期开始招生。'], { p: tr(p.name) }), 'gold'); }
   }
   if (S.application && --S.application.days <= 0) decideApplication();
   const d = dateAt(S.hours);
@@ -826,21 +833,14 @@ function monthlyTick(month) {
   const upkeep = Math.round(S.buildings.reduce((a, b) => a + BT[b.t].upkeep, 0) * md.upkeep);
   const overhead = 15000 + 45 * c.students;
   const pol = (S.policies.mentor ? 60 * c.students : 0) + (S.policies.wbl ? 40 * c.students : 0) + (S.policies.shuttle && has('bus') ? 12000 : 0)
-    + (S.policies.scholar ? Math.round(c.students * 0.05) * 1800 : 0) + (S.policies.iactg ? 10000 : 0);
+    + (S.policies.scholar ? Math.round(c.students * 0.05) * 1800 : 0) + (S.policies.iactg ? 10000 : 0) + SUPPORT[S.support].cost * c.students;
   const interest = Math.round(S.loan * 0.005);
   const out = share + salaries + sponsor + upkeep + overhead + pol + S.marketing + S.rfund + interest;
   S.cash += tuition + rent - out;
   S.last = { tuition, rent, grants: S.acc.grants, share, salaries, sponsor, upkeep, overhead, pol, marketing: S.marketing, rfund: S.rfund, interest, oneoff: S.acc.oneoff, capex: S.acc.capex,
     net: tuition + rent + S.acc.grants - out - S.acc.oneoff - S.acc.capex, m: (month + 11) % 12 };
   S.acc = { grants: 0, oneoff: 0, capex: 0 };
-  let grads = 0;
-  const dropRate = 0.003 + Math.max(0, 60 - S.sat) * 0.0009;
-  for (const co of S.cohorts) {
-    const l = Math.min(co.count, Math.floor(co.count * dropRate + Math.random()));
-    co.count -= l;
-    if (--co.left <= 0) { grads += co.count; co.count = 0; }
-  }
-  S.cohorts = S.cohorts.filter(co => co.count > 0);
+  const ssm = studentMonth(c), grads = ssm.grads, ind = industryMonth(c), ssn = ssNow(c);
   S.graduates += grads;
   if (grads) logD('result', ['Convocation: {g} graduates','Konvokesyen: {g} graduan','毕业典礼：{g} 名毕业生'], { g: grads }, ['{e}% employed within 6 months','{e}% bekerja dalam 6 bulan','{e}% 在 6 个月内就业'], { e: Math.round(S.employ) });
   if (grads) toast(tr(['Convocation: {g} graduates this month. {e}% employed within 6 months.','Konvokesyen: {g} graduan bulan ini. {e}% bekerja dalam 6 bulan.','毕业典礼：本月 {g} 名毕业生，{e}% 在 6 个月内就业。'], { g: grads, e: Math.round(S.employ) }), 'gold');
@@ -848,12 +848,13 @@ function monthlyTick(month) {
   let rr = c.phd * 1.2 + c.prof * 4 + c.master * 0.15 + c.postgrad * 0.15 + (has('industry') ? 6 : 0) + S.rfund / 5000;
   if (has('research')) rr *= 1.6;
   S.researchRate = rr; S.research += rr;
-  const empT = clamp(70 + (has('industry') ? 8 : 0) + (S.policies.wbl ? 5 : 0) + (S.policies.mentor ? 4 : 0) + (S.rep - 50) * 0.15 + indRatio * 40 + S.employBonus, 40, 99);
+  const empT = clamp(70 + (has('industry') ? 8 : 0) + ind.rate * 12 + Math.min(4, Object.keys(S.ind.partners).length - 1) + (S.policies.mentor ? 4 : 0) + (ssn.pass - .8) * 20
+    + (S.rep - 50) * 0.15 + indRatio * 40 + S.employBonus, 40, 99);
   S.employ += (empT - S.employ) * 0.3;
   const kinds = ['classroom','library','cafe','hostel','lounge','sports','englab','complab','research','industry','hall'];
   const fac = kinds.filter(has).length / kinds.length * 100;
   const repT = 0.35 * S.sat + 0.25 * S.employ + 0.15 * Math.min(100, c.phdPct * 2) + 0.15 * Math.min(100, rr * 1.2) + 0.1 * fac
-    - Math.max(0, c.ratio - 25) * 0.8 + (S.policies.scholar ? 3 : 0) + S.stage * 3;
+    - Math.max(0, c.ratio - 25) * 0.8 + (S.policies.scholar ? 3 : 0) + S.stage * 3 + (qaAvg(c) - 65) * .08 + (ssn.pass - .8) * 10;
   S.rep = clamp(S.rep + (repT + S.repBonus - S.rep) * 0.12, 0, 100);
   S.repBonus *= 0.9; S.employBonus *= 0.92;
   const mT = 72 - Math.max(0, c.ratio - 20) * 2 + (has('lounge') ? 5 : 0) + (S.policies.iactg ? 6 : 0) + (has('research') ? 4 : 0) - (S.cash < 0 ? 12 : 0);
@@ -871,6 +872,7 @@ function monthlyTick(month) {
   const c2 = counts(), L2 = S.last;
   S.history.push({ t: S.hours - 12, cash: S.cash, students: c2.students, rep: S.rep, sat: S.sat, employ: S.employ, ratio: +c2.ratio.toFixed(2), phdPct: c2.phdPct,
     staff: c2.staff, research: S.research, rr: S.researchRate, teach: +(CROWD ? CROWD.teach : 1).toFixed(2),
+    pass: +ssn.pass.toFixed(3), qa: Math.round(qaAvg(c2)), place: +ind.rate.toFixed(3), drops: ssm.drops,
     income: L2.tuition + L2.rent + L2.grants, expense: L2.tuition + L2.rent + L2.grants - L2.net,
     ex: { sal: L2.salaries + L2.sponsor, up: L2.upkeep, cap: L2.capex, pol: L2.pol + L2.marketing + L2.rfund, adm: L2.overhead + L2.share + L2.interest, ev: L2.oneoff } });
   if (S.history.length > 240) S.history.shift();
@@ -883,7 +885,8 @@ function intake(month) {
   const c = counts(), k = capacity();
   const repM = 0.4 + S.rep / 50, mkt = 0.7 + 0.6 * Math.sqrt(S.marketing / 20000), sch = S.policies.scholar ? 1.15 : 1, od = (S.openDay ? 1.25 : 1) * MOD().demand, st = [1, 1.2, 1.4][S.stage];
   const want = [];
-  for (const p of PROGS) if (S.progs[p.id].state === 'running') want.push({ p, n: Math.round(DEMAND[p.lvl] * repM * mkt * sch * od * st * rnd(0.85, 1.15)) });
+  const ent = ENTRY[S.entry].dem;
+  for (const p of PROGS) if (S.progs[p.id].state === 'running') want.push({ p, n: Math.round(DEMAND[p.lvl] * repM * mkt * sch * od * st * ent * qaDemand(p, c) * rnd(0.85, 1.15)) });
   const demand = want.reduce((a, w) => a + w.n, 0);
   const left = { all: Math.max(0, k.teach - c.students), eng: Math.max(0, k.eng - c.eng), comp: Math.max(0, k.comp - c.comp) };
   for (const sc of ['eng', 'comp']) { const ws = want.filter(w => w.p.school === sc), t = ws.reduce((a, w) => a + w.n, 0); if (t > left[sc]) ws.forEach(w => w.n = Math.floor(w.n * left[sc] / t)); }
@@ -963,7 +966,7 @@ function decideApplication() {
 // ================= scenarios =================
 // Each scenario changes the starting campus and market, sets goals with a deadline, and is scored in stars.
 const goalRow = (label, cur, need, f = v => fmtN(v), atMost = false) => ({ label, ok: atMost ? cur <= need : cur >= need, txt: `${f(cur)} ${atMost ? '≤' : '/'} ${f(need)}` });
-const goalBld = t => ({ label: [bname(t)], ok: has(t), txt: has(t) ? tr(['Built','Dibina','已建']) : tr(['Missing','Tiada','未建']) });
+const goalBld = t => ({ t, label: [bname(t)], ok: has(t), txt: has(t) ? tr(['Built','Dibina','已建']) : tr(['Missing','Tiada','未建']) });
 const pctF = v => Math.round(v) + '%';
 const GL = { stu: ['Students enrolled','Pelajar berdaftar','在籍学生'], sat: ['Student satisfaction','Kepuasan pelajar','学生满意度'], ratio: ['Students per academic','Pelajar bagi setiap akademik','师生比'],
   seats: ['Teaching seats in use','Tempat duduk kuliah digunakan','教学座位使用率'], phd: ['Academics with a PhD','Akademik berPhD','拥有博士学位的学术人员'], res: ['Research points (total)','Mata penyelidikan (jumlah)','研究积分（累计）'],
@@ -1020,7 +1023,7 @@ function applyScenario(id) {
   refreshPool(); CROWD = crowd();
   logD('result', ['Started the scenario {s}','Memulakan senario {s}','开始情境：{s}'], { s: sc.name });
 }
-function startScenario(id) { newGame(); applyScenario(id); sims = []; syncSims(); fitCam(); setTab('goals'); updateTop(); }
+function startScenario(id) { newGame(); applyScenario(id); initSystems(); sims = []; syncSims(); fitCam(); setTab('goals'); updateTop(); }
 let bestRuns = {}; try { bestRuns = JSON.parse(localStorage.getItem('vcsim-best') || '{}'); } catch (e) {}
 function checkScenario() {
   const sc = curScn(); if (!S.scn || sc.id === 'uni' || S.scn.done || S.scn.failed) return false;
@@ -1160,6 +1163,194 @@ function maybeEvent() {
   showModal({ title: e.title, body: tr(e.body), choices, kicker: ['Campus event','Peristiwa kampus','校园事件'] });
 }
 
+// ================= industry partners, student success, quality assurance =================
+// Partner companies other than ViTrox are fictional.
+const PARTNERS = [
+  { id:'vitrox', name:['ViTrox','ViTrox','ViTrox'], sec:['Machine vision and automated inspection','Penglihatan mesin dan pemeriksaan automatik','机器视觉与自动化检测'], sch:['eng','comp'], slots:30, rep:0, stage:0, cost:0, spons:6000 },
+  { id:'jelutong', name:['Jelutong Logistics','Jelutong Logistics','日落洞物流'], sec:['Supply chain and logistics','Rantaian bekalan dan logistik','供应链与物流'], sch:['mgmt'], slots:25, rep:30, stage:0, cost:20000, spons:5000 },
+  { id:'kawan', name:['Kawan Semiconductor','Kawan Semiconductor','Kawan 半导体'], sec:['Chip packaging and test','Pembungkusan dan ujian cip','芯片封装与测试'], sch:['eng'], slots:25, rep:35, stage:0, cost:30000, spons:8000 },
+  { id:'pulau', name:['Pulau Data Systems','Pulau Data Systems','Pulau 数据系统'], sec:['Cloud and AI software','Perisian awan dan AI','云计算与 AI 软件'], sch:['comp'], slots:25, rep:40, stage:0, cost:30000, spons:8000 },
+  { id:'mutiara', name:['Mutiara MedTech','Mutiara MedTech','珍珠医疗科技'], sec:['Medical device manufacturing','Pembuatan peranti perubatan','医疗器械制造'], sch:['eng','mgmt'], slots:20, rep:45, stage:0, cost:40000, spons:10000 },
+  { id:'cassia', name:['Cassia Robotics','Cassia Robotics','Cassia 机器人'], sec:['Robotics and automation','Robotik dan automasi','机器人与自动化'], sch:['eng','comp'], slots:20, rep:50, stage:0, cost:50000, spons:12000 },
+  { id:'seberang', name:['Seberang Smart Factory Consortium','Konsortium Kilang Pintar Seberang','威省智能工厂联盟'], sec:['Industry 4.0 SMEs','PKS Industri 4.0','工业 4.0 中小企业'], sch:['eng','mgmt'], slots:40, rep:60, stage:1, cost:80000, spons:20000 },
+];
+const PT = Object.fromEntries(PARTNERS.map(p => [p.id, p]));
+const SUPPORT = [
+  { n:['None','Tiada','无'], cost:0, v:0 }, { n:['Peer tutoring','Tutor rakan sebaya','同侪辅导'], cost:20, v:.4 },
+  { n:['Learning centre','Pusat pembelajaran','学习中心'], cost:45, v:.7 }, { n:['Early alert + counselling','Amaran awal + kaunseling','预警 + 辅导'], cost:80, v:1 } ];
+const ENTRY = { open:{ n:['Open','Terbuka','宽松'], dem:1.2, prep:.35 }, std:{ n:['Standard','Standard','标准'], dem:1, prep:.6 }, sel:{ n:['Selective','Terpilih','严格'], dem:.75, prep:.85 } };
+const MO = 24 * 30.4;   // game hours in a month
+const monthsSince = h => h == null ? Infinity : (S.hours - h) / MO;
+const enrolledIn = id => S.cohorts.reduce((a, co) => a + (co.p === id ? co.count : 0), 0);
+const running = () => PROGS.filter(p => S.progs[p.id].state === 'running');
+const pctS = v => v == null ? '–' : Math.round(v * 100) + '%';
+function initSystems() {
+  S.ind = S.ind || { partners: { vitrox: { rel: 70, since: 0 } }, rate: 0, placed: 0, eligible: 0 };
+  S.ss = S.ss || {}; S.qa = S.qa || {}; S.tasks = S.tasks || []; S.iap = S.iap || {};
+  if (S.support == null) S.support = 0; if (!S.entry) S.entry = 'std';
+  for (const p of running()) if (!S.qa[p.id]) S.qa[p.id] = { review: S.hours - 6 * MO, cqi: null, next: S.hours + 18 * MO, status: 'full', score: null, condUntil: null };
+}
+
+// ---------- student success: pass rates from teaching, staff, facilities, support and intake preparation ----------
+const SS_W = { teach: .15, qual: .08, fac: .1, support: .1, prep: .12 };
+const SS_F = { teach: ['Too many students per lecturer','Terlalu ramai pelajar bagi setiap pensyarah','每位讲师的学生太多'], qual: ['Few PhD lecturers','Kurang pensyarah PhD','博士讲师太少'],
+  fac: ['Crowded labs, seats or no library','Makmal atau tempat duduk sesak, atau tiada perpustakaan','实验室或座位拥挤，或没有图书馆'], support: ['Little academic support','Sokongan akademik kurang','学业支持不足'], prep: ['Weakly prepared intake','Pelajar baharu kurang bersedia','新生基础较弱'] };
+function success(p, c) {
+  if (!CROWD) CROWD = crowd();
+  const a = c.sch[p.school], ratio = a[0] ? c[p.school] / a[0] : 60;
+  const lab = p.school === 'eng' ? Math.min(CROWD.eng, CROWD.teach) : p.school === 'comp' ? Math.min(CROWD.comp, CROWD.teach) : CROWD.teach;
+  const f = { teach: clamp(1 - Math.max(0, ratio - 20) / 40, 0, 1), qual: Math.min(1, a[0] ? a[1] / a[0] * 2.5 : 0), fac: clamp(lab * (has('library') ? 1 : .85), 0, 1),
+    support: Math.min(1, SUPPORT[S.support].v * .75 + (S.policies.mentor ? .3 : 0)), prep: ENTRY[S.entry].prep };
+  const diff = { dip: 0, fra: .03, deg: .04, mas: .02, phd: 0 }[p.lvl];
+  const pass = clamp(.5 + Object.keys(SS_W).reduce((s, k) => s + SS_W[k] * f[k], 0) - diff + (S.morale - 60) / 400, .4, .98);
+  const weak = Object.keys(SS_W).sort((x, y) => SS_W[y] * (1 - f[y]) - SS_W[x] * (1 - f[x]))[0];
+  return { pass, f, ratio, weak };
+}
+// enrolment-weighted pass rate and students at risk across running programmes, right now
+function ssNow(c) {
+  let n = 0, pw = 0, risk = 0;
+  for (const p of PROGS) { const e = enrolledIn(p.id); if (!e) continue; const s = success(p, c); n += e; pw += e * s.pass; risk += Math.round(e * (1 - s.pass) * .6); }
+  let grad = 0, drop = 0, late = 0; for (const k in S.ss) { grad += S.ss[k].grad; drop += S.ss[k].drop; late += S.ss[k].late; }
+  return { pass: n ? pw / n : .85, risk, grad, drop, gradRate: grad ? grad / (grad + drop) : null, onTime: grad ? 1 - late / grad : null };
+}
+// a month of study: students who struggle may fall behind a semester or drop out; finishing cohorts graduate
+function studentMonth(c) {
+  const out = { grads: 0, drops: 0 }, pr = {};
+  for (const co of S.cohorts) {
+    const p = P[co.p], r = pr[co.p] ||= success(p, c), fail = 1 - r.pass, ss = S.ss[co.p] ||= { grad: 0, drop: 0, late: 0 };
+    const l = Math.min(co.count, Math.floor(co.count * (fail * .035 + Math.max(0, 60 - S.sat) * .0006) + Math.random()));
+    co.count -= l; ss.drop += l; out.drops += l;
+    co.slip = (co.slip || 0) + fail * .18; if (co.slip >= 1) { co.slip -= 1; co.left++; co.late = true; }
+    if (--co.left <= 0) { ss.grad += co.count; if (co.late) ss.late += co.count; out.grads += co.count; co.count = 0; }
+  }
+  S.cohorts = S.cohorts.filter(co => co.count > 0);
+  return out;
+}
+
+// ---------- industry-driven education: partner places, WBL Studio projects and supervisors ----------
+function eligibleBySchool() {
+  const e = { eng: 0, comp: 0, mgmt: 0 };
+  for (const co of S.cohorts) { const p = P[co.p]; if (p.lvl !== 'phd' && p.months - co.left >= 12) e[p.school] += co.count; }
+  return e;
+}
+function industryCalc(c) {
+  c = c || counts();
+  const el = eligibleBySchool(), sl = { eng: 0, comp: 0, mgmt: 0 };
+  for (const [id, st] of Object.entries(S.ind.partners)) { const p = PT[id]; p.sch.forEach(sc => sl[sc] += p.slots * (.6 + st.rel / 250) / p.sch.length); }
+  const studio = bOf('wbl').length * 80, sup = 10 + c.ind * 40 + (c.staff - c.ind) * 2 + (S.policies.mentor ? 10 : 0), on = S.policies.wbl;
+  const byS = {}; let placed = 0, fromP = 0, left = studio; const uncovered = [];
+  for (const sc of ['eng', 'comp', 'mgmt']) {
+    const e = on ? el[sc] : 0, p1 = Math.min(e, Math.round(sl[sc])), p2 = sl[sc] > 0 ? Math.min(e - p1, left) : 0;
+    left -= p2; byS[sc] = { el: el[sc], slots: Math.round(sl[sc]), pl: p1 + p2 }; placed += p1 + p2; fromP += p1;
+    if (el[sc] > 0 && sl[sc] === 0) uncovered.push(sc);
+  }
+  const wanted = placed, capped = placed > sup;
+  if (capped) { const k = sup / placed; placed = 0; for (const sc in byS) { byS[sc].pl = Math.floor(byS[sc].pl * k); placed += byS[sc].pl; } fromP *= k; }
+  const eligible = el.eng + el.comp + el.mgmt, slots = Math.round(sl.eng + sl.comp + sl.mgmt);
+  const binding = !on ? 'off' : placed >= eligible * .98 ? 'none' : capped ? 'sup' : uncovered.length ? 'cover' : 'slots';
+  return { eligible, placed, rate: eligible ? placed / eligible : 0, sup, slots, studio, byS, binding, uncovered, fill: slots ? Math.min(1, fromP / slots) : 0, supOK: wanted ? Math.min(1, sup / wanted) : 1 };
+}
+function industryMonth(c) {
+  const r = industryCalc(c); Object.assign(S.ind, { rate: r.rate, placed: r.placed, eligible: r.eligible });
+  let sponsor = 0;
+  for (const [id, st] of Object.entries(S.ind.partners)) {
+    const p = PT[id], progs = running().filter(x => p.sch.includes(x.school)), pass = progs.length ? progs.reduce((a, x) => a + success(x, c).pass, 0) / progs.length : .8;
+    const iap = p.sch.some(sc => monthsSince(S.iap[sc]) <= 12) ? 8 : 0;
+    const relT = S.policies.wbl ? 30 + 30 * r.fill + 20 * r.supOK + 40 * (pass - .7) + iap : 32 + iap;
+    st.rel = clamp(st.rel + (relT - st.rel) * .15, 0, 100);
+    if (st.rel >= 70) sponsor += p.spons;
+    if (id !== 'vitrox' && st.rel < 22) {
+      delete S.ind.partners[id];
+      logD('result', ['{p} ended the partnership','{p} menamatkan perkongsian','{p}终止了合作'], { p: p.name }, ['Relationship fell to {r}: unused places, weak supervision or low pass rates','Hubungan jatuh ke {r}: tempat tidak digunakan, penyeliaan lemah atau kadar lulus rendah','关系降至 {r}：名额闲置、督导不足或通过率偏低'], { r: Math.round(st.rel) });
+      toast(tr(['{p} ended the partnership. Keep placements filled and supervised.','{p} menamatkan perkongsian. Pastikan penempatan diisi dan diselia.','{p}终止了合作。请确保实习名额用满并有人督导。'], { p: tr(p.name) }), 'bad');
+    }
+  }
+  if (sponsor) gain(sponsor);
+  return r;
+}
+function partnerLocked(p) {
+  if (S.ind.partners[p.id]) return tr(['Already a partner','Sudah menjadi rakan','已是合作企业']);
+  if (p.stage > S.stage) return tr(['Needs {s} status','Perlu status {s}','需要{s}地位'], { s: tr(STAGES[p.stage]) });
+  if (S.rep < p.rep) return tr(['Needs reputation {r}','Perlu reputasi {r}','需要声誉 {r}'], { r: p.rep });
+  if (S.cash < p.cost) return tr(['Not enough cash','Tunai tidak mencukupi','现金不足']);
+  return null;
+}
+function signPartner(id) {
+  const p = PT[id]; if (partnerLocked(p)) return;
+  spend(p.cost); S.ind.partners[id] = { rel: 55, since: S.hours };
+  logD('partner', ['Signed an MoU with {p} ({c})','Menandatangani MoU dengan {p} ({c})','与{p}签署合作备忘录（{c}）'], { p: p.name, c: fmtRM(p.cost) });
+  toast(tr(['MoU signed with {p}: up to {n} placement places for {s}.','MoU ditandatangani dengan {p}: sehingga {n} tempat penempatan untuk {s}.','已与{p}签署备忘录：为{s}提供最多 {n} 个实习名额。'], { p: tr(p.name), n: p.slots, s: p.sch.map(schoolOf).join(', ') }), 'gold');
+  refreshPanel(true); updateTop();
+}
+function holdIAP(sc) {
+  const ps = Object.keys(S.ind.partners).filter(id => PT[id].sch.includes(sc));
+  if (!ps.length || S.cash < 8000 || monthsSince(S.iap[sc]) < 3) return;
+  spend(8000); S.iap[sc] = S.hours; ps.forEach(id => S.ind.partners[id].rel = Math.min(100, S.ind.partners[id].rel + 5));
+  logD('qa', ['Convened the {s} industry advisory panel (RM 8k)','Mengadakan panel penasihat industri {s} (RM 8k)','召开{s}产业咨询委员会会议（RM 8k）'], { s: SHORT[sc] }, ['{n} partner(s) reviewed the curriculum. Relationship +5','{n} rakan menyemak kurikulum. Hubungan +5','{n} 家合作企业审阅了课程。关系 +5'], { n: ps.length });
+  toast(tr(['Industry advisory panel met for {s}. Partners gave curriculum feedback.','Panel penasihat industri bermesyuarat untuk {s}. Rakan memberi maklum balas kurikulum.','{s}产业咨询委员会已开会，合作企业提出了课程意见。'], { s: schoolOf(sc) }), 'gold');
+  refreshPanel(true); updateTop();
+}
+
+// ---------- accreditation & quality assurance: six criteria, review tasks and periodic MQA audits ----------
+const QA_W = { review: 15, staff: 20, fac: 15, iap: 15, out: 20, cqi: 15 };
+const QA_N = { review: ['Curriculum reviewed in the last 12 months','Kurikulum disemak dalam 12 bulan lepas','近 12 个月内完成课程审查'], staff: ['Qualified lecturers and ratio','Pensyarah berkelayakan dan nisbah','师资资格与师生比'],
+  fac: ['Facilities','Kemudahan','设施条件'], iap: ['Industry advisory panel','Panel penasihat industri','产业咨询委员会'], out: ['Student outcomes','Pencapaian pelajar','学生成果'], cqi: ['Continuous improvement (CQI)','Penambahbaikan berterusan (CQI)','持续改进（CQI）'] };
+const QA_ST = { full: ['Full accreditation','Akreditasi penuh','完全认证'], cond: ['Accredited with conditions','Akreditasi bersyarat','有条件认证'], susp: ['Intake suspended','Pengambilan digantung','暂停招生'] };
+function qaCrit(p, c) {
+  const q = S.qa[p.id] || {}, s = success(p, c), a = c.sch[p.school], rs = monthsSince(q.review);
+  const needPhd = p.req?.phd?.[p.school] || (['dip', 'fra'].includes(p.lvl) ? 0 : 1);
+  const partner = Object.keys(S.ind.partners).some(id => PT[id].sch.includes(p.school));
+  return { review: rs <= 12 ? 1 : rs <= 24 ? .5 : 0, staff: clamp(1 - Math.max(0, s.ratio - 22) / 15, 0, 1) * (a[1] >= needPhd ? 1 : .5),
+    fac: s.f.fac * ((p.req?.bld || []).every(has) ? 1 : .5), iap: monthsSince(S.iap[p.school]) <= 12 ? 1 : partner ? .5 : 0,
+    out: clamp(((s.pass - .6) / .3 + (S.employ - 60) / 30) / 2, 0, 1), cqi: monthsSince(q.cqi) <= 12 ? 1 : 0 };
+}
+const qaScore = cr => Math.round(Object.keys(QA_W).reduce((a, k) => a + QA_W[k] * cr[k], 0));
+const qaOutcome = sc => sc >= 75 ? 'full' : sc >= 40 ? 'cond' : 'susp';
+function qaAvg(c) { const ps = running(); return ps.length ? ps.reduce((a, p) => a + qaScore(qaCrit(p, c)), 0) / ps.length : 70; }
+const TASKS = { review: { n: ['Curriculum review','Semakan kurikulum','课程审查'], cost: 15000, days: 30 }, cqi: { n: ['CQI action plan','Pelan tindakan CQI','持续改进行动计划'], cost: 10000, days: 20 } };
+function taskBlocked(k, id) {
+  if (S.tasks.some(x => x.k === k && x.p === id)) return tr(['In progress','Sedang berjalan','进行中']);
+  if (k === 'cqi' && monthsSince(S.qa[id]?.review) > 12) return tr(['Needs a curriculum review first','Perlu semakan kurikulum dahulu','需先完成课程审查']);
+  if (S.cash < TASKS[k].cost) return tr(['Not enough cash','Tunai tidak mencukupi','现金不足']);
+  return null;
+}
+function startTask(k, id) {
+  if (taskBlocked(k, id)) return; const t = TASKS[k];
+  spend(t.cost); S.tasks.push({ k, p: id, days: t.days });
+  logD('qa', ['Started a {t} for {p} ({c})','Memulakan {t} untuk {p} ({c})','为{p}启动{t}（{c}）'], { t: t.n, p: P[id].name, c: fmtRM(t.cost) });
+  toast(tr(['{t} started for {p}. Ready in {d} days.','{t} dimulakan untuk {p}. Siap dalam {d} hari.','{p}的{t}已启动，{d} 天后完成。'], { t: tr(t.n), p: tr(P[id].name), d: t.days }));
+  refreshPanel(true); updateTop();
+}
+function qaDay(c) {
+  for (const t of [...S.tasks]) if (--t.days <= 0) {
+    S.tasks.splice(S.tasks.indexOf(t), 1); const q = S.qa[t.p]; if (!q) continue; q[t.k] = S.hours;
+    let res = null;
+    if (t.k === 'cqi' && q.status === 'cond') { q.status = 'full'; q.condUntil = null; res = ['Conditions met: full accreditation restored','Syarat dipenuhi: akreditasi penuh dipulihkan','条件已满足：恢复完全认证']; }
+    if (t.k === 'cqi' && q.status === 'susp') { q.next = Math.min(q.next, S.hours + MO); res = ['MQA will re-audit next month','MQA akan mengaudit semula bulan depan','MQA 将于下月重新审核']; }
+    logD('result', ['{t} finished for {p}','{t} selesai untuk {p}','{p}的{t}已完成'], { t: TASKS[t.k].n, p: P[t.p].name }, res);
+    toast(tr(['{t} finished for {p}.','{t} selesai untuk {p}.','{p}的{t}已完成。'], { t: tr(TASKS[t.k].n), p: tr(P[t.p].name) }) + (res ? ' ' + tr(res) + '.' : ''), 'gold');
+  }
+  for (const p of running()) {
+    const q = S.qa[p.id]; if (!q) continue;
+    if (q.status === 'cond' && q.condUntil && S.hours >= q.condUntil) {
+      q.status = 'susp'; q.condUntil = null; q.next = S.hours + 6 * MO;
+      logD('result', ['MQA suspended intake for {p}','MQA menggantung pengambilan {p}','MQA 暂停了{p}的招生'], { p: p.name }, ['No CQI plan within six months of the conditions','Tiada pelan CQI dalam enam bulan selepas syarat','附带条件后六个月内未完成持续改进计划']);
+      toast(tr(['MQA suspended new intake for {p}: the conditions were not met. Finish a CQI plan to get re-audited.','MQA menggantung pengambilan baharu {p}: syarat tidak dipenuhi. Siapkan pelan CQI untuk diaudit semula.','MQA 暂停了{p}的招生：未满足认证条件。完成持续改进计划即可申请重新审核。'], { p: tr(p.name) }), 'bad');
+    }
+    if (S.hours < q.next) continue;
+    const cr = qaCrit(p, c), sc = qaScore(cr), o = qaOutcome(sc), weak = Object.keys(QA_W).filter(k => cr[k] < .75).map(k => tr(QA_N[k]));
+    q.score = sc; q.status = o;
+    if (o === 'full') { q.next = S.hours + 36 * MO; q.condUntil = null; S.repBonus += 2; }
+    else if (o === 'cond') { q.next = S.hours + 12 * MO; q.condUntil = S.hours + 6 * MO; }
+    else { q.next = S.hours + 6 * MO; S.repBonus -= 3; }
+    logD('result', ['MQA audit of {p}: {s} ({n}/100)','Audit MQA {p}: {s} ({n}/100)','MQA 审核{p}：{s}（{n}/100）'], { p: p.name, s: QA_ST[o], n: sc }, weak.length ? ['Weak areas: {w}','Kawasan lemah: {w}','薄弱环节：{w}'] : null, weak.length ? { w: weak.join(', ') } : null);
+    toast(tr(['MQA audit of {p}: {s}, score {n}/100.','Audit MQA {p}: {s}, skor {n}/100.','MQA 审核{p}：{s}，得分 {n}/100。'], { p: tr(p.name), s: tr(QA_ST[o]), n: sc })
+      + (o === 'cond' ? ' ' + tr(['Finish a CQI plan within 6 months.','Siapkan pelan CQI dalam 6 bulan.','请在 6 个月内完成持续改进计划。']) : ''), o === 'full' ? 'gold' : 'bad');
+  }
+}
+// applicants follow programme quality; suspended programmes take nobody
+function qaDemand(p, c) { const q = S.qa[p.id]; if (q && q.status === 'susp') return 0; return (.85 + qaScore(qaCrit(p, c)) / 100 * .3) * (q && q.status === 'cond' ? .9 : 1); }
+
 // ================= modal =================
 const modalEl = document.getElementById('modal');
 const modalOpen = () => !modalEl.hidden;
@@ -1215,7 +1406,7 @@ function load() {
     const d = JSON.parse(localStorage.getItem(KEY));
     if (d && (d.v === 1 || d.v === 2)) {
       S = d; S.v = 2; if (S.customName === undefined) S.customName = null; delete S.name;
-      S.policies.iactg = !!S.policies.iactg; S.scn = S.scn || { id: 'uni', start: 0, done: false, failed: false }; S.log = S.log || []; S.intakes = S.intakes || []; uid = S.uid || 1e5; sims = []; syncSims(); return true;
+      S.policies.iactg = !!S.policies.iactg; S.scn = S.scn || { id: 'uni', start: 0, done: false, failed: false }; S.log = S.log || []; S.intakes = S.intakes || []; initSystems(); uid = S.uid || 1e5; sims = []; syncSims(); return true;
     }
   } catch (e) {}
   return false;
@@ -1708,6 +1899,11 @@ function makeInterior(b) {
     cyl(.24, .02, '#c49567', Wd - .7, .18, 1.15); cyl(.04, .18, '#9aa3ad', Wd - .7, 0, 1.15);
     for (const [dx, dz, f] of [[.32, 0, -PI / 2], [-.32, 0, PI / 2], [0, -.32, 0]]) chair(Wd - .7 + dx, 1.15 + dz, f, '#36587c');
     plant(x0 + .2, z1 - .25); plant(x1 - .2, z0 + .25);
+  }
+  else if (b.t === 'wbl') {
+    box(1.4, .42, .03, '#17a35e', mid, .35, z0 + .05); box(1.3, .34, .005, '#dff3e7', mid, .39, z0 + .07, true); labels.push([tr(['Industry projects','Projek industri','企业项目']), mid, .95, z0 + .07]);
+    for (const [tx, tz] of [[.6, .85], [1.4, .85], [1.0, 1.5]]) { box(.5, .22, .34, '#e8e0d0', tx, 0, tz); box(.16, .1, .12, '#9aa3ad', tx, .22, tz); box(.1, .06, .004, '#7dffb0', tx, .27, tz + .061, true); stand(tx - .18, tz + .3, PI); stand(tx + .18, tz - .3, 0); }
+    stand(x1 - .3, .45, -PI / 2, staff);
   }
   else if (b.t === 'badminton') {
     for (const cx of [0.85, 2.15]) {
@@ -2271,6 +2467,9 @@ function refreshPanel(force) {
 const schoolOf = sc => tr(SHORT[sc]);
 function renderTab() {
   const c = counts();
+  if (curTab === 'ind') return renderIndustry(c);
+  if (curTab === 'qual') return renderQuality(c);
+  if (curTab === 'adv') return renderAdvisor(c);
   if (curTab === 'goals') {
     const t = S.stage + 1;
     let h = scenarioPanel() + `<div class="sec"><p class="eyebrow">${esc(tr(['Institution status','Status institusi','院校地位']))}</p><div class="ladder">${STAGES.map((s, i) => `<div class="rung ${i < S.stage ? 'done' : i === S.stage ? 'on' : ''}">${esc(tr(s))}</div>`).join('')}</div></div>`;
@@ -2345,7 +2544,7 @@ function renderTab() {
       ${[...S.staff].sort((a, b) => order.indexOf(a.role) - order.indexOf(b.role)).map(s => `<div class="row"><div class="l"><div class="n">${esc(ROLES[s.role].title + s.name)}</div><div class="d">${esc(tr(ROLES[s.role].t))} · ${esc(schoolOf(s.school))} · ${fmtRM(s.salary)}${esc(tr(['/mo','/bln','/月']))}${s.sponsor ? ' · ' + esc(tr(['PhD in {m} mo','PhD dalam {m} bln','{m} 个月后获博士'], { m: s.sponsor })) : ''}</div></div>
         ${sims.some(x => x.staffId === s.id) ? `<button class="btn" data-w="${s.id}" aria-label="${esc(tr(['Watch','Tonton','跟随']))}">👁</button>` : ''}${s.role === 'master' && !s.sponsor ? `<button class="btn" data-sp="${s.id}">${esc(tr(['Sponsor PhD','Taja PhD','资助读博']))}</button>` : ''}<button class="btn danger" data-f="${s.id}">${esc(tr(['Let go','Lepaskan','解聘']))}</button></div>`).join('')}</div>`;
     body.innerHTML = h;
-    body.querySelectorAll('[data-h]').forEach(b => b.onclick = () => { const s = S.pool.splice(+b.dataset.h, 1)[0]; S.staff.push(s); syncSims(); logD('hire', ['Hired {n} ({r}, {c}/month)','Mengambil {n} ({r}, {c}/bulan)','聘请 {n}（{r}，月薪 {c}）'], { n: ROLES[s.role].title + s.name, r: ROLES[s.role].t, c: fmtRM(s.salary) }); toast(tr(['{n} joins the {s}.','{n} menyertai {s}.','{n} 加入了{s}。'], { n: ROLES[s.role].title + s.name, s: tr(SCHOOLS[s.school]) })); renderTab(); updateTop(); });
+    body.querySelectorAll('[data-h]').forEach(b => b.onclick = () => { hireStaff(+b.dataset.h); renderTab(); updateTop(); });
     body.querySelectorAll('[data-w]').forEach(b => b.onclick = () => { const s = sims.find(x => x.staffId === +b.dataset.w); if (s) startFollow(s); });
     body.querySelectorAll('[data-sp]').forEach(b => b.onclick = () => { const s = S.staff.find(x => x.id === +b.dataset.sp); s.sponsor = 24; logD('sponsor', ['Sponsored a PhD for {n} (RM 2,500/month, 24 months)','Menaja PhD untuk {n} (RM 2,500/bulan, 24 bulan)','资助 {n} 攻读博士（每月 RM 2,500，24 个月）'], { n: s.name }); toast(tr(['{n} starts a sponsored PhD.','{n} memulakan PhD tajaan.','{n} 开始攻读资助博士。'], { n: s.name })); renderTab(); });
     body.querySelectorAll('[data-f]').forEach(b => b.onclick = () => { const s = S.staff.find(x => x.id === +b.dataset.f); spend(s.salary); S.staff.splice(S.staff.indexOf(s), 1); S.morale -= 2; logD('fire', ['Let {n} go','Melepaskan {n}','解聘 {n}'], { n: ROLES[s.role].title + s.name }, ['Morale −2','Semangat −2','士气 −2']); syncSims(); toast(tr(["{n} left with one month's pay.",'{n} pergi dengan gaji sebulan.','{n} 领取一个月薪水后离职。'], { n: s.name })); renderTab(); updateTop(); });
@@ -2395,6 +2594,223 @@ function renderTab() {
     drawSpark();
   }
 }
+// ---------- shared pieces for the Industry, Success & QA and Advisor tabs ----------
+const T_ = (s, v) => esc(trV(s, v));
+const tileH = (l, v, sub, bad) => `<div class="bcard" style="cursor:default"><span class="muted" style="font-size:11px">${T_(l)}</span><b style="font-family:var(--f-mono);font-size:18px;${bad ? 'color:var(--bad)' : ''}">${v}</b>${sub ? `<span class="muted" style="font-size:10.5px;line-height:1.3">${esc(sub)}</span>` : ''}</div>`;
+const barH = v => `<div class="bar"><i class="${v < .4 ? 'low' : v < .7 ? 'mid' : ''}" style="width:${Math.round(clamp(v, 0, 1) * 100)}%"></i></div>`;
+const POL_N = { wbl: ['Work-Based Learning','Pembelajaran Berasaskan Kerja','工作本位学习'], scholar: ['Rising Star+ Scholarship','Biasiswa Rising Star+','Rising Star+ 奖学金'], iactg: ['I.A.C.T.G. Values Programme','Program Nilai I.A.C.T.G.','I.A.C.T.G. 价值观计划'] };
+function hireStaff(i) {
+  const s = S.pool.splice(i, 1)[0]; if (!s) return; S.staff.push(s); syncSims();
+  logD('hire', ['Hired {n} ({r}, {c}/month)','Mengambil {n} ({r}, {c}/bulan)','聘请 {n}（{r}，月薪 {c}）'], { n: ROLES[s.role].title + s.name, r: ROLES[s.role].t, c: fmtRM(s.salary) });
+  toast(tr(['{n} joins the {s}.','{n} menyertai {s}.','{n} 加入了{s}。'], { n: ROLES[s.role].title + s.name, s: tr(SCHOOLS[s.school]) }));
+}
+// one place for every action button on these tabs, so the advisor can trigger the same moves
+function doAct(a, from) {
+  const [k, x, y] = a.split(':');
+  if (from) logD('advisor', ['Followed the advisor: {x}','Mengikut nasihat penasihat: {x}','采纳顾问建议：{x}'], { x: from });
+  if (['people', 'ind', 'qual', 'goals', 'fin', 'progs'].includes(k)) return setTab(k);
+  if (k === 'build') { setTab('build'); setTool(x); return; }
+  if (k === 'task') return startTask(x, y);
+  if (k === 'iap') return holdIAP(x);
+  if (k === 'sign') return signPartner(x);
+  if (k === 'pol') { S.policies[x] = y === 'on'; logD('policy', y === 'on' ? ['Turned on {x}','Menghidupkan {x}','开启{x}'] : ['Turned off {x}','Mematikan {x}','关闭{x}'], { x: POL_N[x] }); }
+  else if (k === 'borrow' && S.loan < 3e6) { S.loan += 1e6; S.cash += 1e6; logD('loan', ['Borrowed RM 1M (0.5% a month)','Meminjam RM 1M (0.5% sebulan)','借贷 RM 1M（月息 0.5%）']); toast(tr(['RM 1M loan received.','Pinjaman RM 1M diterima.','已收到 RM 1M 贷款。'])); }
+  else if (k === 'repay' && S.loan >= 1e6 && S.cash >= 1e6) { S.loan -= 1e6; S.cash -= 1e6; logD('loan', ['Repaid RM 1M','Membayar balik RM 1M','偿还 RM 1M']); toast(tr(['RM 1M repaid.','RM 1M telah dibayar balik.','已偿还 RM 1M。'])); }
+  else if (k === 'mkt') { S.marketing = Math.max(0, S.marketing - 10000); logD('budget', ['Set the marketing budget to {c}/month','Menetapkan bajet pemasaran {c}/bulan','市场推广预算调为每月 {c}'], { c: fmtRM(S.marketing) }); }
+  else if (k === 'sup') { S.support = +x; logD('support', ['Set academic support to {x}','Menetapkan sokongan akademik: {x}','学业支持调为：{x}'], { x: SUPPORT[S.support].n }); }
+  else if (k === 'entry') { S.entry = x; logD('support', ['Set the entry standard to {x}','Menetapkan standard kemasukan: {x}','入学标准调为：{x}'], { x: ENTRY[x].n }); }
+  else if (k === 'hire') hireStaff(S.pool.findIndex(s => s.id === +x));
+  refreshPanel(true); updateTop();
+}
+function bindActs() { body.querySelectorAll('[data-ia]').forEach(b => b.onclick = () => doAct(b.dataset.ia)); }
+
+// ---------- Industry tab ----------
+const BIND = {
+  off: ['The Work-Based Learning policy is off, so no student is placed, and partners lose interest while it stays off.','Dasar Pembelajaran Berasaskan Kerja dimatikan, jadi tiada pelajar ditempatkan dan rakan hilang minat selagi ia dimatikan.','工作本位学习政策已关闭，没有学生获得实习，合作企业也会逐渐失去兴趣。'],
+  none: ['Every eligible student has a placement. Partners, supervisors and places are in balance.','Setiap pelajar yang layak mendapat penempatan. Rakan, penyelia dan tempat adalah seimbang.','所有符合条件的学生都获得了实习，企业、督导和名额三者平衡。'],
+  sup: ['Bottleneck: supervisors. Places are waiting but nobody can supervise them. Each Industry Practitioner supervises 40 students.','Kesesakan: penyelia. Tempat tersedia tetapi tiada penyelia. Setiap Pengamal Industri menyelia 40 pelajar.','瓶颈：督导人员。名额空着却没人督导。每位业界导师可督导 40 名学生。'],
+  cover: ['Bottleneck: no partner company takes {s} students. Sign a partner that covers that school.','Kesesakan: tiada syarikat rakan menerima pelajar {s}. Tandatangani rakan yang meliputi pusat pengajian itu.','瓶颈：没有合作企业接收{s}学生。请签约覆盖该学院的企业。'],
+  slots: ['Bottleneck: placement places. Sign more partners, or build a WBL Studio for 80 on-campus project places.','Kesesakan: tempat penempatan. Tandatangani lebih ramai rakan, atau bina Studio WBL untuk 80 tempat projek di kampus.','瓶颈：实习名额不足。请签约更多企业，或建造 WBL 工作室提供 80 个校内项目名额。'] };
+function renderIndustry(c) {
+  const r = industryCalc(c), T = T_;
+  const act = { off: `<button class="btn pri" data-ia="pol:wbl:on">${T(['Turn on Work-Based Learning','Hidupkan Pembelajaran Berasaskan Kerja','开启工作本位学习'])}</button>`,
+    sup: `<button class="btn pri" data-ia="people">${T(['Hire Industry Practitioners','Ambil Pengamal Industri','聘请业界导师'])}</button>`,
+    slots: `<button class="btn pri" data-ia="build:wbl">${T(['Build a WBL Studio','Bina Studio WBL','建造 WBL 工作室'])}</button>` };
+  let h = `<div class="sec"><h4>${T(['Work-based learning','Pembelajaran berasaskan kerja','工作本位学习'])}</h4><p class="muted" style="margin:-4px 0 8px;font-size:12px">${T(['Students from their second year spend time on real industry tasks. Each placement needs three things at once: a place from a partner company or a WBL Studio project, a supervisor, and the Work-Based Learning policy.','Pelajar tahun kedua ke atas menjalankan tugasan industri sebenar. Setiap penempatan memerlukan tiga perkara serentak: tempat daripada syarikat rakan atau projek Studio WBL, penyelia, dan dasar Pembelajaran Berasaskan Kerja.','二年级起的学生参与真实企业任务。每个实习名额同时需要三样：合作企业或 WBL 工作室提供的名额、督导人员，以及开启工作本位学习政策。'])}</p>
+    <div class="grid2">${tileH(['Eligible students (year 2+)','Pelajar layak (tahun 2+)','符合条件学生（二年级起）'], fmtN(r.eligible))}${tileH(['Placed this month','Ditempatkan bulan ini','本月已安排实习'], `${fmtN(r.placed)} · ${pctS(r.rate)}`, null, r.binding !== 'none' && r.rate < .5)}
+    ${tileH(['Placement places','Tempat penempatan','实习名额'], fmtN(r.slots + r.studio), tr(['{a} from partners · {b} WBL Studio','{a} daripada rakan · {b} Studio WBL','企业 {a} · 工作室 {b}'], { a: r.slots, b: r.studio }))}${tileH(['Supervision capacity','Kapasiti penyeliaan','督导容量'], fmtN(r.sup), tr(['{n} Industry Practitioners × 40, other academics × 2, plus 10{m}','{n} Pengamal Industri × 40, akademik lain × 2, tambah 10{m}','{n} 位业界导师 × 40，其他讲师 × 2，另加 10{m}'], { n: c.ind, m: S.policies.mentor ? tr([', plus 10 from mentors',', tambah 10 daripada mentor','，导师制再加 10']) : '' }))}</div></div>
+    <div class="sec yr"><p style="margin:0 0 8px;font-size:12.5px">💡 ${T(BIND[r.binding], { s: r.uncovered.map(schoolOf).join(', ') })}</p>${act[r.binding] || ''}</div>
+    <div class="sec dtable"><p class="eyebrow">${T(['By school','Mengikut pusat pengajian','按学院'])}</p><table><thead><tr><th>${T(['School','Pusat','学院'])}</th><th>${T(['Eligible','Layak','符合条件'])}</th><th>${T(['Partner places','Tempat rakan','企业名额'])}</th><th>${T(['Placed','Ditempatkan','已安排'])}</th></tr></thead><tbody>
+    ${['eng', 'comp', 'mgmt'].map(sc => `<tr><td>${esc(schoolOf(sc))}</td><td>${fmtN(r.byS[sc].el)}</td><td>${fmtN(r.byS[sc].slots)}</td><td>${fmtN(r.byS[sc].pl)}</td></tr>`).join('')}</tbody></table></div>
+    <div class="sec"><h4>${T(['Partner companies','Syarikat rakan','合作企业'])}</h4><p class="muted" style="margin:-4px 0 4px;font-size:12px">${T(['A relationship grows when its places are filled, students are supervised and pass rates are good. At 70 or more the partner sponsors the college every month; below 22 it walks away. Companies other than ViTrox are fictional.','Hubungan berkembang apabila tempat diisi, pelajar diselia dan kadar lulus baik. Pada 70 ke atas rakan menaja kolej setiap bulan; di bawah 22 ia menarik diri. Syarikat selain ViTrox adalah rekaan.','名额被用满、学生有人督导、通过率高，关系就会变好。关系达 70 以上企业每月赞助学院；低于 22 企业会退出。除 ViTrox 外的企业均为虚构。'])}</p>`;
+  for (const p of PARTNERS) {
+    const st = S.ind.partners[p.id], lock = partnerLocked(p);
+    h += `<div class="row"><div class="l"><div class="n">${esc(tr(p.name))}</div><div class="d">${esc(tr(p.sec))} · ${esc(p.sch.map(schoolOf).join(', '))} · ${T(['{n} places','{n} tempat','{n} 个名额'], { n: p.slots })}${st ? '' : ' · ' + T(['sponsors {c}/mo at 70+','menaja {c}/bln pada 70+','关系 70+ 每月赞助 {c}'], { c: fmtRM(p.spons) })}</div>
+      ${st ? `<div class="need" style="grid-template-columns:72px 1fr 30px;margin:4px 0 0"><span>${T(['Relationship','Hubungan','关系'])}</span>${barH(st.rel / 100)}<span style="font-family:var(--f-mono);font-size:11px;text-align:right">${Math.round(st.rel)}</span></div>${st.rel >= 70 ? `<div class="d" style="color:var(--accent)">${T(['Sponsoring {c} a month','Menaja {c} sebulan','每月赞助 {c}'], { c: fmtRM(p.spons) })}</div>` : ''}` : lock ? `<div class="d" style="color:var(--bad)">${esc(lock)}</div>` : ''}</div>
+      ${st ? `<span class="tag ok">${T(['Partner','Rakan','合作中'])}</span>` : `<button class="btn ${lock ? '' : 'pri'}" data-ia="sign:${p.id}" ${lock ? 'disabled' : ''}>${T(['Sign MoU {c}','Tandatangan MoU {c}','签约 {c}'], { c: fmtRM(p.cost) })}</button>`}</div>`;
+  }
+  h += `</div><div class="sec"><h4>${T(['Industry advisory panels','Panel penasihat industri','产业咨询委员会'])}</h4><p class="muted" style="margin:-4px 0 4px;font-size:12px">${T(["Partners review a school's curriculum. A meeting in the last 12 months counts for accreditation and lifts partner relationships by 5. RM 8k a meeting, at most once every 3 months.",'Rakan menyemak kurikulum pusat pengajian. Mesyuarat dalam 12 bulan lepas dikira untuk akreditasi dan menaikkan hubungan rakan sebanyak 5. RM 8k setiap mesyuarat, paling kerap setiap 3 bulan.','合作企业审阅学院课程。近 12 个月内开过会可计入认证评分，并使企业关系 +5。每次 RM 8k，最多每 3 个月一次。'])}</p>
+    ${['eng', 'comp', 'mgmt'].map(sc => { const ps = Object.keys(S.ind.partners).filter(id => PT[id].sch.includes(sc)), m = monthsSince(S.iap[sc]), dis = !ps.length || S.cash < 8000 || m < 3;
+      return `<div class="row"><div class="l"><div class="n">${esc(tr(SCHOOLS[sc]))}</div><div class="d">${ps.length ? T(['{n} partner(s)','{n} rakan','{n} 家合作企业'], { n: ps.length }) : T(['No partner yet','Belum ada rakan','尚无合作企业'])} · ${m === Infinity ? T(['never met','belum pernah bermesyuarat','尚未开会']) : T(['last met {m} months ago','mesyuarat terakhir {m} bulan lalu','上次开会是 {m} 个月前'], { m: Math.floor(m) })}</div></div><button class="btn" data-ia="iap:${sc}" ${dis ? 'disabled' : ''}>${T(['Convene (RM 8k)','Adakan (RM 8k)','召开会议（RM 8k）'])}</button></div>`; }).join('')}</div>`;
+  body.innerHTML = h; bindActs();
+}
+
+// ---------- Success & QA tab ----------
+function renderQuality(c) {
+  const T = T_, n = ssNow(c), sup = SUPPORT[S.support];
+  let h = `<div class="sec"><h4>${T(['Student success','Kejayaan pelajar','学生学业成果'])}</h4><p class="muted" style="margin:-4px 0 8px;font-size:12px">${T(['Pass rates come from five things: students per lecturer, PhD share, crowding of seats and labs, academic support, and how prepared the intake is. Students who fail fall a semester behind or drop out.','Kadar lulus bergantung pada lima perkara: pelajar bagi setiap pensyarah, bahagian PhD, kesesakan tempat duduk dan makmal, sokongan akademik, dan kesediaan pelajar baharu. Pelajar yang gagal ketinggalan satu semester atau berhenti.','通过率取决于五点：师生比、博士比例、座位与实验室拥挤程度、学业支持，以及新生的基础。不及格的学生会延迟一个学期或退学。'])}</p>
+    <div class="grid2">${tileH(['Pass rate this semester','Kadar lulus semester ini','本学期通过率'], pctS(n.pass), null, n.pass < .75)}${tileH(['Students at risk','Pelajar berisiko','学业风险学生'], fmtN(n.risk), null, n.risk > c.students * .1)}
+    ${tileH(['Graduation rate','Kadar graduasi','毕业率'], pctS(n.gradRate), tr(['{g} graduated · {d} dropped out','{g} bergraduat · {d} berhenti','{g} 人毕业 · {d} 人退学'], { g: fmtN(n.grad), d: fmtN(n.drop) }))}${tileH(['Graduated on time','Bergraduat tepat masa','按时毕业'], pctS(n.onTime))}</div></div>
+    <div class="sec"><p class="eyebrow">${T(['Academic support','Sokongan akademik','学业支持'])}</p><div class="seg" role="group" style="display:flex;flex-wrap:wrap">${SUPPORT.map((s, i) => `<button data-ia="sup:${i}" aria-pressed="${S.support === i}">${T(s.n)}</button>`).join('')}</div>
+    <p class="muted" style="margin:6px 0 12px;font-size:12px">${T(['RM {c} per student a month ({t}). Raises pass rates from the next month.','RM {c} seorang pelajar sebulan ({t}). Menaikkan kadar lulus mulai bulan depan.','每生每月 RM {c}（共 {t}）。下个月起提高通过率。'], { c: sup.cost, t: fmtRM(sup.cost * c.students) })}</p>
+    <p class="eyebrow">${T(['Entry standard','Standard kemasukan','入学标准'])}</p><div class="seg" role="group" style="display:flex;flex-wrap:wrap">${Object.entries(ENTRY).map(([k, e]) => `<button data-ia="entry:${k}" aria-pressed="${S.entry === k}">${T(e.n)}</button>`).join('')}</div>
+    <p class="muted" style="margin:6px 0 0;font-size:12px">${T(['Open: 20% more applicants, weaker preparation. Selective: 25% fewer applicants, much better pass rates.','Terbuka: 20% lebih pemohon, kesediaan lebih lemah. Terpilih: 25% kurang pemohon, kadar lulus jauh lebih baik.','宽松：申请人数多 20%，但基础较弱。严格：申请人数少 25%，通过率明显更高。'])}</p></div>
+    <div class="sec"><p class="eyebrow">${T(['By programme','Mengikut program','按课程'])}</p>`;
+  for (const p of PROGS) {
+    const e = enrolledIn(p.id); if (!e) continue;
+    const s = success(p, c), ss = S.ss[p.id] || { grad: 0, drop: 0 }, gr = ss.grad ? ss.grad / (ss.grad + ss.drop) : null;
+    h += `<div class="row" style="display:block"><div class="n">${esc(tr(p.name))}</div><div class="need" style="grid-template-columns:70px 1fr 40px"><span>${T(['Pass rate','Kadar lulus','通过率'])}</span>${barH((s.pass - .4) / .58)}<b style="font-family:var(--f-mono);font-size:11.5px;text-align:right">${pctS(s.pass)}</b></div>
+      <div class="d">${T(['{e} enrolled · {r} at risk · graduation rate {g}','{e} berdaftar · {r} berisiko · kadar graduasi {g}','在读 {e} 人 · 风险 {r} 人 · 毕业率 {g}'], { e: fmtN(e), r: Math.round(e * (1 - s.pass) * .6), g: pctS(gr) })}${s.pass < .9 ? `<br>${T(['Biggest drag: {w}','Penghalang utama: {w}','主要拖累：{w}'], { w: tr(SS_F[s.weak]) })}` : ''}</div></div>`;
+  }
+  h += `</div><div class="sec"><h4>${T(['Accreditation and quality assurance','Akreditasi dan jaminan kualiti','认证与质量保证'])}</h4><p class="muted" style="margin:-4px 0 8px;font-size:12px">${T(['MQA audits each running programme on six criteria (simplified game rules). 75 or more: full accreditation for 3 years. 40 to 74: conditions, so finish a CQI plan within 6 months or new intake is suspended. Below 40: suspended at once. Higher scores also attract more applicants.','MQA mengaudit setiap program pada enam kriteria (peraturan permainan dipermudahkan). 75 ke atas: akreditasi penuh 3 tahun. 40 hingga 74: bersyarat, siapkan pelan CQI dalam 6 bulan atau pengambilan baharu digantung. Bawah 40: digantung serta-merta. Skor lebih tinggi juga menarik lebih ramai pemohon.','MQA 按六项标准审核每个开办中的课程（简化的游戏规则）。75 分以上：完全认证 3 年。40 至 74 分：有条件认证，需在 6 个月内完成持续改进计划，否则暂停招生。低于 40 分：立即暂停招生。得分越高，申请人数也越多。'])}</p>`;
+  for (const p of running()) {
+    const q = S.qa[p.id] || {}, cr = qaCrit(p, c), sc = qaScore(cr), o = qaOutcome(sc), due = Math.max(0, (q.next - S.hours) / MO), tasks = S.tasks.filter(t => t.p === p.id);
+    h += `<div class="yr" style="margin-bottom:8px"><h5 style="font-size:14px">${esc(tr(p.name))}</h5>
+      <div class="deltas"><span class="${q.status === 'full' ? 'good' : 'bad'}">${T(QA_ST[q.status || 'full'])}</span><span>${T(['Score now {n}/100','Skor kini {n}/100','当前得分 {n}/100'], { n: sc })}</span><span class="${o === 'full' ? 'good' : 'bad'}">${T(['Audit in {m} mo → {o}','Audit dalam {m} bln → {o}','{m} 个月后审核 → {o}'], { m: Math.ceil(due), o: tr(QA_ST[o]) })}</span></div>
+      <ul class="why">${Object.keys(QA_W).map(k => `<li><span aria-hidden="true">${cr[k] >= .99 ? '✅' : cr[k] > 0 ? '🟡' : '❌'}</span><span>${T(QA_N[k])} <span class="muted">${Math.round(QA_W[k] * cr[k])}/${QA_W[k]}</span></span></li>`).join('')}</ul>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${['review', 'cqi'].map(k => { const t = tasks.find(x => x.k === k), b = taskBlocked(k, p.id);
+        return t ? `<span class="tag wip">${T(TASKS[k].n)} · ${T(['{d} days left','{d} hari lagi','剩 {d} 天'], { d: t.days })}</span>` : `<button class="btn" data-ia="task:${k}:${p.id}" ${b ? `disabled title="${esc(b)}"` : ''}>${T(TASKS[k].n)} · ${fmtRM(TASKS[k].cost)}</button>`; }).join('')}${cr.iap < 1 ? `<button class="btn" data-ia="ind">${T(['Advisory panel →','Panel penasihat →','产业咨询 →'])}</button>` : ''}</div></div>`;
+  }
+  if (!running().length) h += `<p class="muted">${T(['No programme is running yet.','Belum ada program berjalan.','还没有开办中的课程。'])}</p>`;
+  body.innerHTML = h + '</div>'; bindActs();
+}
+
+// ---------- AI management advisor: reads the numbers, ranks the problems, and lays out options with pros, risks and impact ----------
+const fmMo = v => v === Infinity || v > 99 ? '99+' : Math.max(0, v).toFixed(0);
+function tryWith(set, measure) { const keep = { support: S.support, entry: S.entry }; set(); const v = measure(); S.support = keep.support; S.entry = keep.entry; return v; }
+function advise(c) {
+  const R = [], add = (pri, sev, icon, title, why, wv, opts) => R.push({ pri, sev, icon, title, why, wv, opts: opts.filter(Boolean) });
+  const last = S.history[S.history.length - 1], opNet = last && last.income !== undefined ? last.income - (last.expense - (last.ex?.cap || 0)) : null;
+  const runway = opNet != null && opNet < 0 ? S.cash / -opNet : Infinity;
+  const fee = c.students ? S.cohorts.reduce((a, co) => a + P[co.p].fee * co.count, 0) / c.students : 1000;
+  // 1. money
+  if (S.cash < 0 || runway < 8) {
+    const burn = opNet != null && opNet < 0 ? -opNet : 0, m0 = .7 + .6 * Math.sqrt(S.marketing / 2e4), m1 = .7 + .6 * Math.sqrt(Math.max(0, S.marketing - 1e4) / 2e4);
+    add(100 - Math.min(50, runway * 5), 'bad', '💸', ['Cash is running out','Tunai semakin habis','现金即将耗尽'],
+      burn ? ['Cash {c}. Last month you spent {n} more than you earned, not counting construction. At this pace the money lasts about {m} months.','Tunai {c}. Bulan lepas anda berbelanja {n} lebih daripada pendapatan, tidak termasuk pembinaan. Pada kadar ini wang bertahan kira-kira {m} bulan.','现金 {c}。上月（不含建设）支出比收入多 {n}，按此速度资金约可支撑 {m} 个月。'] : ['Cash is negative at {c}. Three months in the red and the bank steps in.','Tunai negatif pada {c}. Tiga bulan dalam merah dan bank akan campur tangan.','现金为负（{c}）。连续三个月赤字，银行就会介入。'],
+      { c: fmtRM(S.cash), n: fmtRM(burn), m: fmMo(runway) }, [
+      S.loan < 3e6 && { n: ['Borrow RM 1M','Pinjam RM 1M','借贷 RM 1M'], pro: [['A cash buffer straight away','Penimbal tunai serta-merta','立即获得现金缓冲']], risk: [['Interest of RM 5k a month; loans are capped at RM 3M','Faedah RM 5k sebulan; had pinjaman RM 3M','每月利息 RM 5k；贷款上限 RM 3M']], imp: [['Runway {a} → {b} months','Jangka hayat tunai {a} → {b} bulan','资金可支撑 {a} → {b} 个月'], { a: fmMo(runway), b: fmMo(burn ? (S.cash + 1e6) / (burn + 5000) : Infinity) }], act: 'borrow' },
+      S.marketing >= 1e4 && { n: ['Cut marketing by RM 10k','Kurangkan pemasaran RM 10k','削减市场推广 RM 10k'], pro: [['Saves RM 10k a month','Jimat RM 10k sebulan','每月节省 RM 10k']], risk: [['About {p}% fewer applicants at the next intake','Kira-kira {p}% kurang pemohon pada pengambilan seterusnya','下次招生申请人数约减少 {p}%'], { p: Math.round((1 - m1 / m0) * 100) }], imp: [['Runway → {b} months','Jangka hayat tunai → {b} bulan','资金可支撑 → {b} 个月'], { b: fmMo(burn > 1e4 ? S.cash / (burn - 1e4) : Infinity) }], act: 'mkt' },
+      S.policies.scholar && { n: ['Pause the Rising Star+ Scholarship','Hentikan sementara Biasiswa Rising Star+','暂停 Rising Star+ 奖学金'], pro: [['Saves {c} a month','Jimat {c} sebulan','每月节省 {c}'], { c: fmtRM(Math.round(c.students * .05) * 1800) }], risk: [['15% fewer applicants and reputation −3','15% kurang pemohon dan reputasi −3','申请人数减少 15%，声誉 −3']], imp: [['Runway → {b} months','Jangka hayat tunai → {b} bulan','资金可支撑 → {b} 个月'], { b: fmMo(burn > Math.round(c.students * .05) * 1800 ? S.cash / (burn - Math.round(c.students * .05) * 1800) : Infinity) }], act: 'pol:scholar:off' }]);
+  }
+  // 2. quality audits
+  const qa = running().map(p => { const q = S.qa[p.id] || {}, cr = qaCrit(p, c); return { p, q, cr, sc: qaScore(cr), due: (q.next - S.hours) / MO }; })
+    .filter(x => x.q.status !== 'full' || (x.due <= 6 && x.sc < 75)).sort((a, b) => a.sc - b.sc);
+  if (qa.length) {
+    const x = qa[0], id = x.p.id, gainOf = k => Math.round(QA_W[k] * (1 - x.cr[k])), sc = x.p.school;
+    const cover = Object.keys(S.ind.partners).some(pid => PT[pid].sch.includes(sc)), cand = PARTNERS.find(p => p.sch.includes(sc) && !partnerLocked(p));
+    add(x.q.status === 'susp' ? 95 : x.q.status === 'cond' ? 85 : 72, x.q.status === 'full' ? 'warn' : 'bad', '🧭', ['Accreditation at risk: {p}','Akreditasi berisiko: {p}','认证面临风险：{p}'],
+      ['MQA audit in {m} months. Predicted score {s}/100, which means {o}. {k} more programme(s) are in the same position.','Audit MQA dalam {m} bulan. Jangkaan skor {s}/100, iaitu {o}. {k} program lagi dalam keadaan sama.','MQA 将在 {m} 个月后审核，预计得分 {s}/100，即{o}。另有 {k} 个课程情况类似。'],
+      { p: x.p.name, m: fmMo(Math.max(0, x.due)), s: x.sc, o: QA_ST[qaOutcome(x.sc)], k: qa.length - 1 }, [
+      x.cr.review < 1 && { n: ['Curriculum review','Semakan kurikulum','课程审查'], pro: [['Worth {w} audit points','Bernilai {w} mata audit','可得 {w} 审核分'], { w: gainOf('review') }, ['Unlocks the CQI plan','Membuka pelan CQI','完成后才能做持续改进计划']], risk: [['RM 15k; takes 30 days','RM 15k; mengambil 30 hari','RM 15k；需 30 天']], imp: [['Score {a} → {b}','Skor {a} → {b}','得分 {a} → {b}'], { a: x.sc, b: x.sc + gainOf('review') }], act: 'task:review:' + id, off: taskBlocked('review', id) },
+      x.cr.cqi < 1 && { n: ['CQI action plan','Pelan tindakan CQI','持续改进行动计划'], pro: [['Worth {w} audit points; lifts conditions','Bernilai {w} mata audit; menarik balik syarat','可得 {w} 审核分，并解除附加条件'], { w: gainOf('cqi') }], risk: [['RM 10k; takes 20 days; needs a review in the last 12 months','RM 10k; 20 hari; perlu semakan dalam 12 bulan lepas','RM 10k；需 20 天；须在近 12 个月内完成课程审查']], imp: [['Score {a} → {b}','Skor {a} → {b}','得分 {a} → {b}'], { a: x.sc, b: x.sc + gainOf('cqi') }], act: 'task:cqi:' + id, off: taskBlocked('cqi', id) },
+      x.cr.iap < 1 && cover && { n: ['Convene the industry advisory panel','Adakan panel penasihat industri','召开产业咨询委员会'], pro: [['Worth {w} audit points; partners +5','Bernilai {w} mata audit; rakan +5','可得 {w} 审核分；企业关系 +5'], { w: gainOf('iap') }], risk: [['RM 8k','RM 8k','RM 8k']], imp: [['Score {a} → {b}, immediately','Skor {a} → {b}, serta-merta','得分 {a} → {b}，立即生效'], { a: x.sc, b: x.sc + gainOf('iap') }], act: 'iap:' + sc, off: monthsSince(S.iap[sc]) < 3 ? tr(['Met recently','Baru bermesyuarat','近期已开会']) : null },
+      x.cr.iap < 1 && !cover && cand && { n: ['Sign {p} as a partner','Tandatangani {p} sebagai rakan','签约{p}'], nv: { p: cand.name }, pro: [['Gives {s} an industry partner; {n} placement places','Memberi {s} rakan industri; {n} tempat penempatan','让{s}有合作企业；{n} 个实习名额'], { s: SHORT[sc], n: cand.slots }], risk: [['{c} to sign','{c} untuk menandatangani','签约费 {c}'], { c: fmtRM(cand.cost) }], imp: [['Advisory panel becomes possible: up to +{w} points','Panel penasihat menjadi mungkin: sehingga +{w} mata','可召开产业咨询会：最多 +{w} 分'], { w: gainOf('iap') }], act: 'sign:' + cand.id },
+      x.cr.staff < .8 && { n: ['Hire lecturers for {s}','Ambil pensyarah untuk {s}','为{s}聘请讲师'], nv: { s: SHORT[sc] }, pro: [['Fixes the lecturer criterion and pass rates','Membaiki kriteria pensyarah dan kadar lulus','改善师资评分与通过率']], risk: [['A salary every month','Gaji setiap bulan','每月增加薪资支出']], imp: [['Up to +{w} points','Sehingga +{w} mata','最多 +{w} 分'], { w: gainOf('staff') }], act: 'people' }]);
+  }
+  // 3. students struggling
+  const ss = ssNow(c);
+  if (ss.pass < .8) {
+    const nextSup = Math.min(3, S.support + 1), pSup = tryWith(() => S.support = nextSup, () => ssNow(c).pass), pSel = tryWith(() => S.entry = 'sel', () => ssNow(c).pass);
+    const sch = ['eng', 'comp', 'mgmt'].filter(s => c[s]).sort((a, b) => c[b] / Math.max(1, c.sch[b][0]) - c[a] / Math.max(1, c.sch[a][0]))[0], cand = S.pool.filter(s => s.school === sch).sort((a, b) => (b.role !== 'master') - (a.role !== 'master'))[0];
+    add(70 + (.8 - ss.pass) * 200, 'warn', '📉', ['Students are struggling','Pelajar sedang bergelut','学生学业吃力'], ['Pass rate is {p}. {r} students are at risk of falling behind or dropping out, which costs fees and satisfaction.','Kadar lulus {p}. {r} pelajar berisiko ketinggalan atau berhenti, yang menjejaskan yuran dan kepuasan.','通过率为 {p}，{r} 名学生面临延毕或退学风险，会损失学费并拉低满意度。'], { p: pctS(ss.pass), r: fmtN(ss.risk) }, [
+      S.support < 3 && { n: ['Raise academic support to {x}','Naikkan sokongan akademik ke {x}','学业支持提升至{x}'], nv: { x: SUPPORT[nextSup].n }, pro: [['Pass rate {a} → {b}','Kadar lulus {a} → {b}','通过率 {a} → {b}'], { a: pctS(ss.pass), b: pctS(pSup) }], risk: [['{c} more a month','{c} lagi sebulan','每月多花 {c}'], { c: fmtRM((SUPPORT[nextSup].cost - SUPPORT[S.support].cost) * c.students) }], imp: [['About {n} fewer students at risk','Kira-kira {n} kurang pelajar berisiko','风险学生约减少 {n} 人'], { n: Math.round((pSup - ss.pass) * c.students * .6) }], act: 'sup:' + nextSup },
+      cand && { n: ['Hire {r} {x}','Ambil {r} {x}','聘请{r} {x}'], nv: { r: ROLES[cand.role].t, x: ROLES[cand.role].title + cand.name }, pro: [['{s} has the most students per lecturer ({v})','{s} mempunyai paling ramai pelajar bagi setiap pensyarah ({v})','{s}师生比最高（1:{v}）'], { s: SHORT[sch], v: (c[sch] / Math.max(1, c.sch[sch][0])).toFixed(0) }], risk: [['Salary {c} a month','Gaji {c} sebulan','月薪 {c}'], { c: fmtRM(cand.salary) }], imp: [['Ratio in {s}: {a} → {b}','Nisbah dalam {s}: {a} → {b}','{s}师生比：{a} → {b}'], { s: SHORT[sch], a: (c[sch] / Math.max(1, c.sch[sch][0])).toFixed(1), b: (c[sch] / (c.sch[sch][0] + 1)).toFixed(1) }], act: 'hire:' + cand.id },
+      S.entry !== 'sel' && { n: ['Make entry selective','Jadikan kemasukan terpilih','提高入学标准'], pro: [['Pass rate of new cohorts rises; overall {a} → {b} over time','Kadar lulus kohort baharu naik; keseluruhan {a} → {b} dari masa ke masa','新生通过率提高；整体逐步 {a} → {b}'], { a: pctS(ss.pass), b: pctS(pSel) }], risk: [['25% fewer applicants, so less fee income','25% kurang pemohon, jadi kurang pendapatan yuran','申请人数减少 25%，学费收入下降']], imp: [['Free to switch; shows from the next intake','Percuma; berkesan mulai pengambilan seterusnya','无需费用；下次招生起生效']], act: 'entry:sel' }]);
+  }
+  // 4. lecturers: the ratio drives pass rates, satisfaction, audits and reputation at once
+  if (c.ratio > 21) {
+    const best = [...S.pool].sort((a, b) => ({ prof: 3, phd: 2, ind: 1, master: 0 }[b.role]) - ({ prof: 3, phd: 2, ind: 1, master: 0 }[a.role]) || a.salary - b.salary).slice(0, 2);
+    add(80 + (c.ratio - 21) * 3, c.ratio > 25 ? 'bad' : 'warn', '👩‍🏫', ['Not enough lecturers','Tidak cukup pensyarah','讲师不足'], ['There are {r} students per academic. Above about 20, pass rates, satisfaction, audit scores and reputation all slip together.','Terdapat {r} pelajar bagi setiap akademik. Melebihi kira-kira 20, kadar lulus, kepuasan, skor audit dan reputasi semuanya merosot bersama.','目前师生比为 1:{r}。超过约 20 后，通过率、满意度、审核得分和声誉会一起下滑。'], { r: c.ratio.toFixed(1) }, [
+      ...best.map(s => ({ n: ['Hire {r} {x}','Ambil {r} {x}','聘请{r} {x}'], nv: { r: ROLES[s.role].t, x: ROLES[s.role].title + s.name }, pro: [['Ratio {a} → {b}','Nisbah {a} → {b}','师生比 {a} → {b}'], { a: c.ratio.toFixed(1), b: (c.students / (c.staff + 1)).toFixed(1) }, s.role === 'phd' || s.role === 'prof' ? ['Raises the PhD share, which audits and upgrades need','Menaikkan bahagian PhD yang diperlukan audit dan naik taraf','提高博士比例，审核和升格都需要'] : s.role === 'ind' ? ['Also supervises 40 work placements','Juga menyelia 40 penempatan kerja','还可督导 40 个实习名额'] : ['The cheapest way to cut class sizes','Cara paling murah untuk mengecilkan kelas','缩小班级规模最便宜的方法']],
+        risk: [['Salary {c} a month ({s})','Gaji {c} sebulan ({s})','月薪 {c}（{s}）'], { c: fmtRM(s.salary), s: SHORT[s.school] }], imp: [['Pass rate and satisfaction recover over the next months','Kadar lulus dan kepuasan pulih dalam beberapa bulan','通过率和满意度将在接下来几个月回升']], act: 'hire:' + s.id })),
+      !best.length && { n: ['Check the job applicants next month','Semak pemohon kerja bulan depan','下月查看求职者'], pro: [['New candidates arrive every month','Calon baharu tiba setiap bulan','每月都有新的求职者']], risk: [], imp: [['Meanwhile, avoid growing enrolment','Sementara itu, elakkan menambah enrolmen','在此之前避免继续扩招']], act: 'people' }]);
+  }
+  // 5. what is dragging satisfaction down
+  if (S.sat < 62) {
+    const cr = CROWD || crowd(), short = [['teach', 'classroom', cr.teach], ['lab', c.eng / Math.max(1, c.comp) > 1.5 ? 'englab' : 'complab', Math.min(cr.eng, cr.comp)], ['food', 'cafe', cr.food]].filter(x => x[2] < .97).sort((a, b) => a[2] - b[2]);
+    if (short.length) add(66, 'warn', '😟', ['Satisfaction is slipping','Kepuasan semakin menurun','满意度正在下滑'], ['Satisfaction is {s}. Students are short of {l}.','Kepuasan {s}. Pelajar kekurangan {l}.','满意度为 {s}，学生缺少{l}。'], { s: Math.round(S.sat), l: short.map(x => bname(x[1]).toLowerCase()).join(', ') },
+      short.slice(0, 2).map(([, t, v]) => ({ n: ['Build a {b}','Bina {b}','建造{b}'], nv: { b: BT[t].name }, pro: [['Only {p} of students are covered today','Hanya {p} pelajar dilayani kini','目前只能满足 {p} 的学生'], { p: pctS(v) }], risk: [['{c} now and {u} a month','{c} sekarang dan {u} sebulan','现在 {c}，每月 {u}'], { c: fmtRM(BT[t].cost), u: fmtRM(BT[t].upkeep) }], imp: [['Removes a satisfaction penalty of up to {n} points','Menghapuskan penalti kepuasan sehingga {n} mata','消除最多 {n} 分的满意度扣分'], { n: Math.round((1 - v) * ({ classroom: 30, englab: 15, complab: 15, cafe: 12 }[t])) }], act: 'build:' + t, off: S.cash < BT[t].cost ? tr(['Not enough cash','Tunai tidak mencukupi','现金不足']) : null })));
+  }
+  // 6. room for applicants
+  const k = capacity(), lastIn = S.intakes[S.intakes.length - 1], lost = lastIn ? Math.max(0, lastIn.demand - lastIn.tot) : 0, use = c.students / Math.max(1, k.teach);
+  // seats built since the last intake already answer it, so only warn while the gap is still open
+  if ((lost > 20 && k.teach - c.students < lost) || use > .92) {
+    const room = n => Math.min(n, Math.max(lost, 30)) * fee, stretched = c.ratio > 20;
+    add(stretched ? 52 : 74, 'warn', '🏫', ['Not enough room for applicants','Tidak cukup ruang untuk pemohon','容量不足以接收申请者'], ['{l} applicants were turned away at the last intake and teaching seats are {u} used. Every extra student brings about {f} a month.','{l} pemohon ditolak pada pengambilan lepas dan tempat duduk kuliah {u} digunakan. Setiap pelajar tambahan membawa kira-kira {f} sebulan.','上次招生有 {l} 名申请者被拒，教学座位使用率 {u}。每多一名学生每月约带来 {f}。'], { l: fmtN(lost), u: pctS(use), f: fmtRM(fee) }, [
+      { n: ['Build a Classroom Block','Bina Blok Bilik Kuliah','建造教学楼'], pro: [['+300 teaching seats','+300 tempat duduk kuliah','+300 个教学座位']], risk: stretched ? [['Lecturers are already stretched ({r} students each): hire before you grow','Pensyarah sudah terbeban ({r} pelajar seorang): ambil pensyarah sebelum berkembang','讲师已经吃紧（每人 {r} 名学生）：先招人再扩招'], { r: c.ratio.toFixed(0) }, ['RM 180k now and RM 3k a month','RM 180k sekarang dan RM 3k sebulan','现在 RM 180k，每月 RM 3k']] : [['RM 180k now and RM 3k a month; engineering and computing students also need lab space','RM 180k sekarang dan RM 3k sebulan; pelajar kejuruteraan dan pengkomputeran juga perlu makmal','现在 RM 180k，每月 RM 3k；工程和计算机学生还需要实验室']], imp: [['Pays back in about {m} months if filled','Pulang modal dalam kira-kira {m} bulan jika penuh','若招满约 {m} 个月回本'], { m: fmMo(180000 / Math.max(1, room(300) - 3000)) }], act: 'build:classroom', off: S.cash < 180000 ? tr(['Not enough cash','Tunai tidak mencukupi','现金不足']) : null },
+      { n: ['Build a Lecture Theatre','Bina Dewan Kuliah','建造演讲厅'], pro: [['+750 teaching seats; required for University status','+750 tempat duduk; diperlukan untuk status Universiti','+750 个座位；升格大学的必要条件']], risk: [['RM 420k now and RM 6k a month','RM 420k sekarang dan RM 6k sebulan','现在 RM 420k，每月 RM 6k']], imp: [['Pays back in about {m} months if filled','Pulang modal dalam kira-kira {m} bulan jika penuh','若招满约 {m} 个月回本'], { m: fmMo(420000 / Math.max(1, room(750) - 6000)) }], act: 'build:hall', off: S.cash < 420000 ? tr(['Not enough cash','Tunai tidak mencukupi','现金不足']) : null }]);
+  }
+  // 5. work placements
+  const r = industryCalc(c);
+  if (r.eligible > 0 && r.binding !== 'none' && r.rate < .6) {
+    const cand = PARTNERS.find(p => !partnerLocked(p) && (!r.uncovered.length || p.sch.some(s => r.uncovered.includes(s)))), pr = S.pool.find(s => s.role === 'ind');
+    add(r.rate < .3 ? 64 : 56, 'warn', '🏭', ['Only {p} of eligible students have a work placement','Hanya {p} pelajar layak mendapat penempatan kerja','只有 {p} 的符合条件学生获得实习'], BIND[r.binding], { p: pctS(r.rate), s: r.uncovered.map(schoolOf).join(', ') }, [
+      r.binding === 'off' && { n: ['Turn on Work-Based Learning','Hidupkan Pembelajaran Berasaskan Kerja','开启工作本位学习'], pro: [['Employability rises by up to 12 points as placements fill','Kebolehpasaran naik sehingga 12 mata apabila penempatan diisi','实习名额用满后就业率最多 +12']], risk: [['RM 40 per student a month ({c})','RM 40 seorang pelajar sebulan ({c})','每生每月 RM 40（{c}）'], { c: fmtRM(40 * c.students) }], imp: [['Partners stay engaged and can sponsor at 70+','Rakan kekal komited dan boleh menaja pada 70+','企业保持投入，关系 70+ 会赞助']], act: 'pol:wbl:on' },
+      r.binding === 'sup' && (pr ? { n: ['Hire {x}','Ambil {x}','聘请 {x}'], nv: { x: ROLES.ind.title + pr.name }, pro: [['+40 supervised placements','+40 penempatan diselia','+40 个督导名额']], risk: [['Salary {c} a month','Gaji {c} sebulan','月薪 {c}'], { c: fmtRM(pr.salary) }], imp: [['Placement rate {a} → {b}','Kadar penempatan {a} → {b}','实习率 {a} → {b}'], { a: pctS(r.rate), b: pctS(Math.min(1, (r.placed + 40) / r.eligible)) }], act: 'hire:' + pr.id }
+        : { n: ['Look for Industry Practitioners','Cari Pengamal Industri','寻找业界导师'], pro: [['Each supervises 40 students','Setiap seorang menyelia 40 pelajar','每位可督导 40 名学生']], risk: [['None in this month\'s applicants; check again next month','Tiada dalam pemohon bulan ini; semak bulan depan','本月求职者中没有，下月再看']], imp: [['+40 placements each','+40 penempatan setiap seorang','每人 +40 个名额']], act: 'people' }),
+      ['slots', 'cover'].includes(r.binding) && cand && { n: ['Sign {p} as a partner','Tandatangani {p} sebagai rakan','签约{p}'], nv: { p: cand.name }, pro: [['Up to {n} more places for {s}','Sehingga {n} tempat lagi untuk {s}','为{s}增加最多 {n} 个名额'], { n: cand.slots, s: cand.sch.map(schoolOf).join(', ') }], risk: [['{c} to sign; the relationship must be looked after','{c} untuk menandatangani; hubungan perlu dijaga','签约费 {c}；需要维护关系'], { c: fmtRM(cand.cost) }], imp: [['Sponsors {c} a month at relationship 70+','Menaja {c} sebulan pada hubungan 70+','关系 70+ 每月赞助 {c}'], { c: fmtRM(cand.spons) }], act: 'sign:' + cand.id },
+      r.binding === 'slots' && { n: ['Build a WBL Studio','Bina Studio WBL','建造 WBL 工作室'], pro: [['+80 on-campus project places','+80 tempat projek di kampus','+80 个校内项目名额']], risk: [['RM 280k now and RM 3.5k a month','RM 280k sekarang dan RM 3.5k sebulan','现在 RM 280k，每月 RM 3.5k']], imp: [['Placement rate {a} → {b}','Kadar penempatan {a} → {b}','实习率 {a} → {b}'], { a: pctS(r.rate), b: pctS(Math.min(1, Math.min(r.placed + 80, r.sup) / r.eligible)) }], act: 'build:wbl', off: S.cash < 280000 ? tr(['Not enough cash','Tunai tidak mencukupi','现金不足']) : null }]);
+  }
+  // 6. staff morale
+  if (S.morale < 55) add(50, 'warn', '😮‍💨', ['Staff morale is low','Semangat staf rendah','教职员士气低落'], ['Morale is {m}. Below 55, lecturers start to resign, which raises the students-per-lecturer ratio.','Semangat {m}. Di bawah 55, pensyarah mula meletak jawatan, lalu nisbah pelajar bagi setiap pensyarah naik.','士气为 {m}。低于 55 讲师会开始辞职，师生比随之上升。'], { m: Math.round(S.morale) }, [
+    !S.policies.iactg && { n: ['Start the I.A.C.T.G. Values Programme','Mulakan Program Nilai I.A.C.T.G.','启动 I.A.C.T.G. 价值观计划'], pro: [['+6 staff morale, +2 satisfaction','+6 semangat staf, +2 kepuasan','士气 +6，满意度 +2']], risk: [['RM 10k a month','RM 10k sebulan','每月 RM 10k']], imp: [['Fewer resignations','Kurang peletakan jawatan','辞职减少']], act: 'pol:iactg:on' },
+    !has('lounge') && { n: ['Build a Student Lounge','Bina Ruang Rehat Pelajar','建造学生休闲室'], pro: [['+5 staff morale and more Fun for students','+5 semangat staf dan lebih Keseronokan pelajar','士气 +5，学生更开心']], risk: [['RM 90k now and RM 1.5k a month','RM 90k sekarang dan RM 1.5k sebulan','现在 RM 90k，每月 RM 1.5k']], imp: [['Fewer resignations','Kurang peletakan jawatan','辞职减少']], act: 'build:lounge' }]);
+  // 8. scenario goals that the general rules above do not cover (buildings, the loan)
+  const sc = curScn(), repayOpt = S.loan >= 1e6 && { n: ['Repay RM 1M of the loan','Bayar balik RM 1M pinjaman','偿还 RM 1M 贷款'], pro: [['Saves RM 5k of interest a month','Jimat faedah RM 5k sebulan','每月节省利息 RM 5k']], risk: [['Leaves {c} in cash','Baki tunai {c}','剩余现金 {c}'], { c: fmtRM(S.cash - 1e6) }],
+    imp: [['Loan {a} → {b}','Pinjaman {a} → {b}','贷款 {a} → {b}'], { a: fmtRM(S.loan), b: fmtRM(S.loan - 1e6) }], act: 'repay', off: S.cash < 1.2e6 ? tr(['Keep a cash buffer first','Simpan penimbal tunai dahulu','先保留现金缓冲']) : null };
+  if (sc.id !== 'uni' && S.scn && !S.scn.done && !S.scn.failed) {
+    const goals = sc.goals(), miss = goals.filter(g => !g.ok), left = sc.months - monthsIn();
+    const o = miss.map(g => g.t ? { n: ['Build a {b}','Bina {b}','建造{b}'], nv: { b: BT[g.t].name }, pro: [['Completes a scenario goal','Melengkapkan satu matlamat senario','完成一项情境目标']], risk: [['{c} now and {u} a month','{c} sekarang dan {u} sebulan','现在 {c}，每月 {u}'], { c: fmtRM(BT[g.t].cost), u: fmtRM(BT[g.t].upkeep) }],
+      imp: [['Goals met {a} → {b} of {n}','Matlamat dipenuhi {a} → {b} daripada {n}','已达成目标 {a} → {b}（共 {n} 项）'], { a: goals.length - miss.length, b: goals.length - miss.length + 1, n: goals.length }], act: 'build:' + g.t, off: S.cash < BT[g.t].cost ? tr(['Not enough cash','Tunai tidak mencukupi','现金不足']) : null }
+      : g.label === GL.loan ? repayOpt : null);
+    add(left <= 6 ? 90 : 68, left <= 6 ? 'bad' : 'warn', '🏁', ['Scenario: {n} goal(s) still open','Senario: {n} matlamat belum dicapai','情境：还有 {n} 项目标未完成'], ['{m} months left in {s}. Still open: {l}.','{m} bulan lagi dalam {s}. Belum dicapai: {l}.','{s}还剩 {m} 个月。未完成：{l}。'],
+      { n: miss.length, m: Math.max(0, left), s: sc.name, l: miss.map(g => tr(g.label) + ' (' + g.txt + ')').join(', ') }, o);
+  }
+  // 9. idle cash while a loan costs interest
+  const spendMo = last && last.expense !== undefined ? last.expense - (last.ex?.cap || 0) : 0;
+  if (repayOpt && sc.id !== 'finance' && S.cash - 1e6 > Math.max(5e5, spendMo * 4)) add(46, 'info', '🏦', ['Repay part of the loan','Bayar balik sebahagian pinjaman','偿还部分贷款'], ['You owe {l} and hold {c} in cash. The loan costs {i} a month in interest.','Anda berhutang {l} dan memegang tunai {c}. Pinjaman itu memakan faedah {i} sebulan.','您欠款 {l}，持有现金 {c}，每月利息 {i}。'], { l: fmtRM(S.loan), c: fmtRM(S.cash), i: fmtRM(S.loan * .005) }, [repayOpt]);
+  // 7. the road to the next status
+  if (S.stage < 2 && !S.application) {
+    const miss = reqs(S.stage + 1).filter(x => !x.ok);
+    if (miss.length && miss.length <= 4) add(40, 'info', '🎯', ['{n} steps from {s}','{n} langkah lagi ke {s}','距离{s}还差 {n} 项'], ['Still missing: {l}.','Masih belum dipenuhi: {l}.','尚未达标：{l}。'], { n: miss.length, s: STAGES[S.stage + 1], l: miss.map(x => tr(x.label) + ' (' + x.txt + ')').join(', ') },
+      [{ n: ['Open the requirements','Buka senarai syarat','查看升格条件'], pro: [['See every requirement in one list','Lihat semua syarat dalam satu senarai','一次查看全部条件']], risk: [], imp: [['Apply as soon as all are met','Mohon sebaik semua dipenuhi','全部达标后立即申请']], act: 'goals' }]);
+  }
+  return R.filter(x => x.opts.length).sort((a, b) => b.pri - a.pri).slice(0, 4);
+}
+let advOpts = [];
+function renderAdvisor(c) {
+  const T = T_, recs = advise(c), ss = ssNow(c), r = industryCalc(c), sev = { bad: ['Urgent','Segera','紧急'], warn: ['Important','Penting','重要'], info: ['Opportunity','Peluang','机会'] };
+  advOpts = [];
+  let h = `<div class="sec yr" style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:30px;line-height:1" aria-hidden="true">🤖</span><div><h5>${T(['Your AI management advisor','Penasihat pengurusan AI anda','您的 AI 管理顾问'])}</h5>
+    <p style="margin:0;font-size:12.5px;line-height:1.5">${T(['Cash {c}, {s} students, pass rate {p}, average quality score {q}/100, {w} of eligible students on placement. Here is what I would look at first, with the trade-offs of each option.','Tunai {c}, {s} pelajar, kadar lulus {p}, purata skor kualiti {q}/100, {w} pelajar layak dalam penempatan. Inilah yang saya akan lihat dahulu, bersama untung rugi setiap pilihan.','现金 {c}，学生 {s} 人，通过率 {p}，平均质量分 {q}/100，{w} 的符合条件学生在实习。以下是我建议优先处理的事项，以及各方案的利弊。'], { c: fmtRM(S.cash), s: fmtN(c.students), p: pctS(ss.pass), q: Math.round(qaAvg(c)), w: pctS(r.rate) })}</p></div></div>`;
+  if (!recs.length) h += `<div class="sec yr"><p style="margin:0">✅ ${T(['Nothing urgent. Finances, quality, student success and placements are all on track. A good time to invest in research or a new programme.','Tiada yang mendesak. Kewangan, kualiti, kejayaan pelajar dan penempatan semuanya di landasan. Masa yang baik untuk melabur dalam penyelidikan atau program baharu.','目前没有紧急事项。财务、质量、学业和实习都在正轨上，是投资研究或开办新课程的好时机。'])}</p></div>`;
+  recs.forEach((x, i) => {
+    h += `<div class="sec yr"><h5>${x.icon} ${T(x.title, x.wv)} <span class="tag ${x.sev === 'bad' ? '' : x.sev === 'warn' ? 'wip' : 'ok'}" style="${x.sev === 'bad' ? 'color:var(--bad);border-color:var(--bad)' : ''}">${T(sev[x.sev])}</span></h5><p style="margin:0 0 8px;font-size:12.5px;line-height:1.45">${T(x.why, x.wv)}</p>`;
+    x.opts.forEach((o, j) => {
+      const id = advOpts.push({ act: o.act, n: o.n, nv: o.nv }) - 1, li = (ic, arr) => arr.length ? `<li><span aria-hidden="true">${ic}</span><span>${T(arr[0], arr[1])}</span></li>` : '';
+      const pros = [], risks = []; for (let q = 0; q < o.pro.length; q++) { if (Array.isArray(o.pro[q]) && typeof o.pro[q][0] === 'string') pros.push([o.pro[q], typeof o.pro[q + 1] === 'object' && !Array.isArray(o.pro[q + 1]) ? o.pro[q + 1] : null]); }
+      for (let q = 0; q < o.risk.length; q++) { if (Array.isArray(o.risk[q]) && typeof o.risk[q][0] === 'string') risks.push([o.risk[q], typeof o.risk[q + 1] === 'object' && !Array.isArray(o.risk[q + 1]) ? o.risk[q + 1] : null]); }
+      h += `<div class="opt"><b>${String.fromCharCode(65 + j)}. ${T(o.n, o.nv)}</b><ul class="why" style="margin:4px 0 6px">${pros.map(p => li('✅', p)).join('')}${risks.map(p => li('⚠️', p)).join('')}${li('📈', o.imp)}</ul>
+        <button class="btn ${j === 0 ? 'pri' : ''}" data-adv="${id}" ${o.off ? `disabled title="${esc(o.off)}"` : ''}>${T(['Do this','Laksanakan','执行'])}</button>${o.off ? ` <span class="muted" style="font-size:11.5px">${esc(o.off)}</span>` : ''}</div>`;
+    });
+    h += `</div>`;
+  });
+  h += `<p class="muted" style="font-size:11.5px;margin:0">${T(["In-game advisor: suggestions come from the game's own rules and your current numbers. Estimates are approximate; you decide.",'Penasihat dalam permainan: cadangan berdasarkan peraturan permainan dan angka semasa anda. Anggaran adalah kasar; keputusan di tangan anda.','游戏内顾问：建议基于游戏规则和您当前的数据，估算仅供参考，由您决定。'])}</p>`;
+  body.innerHTML = h;
+  body.querySelectorAll('[data-adv]').forEach(b => b.onclick = () => { const o = advOpts[+b.dataset.adv]; doAct(o.act, o.nv ? trV(o.n, o.nv) : o.n); });
+}
+
 // What a building adds, for the Build cards: capacity, needs it restores, its effect on satisfaction, and whether it is needed now
 const SAT_FX = {
   seats: ['Prevents the overcrowding penalty (up to −30)','Mengelakkan penalti kesesakan (sehingga −30)','避免教室拥挤扣分（最多 −30）'],
@@ -2404,6 +2820,7 @@ const SAT_FX = {
   bikes: ['+2 satisfaction','+2 kepuasan','满意度 +2'], fountain: ['+2 satisfaction (counts once)','+2 kepuasan (dikira sekali)','满意度 +2（只计一次）'],
   tree: ['+1 for every 5 trees (up to +4)','+1 bagi setiap 5 pokok (sehingga +4)','每 5 棵树 +1（最多 +4）'],
   bus: ['+2 with the Shuttle Service policy','+2 dengan dasar Perkhidmatan Bas','配合“校车服务”政策 +2'],
+  wbl: ['No direct effect. More placements raise employability and partner goodwill','Tiada kesan langsung. Lebih banyak penempatan menaikkan kebolehpasaran dan hubungan rakan','不直接影响满意度。实习名额越多，就业率和企业关系越好'],
   research: ['No direct effect. Research output ×1.6','Tiada kesan langsung. Hasil penyelidikan ×1.6','不直接影响满意度，研究产出 ×1.6'],
   needs: ['Raises satisfaction through the needs it restores','Menaikkan kepuasan melalui keperluan yang dipulihkan','通过恢复需求来提升满意度'],
 };
@@ -2416,6 +2833,7 @@ function buildInfo(id, k, c) {
   else if (id === 'cafe') { cap = d.cap * 3; use = [c.students, k.food]; sat = SAT_FX.cafe; }
   else if (d.beds) { cap = d.beds; capLabel = CAP_BED; use = [c.students, k.beds]; }
   else if (d.cap) { cap = d.cap * 4; use = [c.students, k.fun]; if (SPORT_T.includes(id)) sat = SAT_FX.sport; }
+  else if (id === 'wbl') { cap = 80; capLabel = ['{n} placements/mo','{n} penempatan/bln','每月 {n} 个实习名额']; const r = industryCalc(c); use = [r.eligible, r.slots + r.studio]; }
   if (SAT_FX[id]) sat = SAT_FX[id];
   const needs = Object.entries(FX[id] || {}).filter(([, v]) => v > 0).map(([n]) => n);
   // needed: that kind of space is missing or over 85% full (a missing library or sports field also counts when an upgrade requires it)
@@ -2427,7 +2845,7 @@ function buildInfo(id, k, c) {
 let statRange = 24, statsSeen = '';
 const RANGE = { 12: ['12 mo','12 bln','12 个月'], 24: ['24 mo','24 bln','24 个月'], 0: ['All','Semua','全部'] };
 const EXCAT = { sal: ['Salaries','Gaji','薪水'], up: ['Building upkeep','Penyelenggaraan bangunan','建筑维护'], cap: ['Construction','Pembinaan','建设'], pol: ['Policies and budgets','Dasar dan bajet','政策与预算'], adm: ['Administration and partner share','Pentadbiran dan bahagian rakan','行政与合作分成'], ev: ['Events and fees','Acara dan yuran','活动与费用'] };
-const LOG_ICON = { build:'🏗️', demolish:'🧨', hire:'🤝', fire:'👋', sponsor:'🎓', launch:'📜', policy:'⚙️', budget:'💵', event:'🎲', loan:'🏦', apply:'📨', result:'📊' };
+const LOG_ICON = { build:'🏗️', demolish:'🧨', hire:'🤝', fire:'👋', sponsor:'🎓', launch:'📜', policy:'⚙️', budget:'💵', event:'🎲', loan:'🏦', apply:'📨', result:'📊', partner:'🏭', qa:'🧭', support:'🧑‍🏫', advisor:'💡' };
 const monLabel = t => { const d = dateAt(t), y = String(d.getUTCFullYear()).slice(2); return LANG === 'zh' ? `${y}年${d.getUTCMonth() + 1}月` : `${MONS[LANG][d.getUTCMonth()]} ${y}`; };
 const dayLabel = t => { const d = dateAt(t); return LANG === 'zh' ? `${d.getUTCMonth() + 1}月${d.getUTCDate()}日` : `${d.getUTCDate()} ${MONS[LANG][d.getUTCMonth()]}`; };
 const yearOf = t => dateAt(t).getUTCFullYear();
@@ -2504,6 +2922,9 @@ function whyYear(y, rows, a, b) {
   else out.push([true, T(['Surplus of {c}. Tuition and rent covered all spending.','Lebihan {c}. Yuran dan sewa menampung semua perbelanjaan.','盈余 {c}，学费和租金足以支付所有开支。'], { c: fmtRM(inc - exp) })]);
   const lost = (S.intakes || []).filter(i => yearOf(i.t) === y).reduce((s, i) => s + Math.max(0, i.demand - i.tot), 0);
   if (lost > 0) out.push([false, T(['{n} applicants were turned away for lack of seats, labs or staff. More capacity means more fee income.','{n} pemohon ditolak kerana kekurangan tempat, makmal atau staf. Lebih kapasiti bermakna lebih banyak yuran.','有 {n} 名申请者因座位、实验室或师资不足未能录取。容量越大，学费收入越多。'], { n: lost })]);
+  if (a.pass != null && b.pass != null && b.pass - a.pass <= -.04) out.push([false, T(['Pass rate fell from {a} to {b}. Check the Success & QA tab for the biggest drag.','Kadar lulus turun daripada {a} ke {b}. Semak tab Kejayaan & QA untuk penghalang utama.','通过率从 {a} 降至 {b}，请到“学业与质量”页查看主要原因。'], { a: pctS(a.pass), b: pctS(b.pass) })]);
+  else if (a.pass != null && b.pass != null && b.pass - a.pass >= .04) out.push([true, T(['Pass rate rose from {a} to {b}.','Kadar lulus naik daripada {a} ke {b}.','通过率从 {a} 升至 {b}。'], { a: pctS(a.pass), b: pctS(b.pass) })]);
+  const drops = rows.reduce((s, x) => s + (x.drops || 0), 0); if (drops > 20) out.push([false, T(['{n} students dropped out. Academic support and smaller classes keep them.','{n} pelajar berhenti. Sokongan akademik dan kelas lebih kecil membantu mengekalkan mereka.','{n} 名学生退学。加强学业支持、缩小班级规模可以留住他们。'], { n: drops })]);
   if (b.rep - a.rep >= 3) out.push([true, T(['Reputation rose {d}: research averaged {r} points a month and {p}% of academics hold a PhD.','Reputasi naik {d}: purata penyelidikan {r} mata sebulan dan {p}% akademik berPhD.','声誉上升 {d}：研究产出平均每月 {r} 分，{p}% 的学术人员拥有博士学位。'], { d: Math.round(b.rep - a.rep), r: avg('rr').toFixed(1), p: b.phdPct })]);
   else if (b.rep - a.rep <= -3) out.push([false, T(['Reputation fell {d}. It follows satisfaction, employability, PhD share and research.','Reputasi turun {d}. Ia mengikut kepuasan, kebolehpasaran, bahagian PhD dan penyelidikan.','声誉下降 {d}。声誉取决于满意度、就业率、博士比例和研究。'], { d: Math.round(a.rep - b.rep) })]);
   return out;
@@ -2514,13 +2935,15 @@ function renderStats() {
     <div class="seg" role="group" aria-label="${T(['Time range','Julat masa','时间范围'])}">${[12, 24, 0].map(v => `<button data-r="${v}" aria-pressed="${statRange === v}">${T(RANGE[v])}</button>`).join('')}</div></div>`;
   const box = (id, title, legend) => `<div class="sec"><p class="eyebrow">${T(title)}</p>${legend ? `<div class="legend">${legend.map(([c, l, bar]) => `<span><i class="${bar ? 'bar' : ''}" style="background:var(${c})"></i>${T(l)}</span>`).join('')}</div>` : ''}<div class="chart"><canvas id="${id}"></canvas><div class="tip" hidden></div></div></div>`;
   const L = { stu: ['Students enrolled','Pelajar berdaftar','在籍学生'], app: ['Applicants','Pemohon','申请人数'], enr: ['Enrolled','Berdaftar','录取人数'], inc: ['Income','Pendapatan','收入'], exp: ['Spending','Perbelanjaan','支出'],
-    cash: ['Cash reserve','Rizab tunai','现金储备'], sat: ['Satisfaction','Kepuasan','满意度'], rep: ['Reputation','Reputasi','声誉'], emp: ['Employability','Kebolehpasaran','就业率'], ratio: ['Students per academic','Pelajar bagi setiap akademik','师生比'] };
+    cash: ['Cash reserve','Rizab tunai','现金储备'], sat: ['Satisfaction','Kepuasan','满意度'], rep: ['Reputation','Reputasi','声誉'], emp: ['Employability','Kebolehpasaran','就业率'], ratio: ['Students per academic','Pelajar bagi setiap akademik','师生比'],
+    pass: ['Pass rate %','Kadar lulus %','通过率 %'], qa: ['Quality score','Skor kualiti','质量得分'], place: ['Placement rate %','Kadar penempatan %','实习率 %'] };
   const ins = (S.intakes || []).filter(i => !rows.length || i.t >= rows[0].t - 24 * 31);
   if (rows.length < 2) h += `<p class="muted" style="margin:0">${T(['Charts appear after your second month. Speed up time to start building a history.','Carta muncul selepas bulan kedua. Cepatkan masa untuk mula membina sejarah.','第二个月之后就会出现图表。加快游戏速度来累积数据。'])}</p>`;
   else {
     h += box('chStu', L.stu) + (ins.length ? box('chIn', ['Intakes: applicants and enrolled','Pengambilan: pemohon dan berdaftar','历次招生：申请与录取'], [['--s2', L.app, 1], ['--s1', L.enr, 1]]) : '')
       + box('chMoney', ['Income and spending each month','Pendapatan dan perbelanjaan setiap bulan','每月收入与支出'], [['--s1', L.inc], ['--s2', L.exp]]) + box('chCash', L.cash)
       + box('chQual', ['Satisfaction, reputation and employability (0–100)','Kepuasan, reputasi dan kebolehpasaran (0–100)','满意度、声誉与就业率（0–100）'], [['--s1', L.sat], ['--s2', L.rep], ['--s3', L.emp]])
+      + (rows.some(x => x.pass != null) ? box('chSS', ['Student success and quality (0–100)','Kejayaan pelajar dan kualiti (0–100)','学业成果与质量（0–100）'], [['--s1', L.pass], ['--s2', L.qa], ['--s3', L.place]]) : '')
       + box('chRatio', ['Teaching quality: students per academic (lower is better)','Kualiti pengajaran: pelajar bagi setiap akademik (lebih rendah lebih baik)','教学质量：师生比（越低越好）']);
   }
   // yearly review, newest first
@@ -2555,6 +2978,7 @@ function renderStats() {
   drawChart('chMoney', lab, [{ label: tr(L.inc), color: '--s1', values: rows.map(x => x.income) }, { label: tr(L.exp), color: '--s2', values: rows.map(x => x.expense) }], { fmt: fmtRM, axis: kM });
   drawChart('chCash', lab, [{ label: tr(L.cash), color: '--s1', values: rows.map(x => x.cash) }], { fmt: fmtRM, axis: kM });
   drawChart('chQual', lab, [{ label: tr(L.sat), color: '--s1', values: rows.map(x => x.sat) }, { label: tr(L.rep), color: '--s2', values: rows.map(x => x.rep) }, { label: tr(L.emp), color: '--s3', values: rows.map(x => x.employ) }], { fmt: pct });
+  if (rows.some(x => x.pass != null)) drawChart('chSS', lab, [{ label: tr(L.pass), color: '--s1', values: rows.map(x => x.pass != null ? Math.round(x.pass * 100) : null) }, { label: tr(L.qa), color: '--s2', values: rows.map(x => x.qa ?? null) }, { label: tr(L.place), color: '--s3', values: rows.map(x => x.place != null ? Math.round(x.place * 100) : null) }], { fmt: pct });
   drawChart('chRatio', lab, [{ label: tr(L.ratio), color: '--s1', values: rows.map(x => +x.ratio) }], { fmt: v => (+v).toFixed(0), ref: 25, refLabel: tr(['25 = limit','25 = had','25 = 上限']) });
 }
 // redraw the report charts when the panel changes width (phone rotation, window resize)
