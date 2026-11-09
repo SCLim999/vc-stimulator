@@ -203,7 +203,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
       <div class="hint" id="hint" hidden></div>
       <div id="followbar" hidden></div>
       <div id="compass" aria-hidden="true"><div id="needle"><i></i><b data-i18n="north">N</b></div></div>
-      <div class="zoom"><button id="zin" data-i18n-aria="zin">+</button><button id="zout" data-i18n-aria="zout">−</button><button id="zfit" data-i18n-aria="zfit" style="font-size:13px">⌂</button><button id="zbub" data-i18n-aria="zbub" aria-pressed="true" style="font-size:14px">💬</button><button id="zwatch" data-i18n-aria="zwatch" style="font-size:14px">👁</button></div>
+      <div class="zoom"><button id="zin" data-i18n-aria="zin">+</button><button id="zout" data-i18n-aria="zout">−</button><button id="zfit" data-i18n-aria="zfit" style="font-size:13px">⌂</button><button id="zrot" data-i18n-aria="zrot" style="font-size:15px">⟳</button><button id="zbub" data-i18n-aria="zbub" aria-pressed="true" style="font-size:14px">💬</button><button id="zwatch" data-i18n-aria="zwatch" style="font-size:14px">👁</button></div>
       <div id="insp" hidden></div>
       <div id="toasts" aria-live="polite"></div>
     </section>
@@ -235,7 +235,7 @@ const UI = {
   rep:['Reputation','Reputasi','声誉'], sat:['Satisfaction','Kepuasan','满意度'], research:['Research','Penyelidikan','研究'],
   goals:['Goals','Matlamat','目标'], dec:['Decisions','Keputusan','决策'], build:['Build','Bina','建造'], progs:['Programmes','Program','课程'], people:['People','Warga','人员'],
   policy:['Policies','Dasar','政策'], fin:['Finance','Kewangan','财务'], pause:['Pause','Jeda','暂停'], speed:['Game speed','Kelajuan permainan','游戏速度'],
-  zin:['Zoom in','Zum masuk','放大'], zout:['Zoom out','Zum keluar','缩小'], zfit:['Recentre','Pusatkan semula','重新居中'], zbub:['Show thoughts','Tunjuk fikiran','显示想法'],
+  zin:['Zoom in','Zum masuk','放大'], zout:['Zoom out','Zum keluar','缩小'], zrot:['Turn the view 90° (Q / E)','Pusing pandangan 90° (Q / E)','视角旋转 90°（Q / E）'], zfit:['Recentre','Pusatkan semula','重新居中'], zbub:['Show thoughts','Tunjuk fikiran','显示想法'],
   lang:['Language','Bahasa','语言'], campus:['Campus view','Paparan kampus','校园视图'], north:['N','U','北'],
   zwatch:['Watch a random student','Tonton pelajar rawak','随机跟随一名学生'],
 };
@@ -1293,10 +1293,19 @@ if (renderer) {
   glEl.appendChild(domEl);
 } else glEl.innerHTML = '<p style="padding:24px;max-width:40ch">3D view needs WebGL, which this browser has turned off. The game still runs: use the panel on the right.</p>';
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 500);
+// Isometric view: an orthographic camera at the classic 35.26° elevation, looking down one of the four diagonals.
+// Drag pans, the wheel or a pinch zooms, ⟳ (or Q / E) turns the view 90° about the centre of the screen.
+const ISO_EL = Math.atan(1 / Math.SQRT2), ISO_D = 50, VIEW_H = 10;   // VIEW_H: half the world height on screen at zoom 1
+const ZK = 30.8;   // zoom = ZK / d shows what a 36° perspective camera showed from distance d
+let isoAz = Math.PI / 4, azGoal = isoAz, ASPECT = 1;
+const isoOffset = az => new THREE.Vector3(Math.sin(az) * Math.cos(ISO_EL), Math.sin(ISO_EL), Math.cos(az) * Math.cos(ISO_EL)).multiplyScalar(ISO_D);
+const camera = new THREE.OrthographicCamera(-VIEW_H, VIEW_H, VIEW_H, -VIEW_H, 0.1, 500);
 const controls = new THREE.OrbitControls(camera, domEl);
-controls.enableDamping = true; controls.dampingFactor = 0.08; controls.maxPolarAngle = 1.45; controls.minDistance = 1.6; controls.maxDistance = 120;
+controls.enableDamping = true; controls.dampingFactor = 0.08; controls.enableRotate = false; controls.minZoom = 0.3; controls.maxZoom = 8;
 controls.screenSpacePanning = false; controls.zoomSpeed = 1.1;
+controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
+controls.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_PAN };
+function turnView(dir) { azGoal += dir * Math.PI / 2; camTouched = true; }
 const hemi = new THREE.HemisphereLight(0xdfefff, 0x6b7a55, 0.6); scene.add(hemi);
 const amb = new THREE.AmbientLight(0xffffff, 0.12); scene.add(amb);
 const sun = new THREE.DirectionalLight(0xfff1d6, 1.0);
@@ -1849,7 +1858,8 @@ function openInterior(b) {
   for (const g of bMeshes.values()) if (g.userData.b === b) { g.visible = false; I.shell = g; }
   if (b === HQ_B) { I.shell = [hqBlock, hqMain].filter(Boolean); I.shell.forEach(m => m.visible = false); }
   roomLight.position.set(b.x + d.w / 2, 1.5 + I.y, b.y + d.h / 2);
-  camTouched = true; camGoal = new THREE.Vector3(b.x + d.w / 2, 0.25 + I.y, b.y + d.h / 2); distGoal = Math.max(4, (d.w + d.h) * 1.4);
+  azGoal = Math.PI / 4 + Math.round((isoAz - Math.PI / 4) / (Math.PI * 2)) * Math.PI * 2;   // the cut-away walls face the default view
+  camTouched = true; camGoal = new THREE.Vector3(b.x + d.w / 2, 0.25 + I.y, b.y + d.h / 2); distGoal = Math.max(7, (d.w + d.h) * 1.8);
 }
 function closeInterior() { interiorFor = null; if (!openI) return; interiorRoot.remove(openI.g); [].concat(openI.shell || []).forEach(m => m.visible = true); openI = null; roomLight.intensity = 0; }
 function stepInterior(t) {
@@ -2013,9 +2023,10 @@ const MAPLBL = [
   ['r3', () => tr(['To Second Penang Bridge','Ke Jambatan Pulau Pinang Kedua','往槟城第二大桥']), [-2, 0.3, GRID + 6], 'lbl road'],
 ];
 const hqVisitors = () => sims.filter(s => s.state === 'inside' && s.bld === HQ_B.id);
-function camDist(x, y, z) { return camera.position.distanceTo(_v.set(x, y, z)); }
+// how far away a point feels: the zoom stands in for distance, plus how far it is from the centre of the screen
+function camDist(x, y, z) { return Math.hypot(ZK / camera.zoom, x - controls.target.x, z - controls.target.z); }
 function renderOverlay(t) {
-  const far = camera.position.distanceTo(controls.target);
+  const far = ZK / camera.zoom;
   for (const [k, txt, p, cls] of MAPLBL) { if (far > 75 && cls.includes('road')) continue; const s = proj(...p); if (s) posEl(ovEl('m' + k, cls, esc(txt())), s); }
   const scale = Math.max(1, counts_cache.students / Math.max(1, sims.filter(s => s.kind === 'student').length));
   for (const b of S.buildings) {
@@ -2056,20 +2067,24 @@ function updateCompass() {
 
 // ---------- camera, follow mode ----------
 let follow = null, distGoal = null, camTouched = false;
-function resize3D() { const r = glEl.getBoundingClientRect(); W = Math.max(1, r.width); H = Math.max(1, r.height); if (renderer) renderer.setSize(W, H, false); camera.aspect = W / H; camera.updateProjectionMatrix(); }
+function resize3D() {
+  const r = glEl.getBoundingClientRect(); W = Math.max(1, r.width); H = Math.max(1, r.height); if (renderer) renderer.setSize(W, H, false);
+  ASPECT = W / H; camera.left = -VIEW_H * ASPECT; camera.right = VIEW_H * ASPECT; camera.top = VIEW_H; camera.bottom = -VIEW_H; camera.updateProjectionMatrix();
+}
 function fitCam() {
   resize3D(); stopFollow(); distGoal = null;
-  const k = camera.aspect < 0.9 ? 1.6 : camera.aspect < 1.3 ? 1.25 : 1;
-  controls.target.set(14, 0, 5); camera.position.set(14 + 21 * k, 25 * k, 5 + 27 * k); controls.update();
+  const k = ASPECT < 0.9 ? 1.6 : ASPECT < 1.3 ? 1.25 : 1;
+  controls.target.set(14, 0, 5); camera.position.copy(controls.target).add(isoOffset(isoAz));
+  camera.zoom = ZK / (40 * k); camera.updateProjectionMatrix(); controls.update();
 }
-function dolly(f) { const off = camera.position.clone().sub(controls.target); off.setLength(clamp(off.length() * f, controls.minDistance, controls.maxDistance)); camera.position.copy(controls.target).add(off); }
+function dolly(f) { camera.zoom = clamp(camera.zoom / f, controls.minZoom, controls.maxZoom); camera.updateProjectionMatrix(); }
 function followPoint(s) {
   if (s.state === 'inside') { const gm = simMeshes.get(s); if (gm && gm.visible) return [gm.position.x, gm.position.z, 0.45]; const b = bById(s.bld); if (b) { const d = door(b); return [d.x, d.y, BT[b.t].ht / 32]; } }
   if (s.state === 'off') { const g = gate(); return [g.x, g.y, 0.4]; }
   return [s.x, s.y, 0.55];
 }
 const followBar = document.getElementById('followbar');
-function startFollow(s) { follow = s; distGoal = 5.5; sel = { type: 's', id: s.id }; renderInsp(); updateFollowBar(); }
+function startFollow(s) { follow = s; distGoal = 8; sel = { type: 's', id: s.id }; renderInsp(); updateFollowBar(); }
 function stopFollow() { if (!follow) return; follow = null; distGoal = null; updateFollowBar(); if (sel) renderInsp(); }
 function updateFollowBar() {
   if (!follow) { followBar.hidden = true; return; }
@@ -2088,7 +2103,8 @@ function stepCamera() {
     const d = camGoal.clone().sub(controls.target).multiplyScalar(0.16); controls.target.add(d); camera.position.add(d);
     if (d.lengthSq() < 1e-5) camGoal = null;
   }
-  if (distGoal) { const off = camera.position.clone().sub(controls.target), L = off.length(), nl = L + (distGoal - L) * 0.07; off.setLength(nl); camera.position.copy(controls.target).add(off); if (Math.abs(nl - distGoal) < 0.05) distGoal = null; }
+  if (distGoal) { const zg = clamp(ZK / distGoal, controls.minZoom, controls.maxZoom); camera.zoom += (zg - camera.zoom) * 0.07; camera.updateProjectionMatrix(); if (Math.abs(zg - camera.zoom) < zg * 0.005) distGoal = null; }
+  if (azGoal !== isoAz) { isoAz += (azGoal - isoAz) * 0.15; if (Math.abs(azGoal - isoAz) < 1e-3) isoAz = azGoal; camera.position.copy(controls.target).add(isoOffset(isoAz)); }
   controls.update();
 }
 
@@ -2177,6 +2193,7 @@ domEl.addEventListener('contextmenu', e => { e.preventDefault(); if (tool) setTo
 document.getElementById('zin').onclick = () => { distGoal = null; dolly(0.75); };
 document.getElementById('zout').onclick = () => { distGoal = null; dolly(1.33); };
 document.getElementById('zfit').onclick = () => { camTouched = false; fitCam(); };
+document.getElementById('zrot').onclick = () => turnView(1);
 document.getElementById('zbub').onclick = e => { showBubbles = !showBubbles; e.currentTarget.setAttribute('aria-pressed', showBubbles); toast(showBubbles ? tr(['Thought bubbles on.','Gelembung fikiran dihidupkan.','已显示想法气泡。']) : tr(['Thought bubbles off.','Gelembung fikiran dimatikan.','已隐藏想法气泡。'])); };
 document.getElementById('zwatch').onclick = () => { const st = sims.filter(s => s.kind === 'student' && s.state !== 'off'); if (st.length) startFollow(pick(st)); };
 document.getElementById('lang').onchange = e => setLang(e.target.value);
@@ -2187,6 +2204,8 @@ document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
   if (e.key === ' ') { e.preventDefault(); setSpeed(speed ? 0 : prevSpeed); }
   const m = { '1': 1, '2': 3, '3': 10, '4': 30 }[e.key]; if (m) setSpeed(m);
+  if (e.key === 'q' || e.key === 'Q') turnView(-1);
+  if (e.key === 'e' || e.key === 'E') turnView(1);
   if (e.key === 'Escape') { if (follow) stopFollow(); else { setTool(null); sel = null; renderInsp(); } }
   if (e.key === 'f' || e.key === 'F') { const s = sel && sel.type === 's' && sims.find(x => x.id === sel.id); if (s) follow === s ? stopFollow() : startFollow(s); }
 });

@@ -10,7 +10,7 @@ Open `index.html` in a browser. It needs an internet connection the first time, 
 
 ## Features
 
-- 3D campus you can orbit and zoom, with day and night, moving sun and shadows.
+- Isometric 3D campus: drag to pan, scroll or pinch to zoom, and turn the view in 90° steps (⟳ or Q / E). Day and night, a moving sun and shadows.
 - Students and staff with needs (Hunger, Energy, Fun, Social, Learning), moods, thoughts and conversations.
 - Click a building to see inside it, or follow any student or lecturer up close.
 - Build teaching blocks, labs, a Smart Factory Lab, hostel, library, research centre, sports courts, running track, bike station and more.
